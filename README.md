@@ -1,7 +1,7 @@
 # The Checked C LLVM test-suite repo
 
 This repo contains a version of the LLVM test-suite repo that is being modified
-to use Checked C.  The modified programs will be used to benchmark the Checked C 
+to use Checked C. The modified programs will be used to benchmark the Checked C 
 version of LLVM/clang.
 
 We have deleted test-only code from this repo and left only benchmarks in the 
@@ -23,9 +23,10 @@ At this time, no benchmarks have been converted to use Checked C.
 ## Running benchmarks
 
 To run benchmarks on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
-on the LLVM site.  You will want to add the argument `-ccflags -fcheckedc-extension`
+on the LLVM site.  You will want to add the argument `--ccflags -fcheckedc-extension`
 to the LNT command-line.  The benchmarks can also be run on Windows 10 using
-the Windows subsystem for Linux.   See the directions [here](docs/Behcmarking-on-Windows.md).
+the [Windows subsystem for Linux](https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/).
+See the directions [here](docs/Benchmarking-on-Windows.md).
 
 ## Contributing
 
