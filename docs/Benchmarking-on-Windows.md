@@ -78,8 +78,9 @@ It may be possible to use a debug version of clang in LNT testing, although we h
 
 In your Bash shell, run
 
-```~/mysandbox/bin/lnt runtest nt --sandbox {directory to build and store results in}
-     --cc {path to clang} --test-suite {location of test suite} --cflags -fcheckedc-extension
+```
+~/mysandbox/bin/lnt runtest nt --sandbox {directory to build and store results in}
+    --cc {path to clang} --test-suite {location of test suite} --cflags -fcheckedc-extension
 ```
 
 To narrow LNT to run on specific tests, use the `--only-test` option.  You can use this to narrow
