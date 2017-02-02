@@ -25,7 +25,7 @@ You will need to create a UNIX user account and password.
 
 ```
 sudo apt-get install python-virtualenv
-sudo apt-get install python-dev -y 
+sudo apt-get install python-dev -y
 sudo apt-get install tcl
 sudo apt-get install bison
 ```
@@ -50,18 +50,19 @@ virtualenv ~/mysandbox
 There will be many error messages.
 
 ## (Temporary) Build a Linux version of clang
-The Windows Subsystem for Linux added the ability to 
+The Windows Subsystem for Linux added the ability to
 [launch Windows NT executables](https://msdn.microsoft.com/en-us/commandline/wsl/release_notes#build-14951)
-in [Windows build 14951](https://blogs.windows.com/windowsexperience/2016/10/19/announcing-windows-10-insider-preview-build-14951-for-mobile-and-pc), 
+in [Windows build 14951](https://blogs.windows.com/windowsexperience/2016/10/19/announcing-windows-10-insider-preview-build-14951-for-mobile-and-pc),
 which was released in mid-October, 2016.   This functionality
 has not yet made it into the release build of Windows 10.  If you running Windows
 insider builds, you can skip this step.  Otherwise, you need to build a Linux version of
 clang to run under the Windows Subsystem for Linux.   You also need to install an updated
-version of cmake.  
+version of cmake.
 
 To install cmake, you can go to the [cmake download page](https://cmake.org/download/).
-You will need to unpack cmake into a target directory and then invoke cmake
-from the target directory.
+You will need to unpack cmake into a target directory.    When you invoke cmake, you
+will need to use the full path name to the binary, including the path for the
+target directory.
 
 LNT testing for LLVM is done using the `release+asserts` version of clang. To build it:
 - Create an LLVM build directory.
@@ -77,11 +78,11 @@ It may be possible to use a debug version of clang in LNT testing, although we h
 
 In your Bash shell, run
 
-```~/mysandbox/bin/lnt runtest nt --sandbox {directory to build and store results in} 
+```~/mysandbox/bin/lnt runtest nt --sandbox {directory to build and store results in}
      --cc {path to clang} --test-suite {location of test suite} --cflags -fcheckedc-extension
 ```
 
-To narrow LNT to run on specific tests, use the `--only-test` option.  You can use this to narrow 
+To narrow LNT to run on specific tests, use the `--only-test` option.  You can use this to narrow
 the tests that are run to a specific directory:
 ```
 --only-test MultiSource

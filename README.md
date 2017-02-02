@@ -25,7 +25,7 @@ At this time, no benchmarks have been converted to use Checked C.
 To run benchmarks on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
 on the LLVM site.  You will want to add the argument `--ccflags -fcheckedc-extension`
 to the LNT command-line.  The benchmarks can also be run on Windows 10 using
-the [Windows subsystem for Linux](https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/).
+the [Windows Subsystem for Linux](https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/).
 See the directions [here](docs/Benchmarking-on-Windows.md).
 
 ## Contributing
