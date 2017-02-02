@@ -5,20 +5,27 @@ to use Checked C.  The modified programs will be used to benchmark the Checked C
 version of LLVM/clang.
 
 We have deleted test-only code from this repo and left only benchmarks in the 
-repo.  That makes the repo easier to work with.  It decreases dis usage from 
-about  2.3 GBytes to under 500 MBytes.
+repo.  That makes the repo easier to work with.  It decreases disk usage from
+about 2.3 GBytes to under 500 MBytes.
 
 Checked C is an extension to C that adds checking to detect or prevent common 
 programming  errors such as out-of-bounds memory accesses.  For more information
 on Checked C, see the Checked C specification in the 
 [Checked C repo](https://github.com/Microsoft/checkedc).  The Checked C
-version of   LLVM/clang lives in two repos: the 
+version of   LLVM/clang lives in two repos: the
 [Checked C clang repo](https://github.com/Microsoft/checked-clang)
 and the [Checked C LLVM repo](https://github.com/Microsoft/checkedc-llvm).  
 
 ## Status
 
 At this time, no benchmarks have been converted to use Checked C.
+
+## Running benchmarks
+
+To run benchmarks on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
+on the LLVM site.  You will want to add the argument `-ccflags -fcheckedc-extension`
+to the LNT command-line.  The benchmarks can also be run on Windows 10 using
+the Windows subsystem for Linux.   See the directions [here](docs/Behcmarking-on-Windows.md).
 
 ## Contributing
 
