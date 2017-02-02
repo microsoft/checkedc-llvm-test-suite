@@ -70,7 +70,7 @@ LNT testing for LLVM is done using the `release+asserts` version of clang. To bu
 
 ```
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On {path to your LLVM repo}
-make
+make -j {number of threads to use}
 ```
 It may be possible to use a debug version of clang in LNT testing, although we have not tried it.
 
@@ -95,5 +95,5 @@ If you just want to run tests quickly, use the `-j` option with the number of th
 -j 8
 ```
 
-The benchmark results will be output in CSV file and .json file.
+The benchmark results will be output in CSV file and a .json file.
 
