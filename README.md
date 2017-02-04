@@ -4,9 +4,9 @@ This repo contains a version of the LLVM test-suite repo that is being modified
 to use Checked C. The modified programs will be used to benchmark the Checked C
 version of LLVM/clang.
 
-We have deleted test-only code from the master branch repo and left only benchmarks
-in the master branch.  That makes the repo easier to work with.  It decreases disk
-usage from about 2.3 GBytes to under 500 MBytes when using the master branch.
+We have deleted test-only code from the master branch of the repo and left only
+benchmarks in the master branch.  That makes the repo easier to work with.  It decreases
+disk usage from about 2.3 GBytes to under 500 MBytes when using the master branch.
 
 Checked C is an extension to C that adds checking to detect or prevent common 
 programming  errors such as out-of-bounds memory accesses.  For more information
