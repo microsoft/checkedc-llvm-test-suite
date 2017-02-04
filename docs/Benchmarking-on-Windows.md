@@ -1,4 +1,4 @@
-# Running Benchmarks on Windows 10
+# Running LNT Tests on Windows 10
 
 The LNT testing framework is tied to Unix.  However, it can be run on Windows 10
 using the beta
@@ -22,12 +22,16 @@ You will have to reboot your computer as the last step.
 and type `bash`.  This will prompt you to install Ubuntu on Windows.
 You will need to create a UNIX user account and password.
 - Install additional packages needed by LNT:
-
 ```
 sudo apt-get install python-virtualenv
 sudo apt-get install python-dev -y
 sudo apt-get install tcl
 sudo apt-get install bison
+```
+
+- Install a development verison of zlib.  The header files are needed to compile some application tests:
+```
+sudo apt-get install zlib1g-dev
 ```
 
 Note that you can find your Windows files under `/mnt/`_{drive letter}_`/`.
@@ -47,7 +51,7 @@ virtualenv ~/mysandbox
 ```
 ~/mysandbox/bin/python setup.py install.
 ```
-There will be many error messages.
+There will be many warning messages.
 
 ## (Temporary) Build a Linux version of clang
 The Windows Subsystem for Linux added the ability to

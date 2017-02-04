@@ -1,30 +1,43 @@
 # The Checked C LLVM test-suite repo
 
 This repo contains a version of the LLVM test-suite repo that is being modified
-to use Checked C. The modified programs will be used to benchmark the Checked C 
+to use Checked C. The modified programs will be used to benchmark the Checked C
 version of LLVM/clang.
 
-We have deleted test-only code from this repo and left only benchmarks in the 
-repo.  That makes the repo easier to work with.  It decreases disk usage from
-about 2.3 GBytes to under 500 MBytes.
+We have deleted test-only code from the master branch repo and left only benchmarks
+in the master branch.  That makes the repo easier to work with.  It decreases disk
+usage from about 2.3 GBytes to under 500 MBytes when using the master branch.
 
 Checked C is an extension to C that adds checking to detect or prevent common 
 programming  errors such as out-of-bounds memory accesses.  For more information
-on Checked C, see the Checked C specification in the 
+on Checked C, see the Checked C specification in the
 [Checked C repo](https://github.com/Microsoft/checkedc).  The Checked C
 version of   LLVM/clang lives in two repos: the
 [Checked C clang repo](https://github.com/Microsoft/checked-clang)
-and the [Checked C LLVM repo](https://github.com/Microsoft/checkedc-llvm).  
+and the [Checked C LLVM repo](https://github.com/Microsoft/checkedc-llvm).
 
 ## Status
 
 At this time, no benchmarks have been converted to use Checked C.
 
-## Running benchmarks
+## Branch organization
 
-To run benchmarks on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
+There are 3 branches in the repo:
+- master: this branch contains benchmarks, some of which may have been modified
+to use Checked C.
+- baseline: this branch contains benchmarks that have not been modified.
+- original: this contains all the tests, including application tests.
+
+This master branch should be used for modifying benchmarks.  This branch can be diffed
+agaisnt the baseline branch to see benchmarks that have changed.
+The original branch can be used to test that
+the Checked C implementation has not broken existing tests.
+
+## Running tests
+
+To run tests on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
 on the LLVM site.  You will want to add the argument `--ccflags -fcheckedc-extension`
-to the LNT command-line.  The benchmarks can also be run on Windows 10 using
+to the LNT command-line.  The tests can also be run on Windows 10 using
 the [Windows Subsystem for Linux](https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/).
 See the directions [here](docs/Benchmarking-on-Windows.md).
 
