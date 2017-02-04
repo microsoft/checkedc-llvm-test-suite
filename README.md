@@ -29,7 +29,7 @@ to use Checked C.
 - original: this contains all the tests, including application tests.
 
 This master branch should be used for modifying benchmarks.  This branch can be diffed
-agaisnt the baseline branch to see benchmarks that have changed.
+against the baseline branch to see the changes in benchmarks.
 The original branch can be used to test that
 the Checked C implementation has not broken existing tests.
 
