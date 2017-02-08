@@ -200,10 +200,11 @@ typedef unsigned long Quad;             /* for building our bit mask */
 
 /* A Word remembers the information about a candidate word. */
 typedef struct {
-    // CHECKEDC : checked array type
+    // CHECKEDC : checkedc array type
     Quad aqMask _Checked [MAX_QUADS];  /* the word's mask */
-    // CHECKEDC : array pointer
-    _Array_ptr<char> pchWord;                 /* the word itself */
+    // CHECKEDC : structure member variable, checkedc array pointer
+    // array pointer length field is within structure
+    _Array_ptr<char> pchWord : count(cchLength);                 /* the word itself */
     unsigned cchLength;                 /* letters in the word */
 } Word;
 typedef _Ptr<Word> PWord;
@@ -225,9 +226,9 @@ typedef struct {
 } Letter;
 typedef Letter * PLetter;
 
-// CHECKEDC : checked array type
-// checked array type of T == array pointer type of T
-// bounds information for checked array is from array size
+// CHECKEDC : checkedc array type
+// checkedc array type of T == array pointer type of T
+// bounds information for checkedc array is from array size
 Letter alPhrase _Checked [ALPHABET]; /* statistics on the current phrase */
 #define lPhrase(ch) alPhrase[ch2i(ch)]  /* quick access to a letter */
 
@@ -249,7 +250,7 @@ char achByFrequency _Checked [ALPHABET];          /* for sorting */
 
 // CHECKEDC : externally scoped variable bounds information
 // global variable bounds information is defined in declaration
-// MAXWORDS = dictionary length
+// dictionary maximum length is defined as MAXWORDS
 _Array_ptr<char> pchDictionary : count(MAXWORDS);               /* the dictionary is read here */
 
 #define Zero(t) memset(t, 0, sizeof(t)) /* quickly zero out an integer array */
@@ -346,6 +347,7 @@ void ReadDict(_Ptr<char> pchFile) {
 }
 
 // CHECKEDC : function call formal parameter bounds information
+// function input parameter is from achPhrase[255]
 void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     int i;
     int ch;
@@ -385,14 +387,14 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     cbtUsed = 0;                        /* bits used so far */
 
     for (i = 0; i < ALPHABET; i++) {
-        // CHECKEDC : checked array type array subscript, in-bounds check
+        // CHECKEDC : checkedc array type array subscript, in-bounds check
         // dynamic_check(i >= 0 && i < ALPHABET)
         // : reasoning facts from for-stmt can remove unnecessary bounds check
         if (alPhrase[i].uFrequency == 0) {
             auGlobalFrequency[i] = ~0;  /* to make it sort last */
         } else {
             auGlobalFrequency[i] = 0;
-            // CHECKEDC : checked array type array subscript, in-bounds check
+            // CHECKEDC : checkedc array type array subscript, in-bounds check
             // dynamic_check(i >= 0 && i < ALPHABET)
             // : reasoning facts can remove unnecessary bounds check
             for (cbtNeed = 1, qNeed = 1;
@@ -432,6 +434,7 @@ PWord NewWord(void) {
  * is a huge pointer (on an IBM PC), so special care must be taken.
  */
 void wprint(_Array_ptr<char> pch) {
+    // CHECKEDC : bounds-safe interface is not given
     printf("%s ", (const char*)pch);
 }
 
@@ -443,13 +446,13 @@ PWord NextWord(void) {
     PWord pw = 0;
     if (cpwCand >= MAXCAND)
 	Fatal("Too many candidates\n", 0);
-    // CHECKEDC : checked array pointer array subscript, in-bounds check
+    // CHECKEDC : checkedc array pointer array subscript, in-bounds check
     // dynamic_check((cpwCand >= 0) && (cpwCand < MAXCAND))
     // : above reasoning facts can remove redundant dynamic_check insertion
     pw = apwCand[cpwCand++];
     if (pw != NULL)
 	return pw;
-    // CHECKEDC : checked array pointer access, in-bounds check
+    // CHECKEDC : checkedc array pointer access, in-bounds check
     // dynamic_check((cpwCand-1) >= 0 && ((cpwCand-1) < MAXCAND))
     // : reaonsing facts can remove redundant bounds check insertion
     apwCand[cpwCand-1] = NewWord();
@@ -459,8 +462,14 @@ PWord NextWord(void) {
 /* BuildWord -- build a Word structure from an ASCII word
  * If the word does not fit, then do nothing.
  */
+// CHECKEDC : function call formal parameters, checkedc array pointer
+// : pchWord declared bounds is from pchDictionary : count(MAXWORDS)
+// TODO
+// - pchWord is pointer to an word but the size of each word is not given by caller
+// - However, caller knows about size of each word
+// - if it is possible to rewrite function, we can use word size information in declaring bounds
 void BuildWord(_Array_ptr<char> pchWord : bounds(pchDictionary, pchDictionary+MAXWORDS)) {
-    // CHECKEDC : checked array type, array subscript
+    // CHECKEDC : checkedc array type, array subscript
     unsigned char cchFrequency _Checked [ALPHABET];
     int i;
     // CHECKEDC
@@ -478,7 +487,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(pchDictionary, pchDictionary+MA
     while ((i = *pch++) != '\0') {
         if (!isalpha(i)) continue;
         i = ch2i(tolower(i));
-        // CHECKEDC : checked array type array subscript, in-bounds check
+        // CHECKEDC : checkedc array type array subscript, in-bounds check
         // dynamic_check(i >= 0 && i < ALPHABET), cchFrequency[ALPHABET], alPhrase[ALPHABET]
         // : isalpha() check if value is alphabet or not
         // : reasoning facts can't know about facts of function call, insert bounds check
@@ -491,7 +500,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(pchDictionary, pchDictionary+MA
 
     /* Update global count */
     for (i = 0; i < ALPHABET; i++)
-        // CHECKEDC : checked array type array subscript
+        // CHECKEDC : checkedc array type array subscript
         // dynamic_check(i >= 0 && i < ALPHABET)
         // : reaonsing facts can remove unnecessary bounds check
         auGlobalFrequency[i] += cchFrequency[i];
@@ -505,7 +514,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(pchDictionary, pchDictionary+MA
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;
     for (i = 0; i < ALPHABET; i++) {
-        // CHECKEDC : checked array type array subscript
+        // CHECKEDC : checkedc array type array subscript
         // : runtime bounds check
         // dynamic_check(i >= 0 && i < ALPHABET) -> alPhrase check
         // dynamic_check(alPhrase[i].iq >= 0 && alPhrase[i].iq < MAX_QUADS)
@@ -517,8 +526,8 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(pchDictionary, pchDictionary+MA
 /* AddWords -- build the list of candidates */
 void
 AddWords(void) {
-    // CHECKEDC : bounds information is declared at variable declaration
-    // MAXWORDS = dictionary max length
+    // CHECKEDC : declared bounds at variable declaration
+    // dictionary max length = MAXWORDS
     _Array_ptr<char> pch : bounds(pchDictionary, pchDictionary+MAXWORDS) = pchDictionary;     /* walk through the dictionary */
 
     cpwCand = 0;
@@ -534,6 +543,9 @@ AddWords(void) {
             || pch[1] == cchPhraseLength)
             // CHECKEDC : pointer arithmetic
             // non-null && in-bounds check
+            // pch[0] = length of word + 3 bytes(length of words, number of letter, NULL string)
+            // pch[1] = number of letters
+            // pch[2..] = word itself
 	    BuildWord(pch+2);
         // CHECKEDC : dereference && pointer arithmetic
         // dynamic_check(pch != NULL)
@@ -589,7 +601,9 @@ jmp_buf jbAnagram;
         continue; \
     }
 
-
+// CHECKEDC : function call formal parameters, checkedc array pointer
+// : pqMask declared bounds is from aqMainMask[MAX_QUADS]
+// : ppwStart declared bounds is from apwCand[MAXCAND]
 void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
         PPWord ppwStart : bounds(apwCand, apwCand+MAXCAND), int iLetter)
 {
@@ -622,7 +636,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
         iLetter++;
     }
 
-    // CHECKEDC : checked array type array subscript, in-bounds check
+    // CHECKEDC : checkedc array type array subscript, in-bounds check
     // dynamic_check(iLetter >= 0 && iLetter < ALPHABET)
     Debug(printf("Pivoting on %c\n", i2ch(achByFrequency[iLetter]));)
 
@@ -635,7 +649,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
         Stat(if (++ulLowCount == 0) ++ulHighCount;)
 
-            // CHECKEDC : checked array type array subscript
+            // CHECKEDC : checkedc array type array subscript
             // aqNext[i], pqMask[i], pw->aqMask[i], aqMainSign[i]
             // dynamic_check(i >= 0 && i < MAX_QUADS)
             // In below macros, i is constant value (0/1/2/3)
@@ -660,7 +674,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 #endif
 
         /* If the pivot letter isn't present, defer this word until later */
-                // CHECKEDC : checked array type array subscript
+                // CHECKEDC : checkedc array type array subscript
                 // dynamic_check(iq >= 0 && iq < MAX_QUADS)
         if ((pw->aqMask[iq] & qMask) == 0) {
             // CHECKEDC : pointer arithmetic && memory read/write
@@ -732,7 +746,7 @@ void SortCandidates(void) {
 
     fprintf(stderr, "Order of search will be ");
     for (i = 0; i < ALPHABET; i++)
-        // CHECKEDC : checked array type array subscript,
+        // CHECKEDC : checkedc array type array subscript,
         // dynamic_check(i >= 0 && i < ALPHABET)
         // : reaonsing facts for for-stmt can remove redundant runtime bounds check
 	fputc(i2ch(achByFrequency[i]), stderr);
@@ -741,8 +755,8 @@ void SortCandidates(void) {
 
 int fInteractive;
 
-// CHECKEDC : function call formal parameter & return value is checked array pointer 
-// that has declared bounds
+// CHECKEDC : function call formal parameter & return value is checkedc array pointer 
+// : formal parameter declared bounds is from achPhrase[255]
 _Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+255), int size)
     : bounds(achPhrase, achPhrase+255) {
     if (fInteractive) printf(">");
@@ -775,7 +789,7 @@ int Cdecl main(int cpchArgc, char **ppchArgv) {
 
     ReadDict(ppchArgv[1]);
 
-    // CHECKEDC : checked array type array subscript, in-bounds check
+    // CHECKEDC : checkedc array type array subscript, in-bounds check
     // static checking for function call
     while (GetPhrase(&achPhrase[0], sizeof(achPhrase)) != NULL) {
         if (isdigit(achPhrase[0])) {
