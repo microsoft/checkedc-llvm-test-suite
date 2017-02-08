@@ -33,9 +33,10 @@
 #include "Fstruct.h"
 
 int
-SanityCheck1(HeapP * h, Item * i)
+SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
 {
-  HeapP * h1;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
 
   if(h == NULL_HEAP)
   {
@@ -62,11 +63,12 @@ SanityCheck1(HeapP * h, Item * i)
 }
 
 int
-SanityCheck2(HeapP * h)
+SanityCheck2(_Ptr<HeapP>  h)
 {
   int   sum;
-  HeapP * h1;
-  HeapP * h2;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
+  _Ptr<HeapP>  h2 = 0;
 
   if(h == NULL_HEAP)
   {
@@ -106,11 +108,12 @@ SanityCheck2(HeapP * h)
 }
 
 int
-SanityCheck3(HeapP * h, int rank)
+SanityCheck3(_Ptr<HeapP>  h, int rank)
 {
   int   sum;
-  HeapP * h1;
-  HeapP * h2;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
+  _Ptr<HeapP>  h2 = 0;
 
   if((h == NULL_HEAP) && (rank == 0))
   {
@@ -143,9 +146,10 @@ SanityCheck3(HeapP * h, int rank)
 }
 
 void
-PrettyPrint(HeapP * h)
+PrettyPrint(_Ptr<HeapP>  h)
 {
-  HeapP * h1;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
 
   if(h == NULL_HEAP)
   {

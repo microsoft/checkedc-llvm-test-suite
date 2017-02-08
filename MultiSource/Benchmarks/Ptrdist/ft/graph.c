@@ -50,14 +50,14 @@ static int generatedEdges;
 /*
  * Local functions.
  */
-Vertices * GenTree(int vertex);
-Vertices * AddEdges(Vertices * graph, int nVertex, int nEdge);
-Vertices * PickVertex(Vertices * graph, int whichVertex);
-void      Connect(Vertices * vertex1, Vertices * vertex2);
-int       Duplicate(Vertices * vertex1, Vertices * vertex2);
-Vertices * NewVertex();
-Edges * NewEdge();
-void      PrintNeighbors(Vertices * vertex);
+_Ptr<Vertices>  GenTree(int vertex);
+_Ptr<Vertices>  AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge);
+_Ptr<Vertices>  PickVertex(_Ptr<Vertices>  graph, int whichVertex);
+void      Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2);
+int       Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2);
+_Ptr<Vertices>  NewVertex(void);
+_Ptr<Edges>  NewEdge(void);
+void      PrintNeighbors(_Ptr<Vertices>  vertex);
 
 /*
  * Local variables.
@@ -71,10 +71,11 @@ static id = 1;
  * Apparently a good reference is Tinhofer G., ,
  * C. Hanser, Verlag, M\"{u}nchen 1980.
  */
-Vertices *
+_Ptr<Vertices> 
 GenGraph(int nVertex, int nEdge)
 {
-  Vertices * graph;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  graph = 0;
 
   assert(nEdge + 1 >= nVertex);
   assert(nEdge <= nVertex * (nVertex - 1) / 2);
@@ -86,14 +87,15 @@ GenGraph(int nVertex, int nEdge)
   return(graph);
 }
 
-Vertices *
+_Ptr<Vertices> 
 GenTree(int nVertex)
 {
   int       i;
   int       weight;
-  Vertices * vertex;
-  Vertices * graph;
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  vertex = 0;
+  _Ptr<Vertices>  graph = 0;
+  _Ptr<Edges>  edge = 0;
 
   graph = NewVertex();
   NEXT_VERTEX(graph) = graph;
@@ -137,12 +139,13 @@ GenTree(int nVertex)
   return(graph);
 }
 
-Vertices *
-AddEdges(Vertices * graph, int nVertex, int nEdge)
+_Ptr<Vertices> 
+AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge)
 {
   int       i;
-  Vertices * vertex1;
-  Vertices * vertex2;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  vertex1 = 0;
+  _Ptr<Vertices>  vertex2 = 0;
 
   assert(graph != NULL_VERTEX);
   assert(nEdge >= 0);
@@ -163,8 +166,8 @@ AddEdges(Vertices * graph, int nVertex, int nEdge)
   return(graph);
 }
 
-Vertices *
-PickVertex(Vertices * graph, int whichVertex)
+_Ptr<Vertices> 
+PickVertex(_Ptr<Vertices>  graph, int whichVertex)
 {
   int       i;
 
@@ -177,10 +180,11 @@ PickVertex(Vertices * graph, int whichVertex)
 }
 
 void
-Connect(Vertices * vertex1, Vertices * vertex2)
+Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 {
   int    weight;
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Edges>  edge = 0;
 
   weight = GET_WEIGHT;
 
@@ -200,9 +204,10 @@ Connect(Vertices * vertex1, Vertices * vertex2)
 }
 
 int
-Duplicate(Vertices * vertex1, Vertices * vertex2)
+Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 {
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Edges>  edge = 0;
 
   edge = EDGES(vertex1);
 
@@ -219,12 +224,13 @@ Duplicate(Vertices * vertex1, Vertices * vertex2)
   return(FALSE);
 }
 
-Vertices *
-NewVertex()
+_Ptr<Vertices> 
+NewVertex(void)
 {
-  Vertices * vertex;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  vertex = 0;
 
-  vertex = (Vertices *)malloc(sizeof(Vertices));
+  vertex = malloc(sizeof(Vertices));
 
   if(vertex == NULL)
   {
@@ -239,12 +245,13 @@ NewVertex()
   return(vertex);
 }
 
-Edges *
-NewEdge()
+_Ptr<Edges> 
+NewEdge(void)
 {
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Edges>  edge = 0;
 
-  edge = (Edges *)malloc(sizeof(Edges));
+  edge = malloc(sizeof(Edges));
 
   if(edge == NULL)
   {
@@ -260,9 +267,10 @@ NewEdge()
 }
 
 void
-PrintGraph(Vertices * graph)
+PrintGraph(_Ptr<Vertices>  graph)
 {
-  Vertices * vertex;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  vertex = 0;
 
   assert(graph != NULL);
 
@@ -278,9 +286,10 @@ PrintGraph(Vertices * graph)
 }
 
 void
-PrintNeighbors(Vertices * vertex)
+PrintNeighbors(_Ptr<Vertices>  vertex)
 {
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Edges>  edge = 0;
 
   edge = EDGES(vertex);
   while(edge != NULL)

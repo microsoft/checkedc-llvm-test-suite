@@ -34,17 +34,17 @@
 
 #include "item.h"
 
-int LessThan(Item * item1, Item * item2)
+int LessThan(_Ptr<Item>  item1, _Ptr<Item>  item2)
 {
   return(KEY(item1) < KEY(item2));
 }
 
-int Equal(Item * item1, Item * item2)
+int Equal(_Ptr<Item>  item1, _Ptr<Item>  item2)
 {
   return(KEY(item1) == KEY(item2));
 }
 
-Item * Subtract(Item * item, int delta)
+_Ptr<Item>  Subtract(_Ptr<Item>  item, int delta)
 {
     assert(delta > 0);
 
