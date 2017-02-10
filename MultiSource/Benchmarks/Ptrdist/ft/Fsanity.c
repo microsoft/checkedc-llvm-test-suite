@@ -28,7 +28,8 @@
  *
  */
 
-#include <stdio.h>
+// CHECKEDC
+#include <stdio_checked.h>
 #include "Fheap.h"
 #include "Fstruct.h"
 

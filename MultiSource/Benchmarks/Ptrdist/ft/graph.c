@@ -29,8 +29,9 @@
  */
 
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+// CHECKEDC
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include "graph.h"
 
 #define TRUE 1

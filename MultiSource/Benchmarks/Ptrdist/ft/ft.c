@@ -35,8 +35,9 @@
  */
 
 #include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
+// CHECKEDC
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include <assert.h>
 
 #include <sys/time.h>
