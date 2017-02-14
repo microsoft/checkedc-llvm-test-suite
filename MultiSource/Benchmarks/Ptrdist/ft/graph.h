@@ -37,22 +37,22 @@ typedef struct _Edges
 {
   int               weight;
 
-  struct _Vertices * source;
-  struct _Vertices * vertex;
-  struct _Edges * next;
+  _Ptr<struct _Vertices>  source;
+  _Ptr<struct _Vertices>  vertex;
+  _Ptr<struct _Edges>  next;
 } Edges;
 
 typedef struct _Vertices
 {
   int               id;
-  Edges * edges;
-  struct _Vertices * next;
+  _Ptr<Edges>  edges;
+  _Ptr<struct _Vertices>  next;
 
   /*
    * For the ft algorithm.
    */
   int               key;
-  Edges * chosenEdge;
+  _Ptr<Edges>  chosenEdge;
 } Vertices;
 
 #define NULL_EDGE	((void *) 0)
@@ -72,7 +72,7 @@ typedef struct _Vertices
 #define KEY(V)		((*(V)).key)
 #define CHOSEN_EDGE(V)	((*(V)).chosenEdge)
 
-Vertices * GenGraph(int nVertex, int nEdge);
-void      PrintGraph(Vertices * graph);
+_Ptr<Vertices>  GenGraph(int nVertex, int nEdge);
+void      PrintGraph(_Ptr<Vertices>  graph);
 
 #endif

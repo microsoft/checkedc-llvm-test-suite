@@ -53,12 +53,12 @@
 
 typedef struct _Heap
 {
-  Item *     item;
+  _Ptr<Item>      item;
 
-  struct _Heap * parent;
-  struct _Heap * child;
-  struct _Heap * forward;
-  struct _Heap * backward;
+  _Ptr<struct _Heap>  parent;
+  _Ptr<struct _Heap>  child;
+  _Ptr<struct _Heap>  forward;
+  _Ptr<struct _Heap>  backward;
   int           rank;
   short         marked;
 } HeapP;
@@ -92,7 +92,7 @@ void  InitFHeap();
  * Return values:
  *   a heap, to be precise an empty, i.e. NULL_HEAP
  */
-HeapP * MakeHeap();
+_Ptr<HeapP>  MakeHeap(void);
 
 /*
  * Find the item with lowest key.
@@ -107,7 +107,7 @@ HeapP * MakeHeap();
  *   an item if the heap is not empty
  *   NULL_ITEM otherwise
  */
-Item * FindMin(HeapP * h);
+_Ptr<Item>  FindMin(_Ptr<HeapP>  h);
 
 /*
  * Insert an item in a heap.
@@ -123,7 +123,7 @@ Item * FindMin(HeapP * h);
  *   a handle to the inserted item, useful in connection with Delete()
  *   and DecreaseKey().
  */
-HeapP * Insert(HeapP * * h, Item * i);
+_Ptr<HeapP>  Insert(_Ptr<_Ptr<HeapP>>  h, _Ptr<Item>  i);
 
 /*
  * Meld to heaps.
@@ -137,7 +137,7 @@ HeapP * Insert(HeapP * * h, Item * i);
  * Return values:
  *   a bigger heap, possibly NULL_HEAP
  */
-HeapP * Meld(HeapP * h1, HeapP * h2);
+_Ptr<HeapP>  Meld(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2);
 
 /*
  * Remove the smallest item in a heap
@@ -151,7 +151,7 @@ HeapP * Meld(HeapP * h1, HeapP * h2);
  * Return values:
  *   a smaller heap, possibly NULL_HEAP
  */
-HeapP * DeleteMin(HeapP * h);
+_Ptr<HeapP>  DeleteMin(_Ptr<HeapP>  h);
 
 /*
  * Decrease the key of an item in a heap.
@@ -169,7 +169,7 @@ HeapP * DeleteMin(HeapP * h);
  * Return values:
  *   a heap, possibly NULL_HEAP
  */
-HeapP * DecreaseKey(HeapP * h, HeapP * i, int delta);
+_Ptr<HeapP>  DecreaseKey(_Ptr<HeapP>  h, _Ptr<HeapP>  i, int delta);
 
 /*
  * Delete an entry in a heap.
@@ -185,7 +185,7 @@ HeapP * DecreaseKey(HeapP * h, HeapP * i, int delta);
  * Return values:
  *   a smaller heap, possibly NULL_HEAP
  */
-HeapP * Delete(HeapP * h, HeapP * i);
+_Ptr<HeapP>  Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i);
 
 /*
  * Search for an item with a particular key in a heap.
@@ -202,7 +202,7 @@ HeapP * Delete(HeapP * h, HeapP * i);
  * Return values:
  *   an handle to the item, possibly NULL_HEAP
  */
-HeapP * Find(HeapP * h, Item * item);
+_Ptr<HeapP>  Find(_Ptr<HeapP>  h, _Ptr<Item>  item);
 
 /*
  * Converts a item handle into an item pointer.
@@ -216,6 +216,6 @@ HeapP * Find(HeapP * h, Item * item);
  * Return values:
  *   an pointer to the item
  */
-Item * ItemOf(HeapP * h);
+_Ptr<Item>  ItemOf(_Ptr<HeapP>  h);
 
 #endif

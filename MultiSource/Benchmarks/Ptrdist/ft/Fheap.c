@@ -37,8 +37,9 @@
  */
 
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+// CHECKED
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include "Fheap.h"
 #include "Fstruct.h"
 
@@ -48,14 +49,14 @@
 #define INLINE
 #endif
 
-static HeapP * hTable[MAX_RANK];
+static _Ptr<HeapP> hTable _Checked[MAX_RANK];
 
-void  CombineLists(HeapP *, HeapP *);
-void  AddEntry(HeapP *, HeapP *);
-HeapP * RemoveEntry(HeapP *);
-HeapP * NewHeap(Item *);
-void  RemoveChild(HeapP *);
-void  FixRank(HeapP *, int);
+void  CombineLists(_Ptr<HeapP> , _Ptr<HeapP> );
+void  AddEntry(_Ptr<HeapP> , _Ptr<HeapP> );
+_Ptr<HeapP>  RemoveEntry(_Ptr<HeapP> );
+_Ptr<HeapP>  NewHeap(_Ptr<Item> );
+void  RemoveChild(_Ptr<HeapP> );
+void  FixRank(_Ptr<HeapP> , int);
 
 INLINE void
 InitFHeap()
@@ -64,18 +65,21 @@ InitFHeap()
 
   for(j = 0; j < MAX_RANK; j++)
   {
+      // CHECKEDC : checkedc array type array subscript
+      // dynamic_check(j >= 0 && j < MAX_RANK)
+      // : reasoning facts can optimize redundant bounds check
     hTable[j] = NULL;
   }
 }
 
-INLINE HeapP *
-MakeHeap()
+INLINE _Ptr<HeapP> 
+MakeHeap(void)
 {
   return(NULL);
 }
 
-INLINE Item *
-FindMin(HeapP * h)
+INLINE _Ptr<Item> 
+FindMin(_Ptr<HeapP>  h)
 {
   if(h == NULL)
   {
@@ -87,18 +91,19 @@ FindMin(HeapP * h)
   }
 }
 
-INLINE HeapP *
-Insert(HeapP * * h, Item * i)
+INLINE _Ptr<HeapP> 
+Insert(_Ptr<_Ptr<HeapP>>  h, _Ptr<Item>  i)
 {
-  HeapP * h1;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
 
   h1 = NewHeap(i);
   *h = Meld(*h, h1);
   return(h1);
 }
 
-INLINE HeapP *
-Meld(HeapP * h1, HeapP * h2)
+INLINE _Ptr<HeapP> 
+Meld(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2)
 {
   if(h2 == NULL)
   {
@@ -122,14 +127,15 @@ Meld(HeapP * h1, HeapP * h2)
 /*
  * This function needs some aesthetic changes.
  */
-INLINE HeapP *
-DeleteMin(HeapP * h)
+INLINE _Ptr<HeapP> 
+DeleteMin(_Ptr<HeapP>  h)
 {
   int   r, rMax, j;
-  HeapP * h1;
-  HeapP * h2;
-  HeapP * h3;
-  HeapP * min;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
+  _Ptr<HeapP>  h2 = 0;
+  _Ptr<HeapP>  h3 = 0;
+  _Ptr<HeapP>  min = 0;
 
   rMax = 0;
 
@@ -142,7 +148,7 @@ DeleteMin(HeapP * h)
 
   if(h1 == NULL)
   {
-    free(h);
+    free((void*)h);
     return(NULL);
   }
 
@@ -168,6 +174,12 @@ DeleteMin(HeapP * h)
 
     r = RANK(h2);
     assert(r < MAX_RANK);
+
+    // CHECKEDC : checkedc array type array subscript
+    // dynamic_check(r >= 0 && r < MAX_RANK)
+    // : reasoning facts from assertion statement (r < MAX_RANK)
+    // can optimize redundant bounds check
+    // : instead of using assertion, it can be replaced with dynamic_check
     while(hTable[r] != NULL)
     {
       if(LessThan(ITEM(hTable[r]), ITEM(h2)))
@@ -209,6 +221,11 @@ DeleteMin(HeapP * h)
 
       r = RANK(h2);
       assert(r < MAX_RANK);
+      // CHECKEDC : checkedc array type array subscript
+      // dynamic_check(r >= 0 && r < MAX_RANK)
+      // : reasoning facts from assertion statement (r < MAX_RANK)
+      // can optimize redundant bounds check
+      // : instead of using assertion, it can be replaced with dynamic_check
       while(hTable[r] != NULL)
       {
         if(LessThan(ITEM(hTable[r]), ITEM(h2)))
@@ -241,6 +258,10 @@ DeleteMin(HeapP * h)
    */
   for(j = 0; j <= rMax; j++)
   {
+      // CHECKEDC : checkedc array type array subscript
+      // dynamic_check(j >= 0 && j < MAX_RANK)
+      // if there is programmer-inserted dynamic_check outside for-loop
+      // compiler can optimize away redundant bounds check
     if(hTable[j] != NULL)
     {
       break;
@@ -252,6 +273,10 @@ DeleteMin(HeapP * h)
   j++;
   for(; j <= rMax; j++)
   {
+      // CHECKEDC : checkedc array type array subscript
+      // dynamic_check(j >= 0 && j < MAX_RANK)
+      // if there is programmer-inserted dynamic_check outside for-loop
+      // compiler can optimize away redundant bounds check
     if(hTable[j] != NULL)
     {
       CombineLists(h1, hTable[j]);			/* TBD note that update to PARENT not necessary!! */
@@ -263,13 +288,13 @@ DeleteMin(HeapP * h)
     }
   }
 
-  free(h);
+  free((void*)h);
 
   return(min);
 }
 
-INLINE HeapP *
-DecreaseKey(HeapP * h, HeapP * i, int delta)
+INLINE _Ptr<HeapP> 
+DecreaseKey(_Ptr<HeapP>  h, _Ptr<HeapP>  i, int delta)
 {
   assert(h != NULL);
   assert(i != NULL);
@@ -294,9 +319,10 @@ DecreaseKey(HeapP * h, HeapP * i, int delta)
  * Note: i must have a parent (;-).
  */
 INLINE void
-RemoveChild(HeapP * i)
+RemoveChild(_Ptr<HeapP>  i)
 {
-  HeapP * parent;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  parent = 0;
 
   assert(i != NULL);
 
@@ -324,7 +350,7 @@ RemoveChild(HeapP * i)
 }
 
 INLINE void
-FixRank(HeapP * h, int delta)
+FixRank(_Ptr<HeapP>  h, int delta)
 {
   assert(h != NULL);
   assert(delta > 0);
@@ -337,11 +363,12 @@ FixRank(HeapP * h, int delta)
   while(h != NULL);
 }
 
-INLINE HeapP *
-Delete(HeapP * h, HeapP * i)
+INLINE _Ptr<HeapP> 
+Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i)
 {
-  HeapP * h1;
-  HeapP * h2;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
+  _Ptr<HeapP>  h2 = 0;
 
   assert(h != NULL);
   assert(i != NULL);
@@ -385,7 +412,7 @@ Delete(HeapP * h, HeapP * i)
     while(h1 != CHILD(i));
   }
 
-  free(i);
+  free((void*)i);
   return(h);
 }
 
@@ -403,9 +430,9 @@ Delete(HeapP * h, HeapP * i)
  *   none
  */
 INLINE void
-CombineLists(HeapP * h1, HeapP * h2)
+CombineLists(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2)
 {
-  HeapP * h;
+  _Ptr<HeapP>  h = 0;
 
   assert((h1 != NULL) && (h2 != NULL));
 
@@ -432,7 +459,7 @@ CombineLists(HeapP * h1, HeapP * h2)
  *   h1 with h2 as new child of h1.
  */
 INLINE void
-AddEntry(HeapP * h1, HeapP * h2)
+AddEntry(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2)
 {
   assert((h1 != NULL) && (h2 != NULL));
 
@@ -462,8 +489,8 @@ AddEntry(HeapP * h1, HeapP * h2)
  * Return values:
  *   a smaller heap, possibly NULL
  */
-INLINE HeapP *
-RemoveEntry(HeapP * h)
+INLINE _Ptr<HeapP> 
+RemoveEntry(_Ptr<HeapP>  h)
 {
   assert(h != NULL);
 
@@ -491,10 +518,11 @@ RemoveEntry(HeapP * h)
  * Return values:
  *   a single entry heap
  */
-INLINE HeapP *
-NewHeap(Item * i)
+INLINE _Ptr<HeapP> 
+NewHeap(_Ptr<Item>  i)
 {
-  HeapP * h;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h = 0;
 
   h = (HeapP *)malloc(sizeof(HeapP));
 
@@ -514,17 +542,18 @@ NewHeap(Item * i)
   return(h);
 }
 
-INLINE Item *
-ItemOf(HeapP * h)
+INLINE _Ptr<Item> 
+ItemOf(_Ptr<HeapP>  h)
 {
   return(ITEM(h));
 }
 
-INLINE HeapP *
-Find(HeapP * h, Item * item)
+INLINE _Ptr<HeapP> 
+Find(_Ptr<HeapP>  h, _Ptr<Item>  item)
 {
-  HeapP * h1;
-  HeapP * h2;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  h1 = 0;
+  _Ptr<HeapP>  h2 = 0;
 
   if(h == NULL)
   {

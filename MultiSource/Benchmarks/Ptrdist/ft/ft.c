@@ -35,8 +35,9 @@
  */
 
 #include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
+// CHECKEDC
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include <assert.h>
 
 #include <sys/time.h>
@@ -57,8 +58,8 @@
 /*
  * Local functions.
  */
-void      PrintMST(Vertices * graph);
-Vertices * MST(Vertices * graph);
+void      PrintMST(_Ptr<Vertices>  graph);
+_Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
 
 /*
  * Local variables.
@@ -66,24 +67,25 @@ Vertices * MST(Vertices * graph);
 int debug = 1;
 
 int
-main(int argc, char *argv[])
+main(int argc, _Array_ptr<_Ptr<char>> argv )
 {
   int            nVertex;
   int            nEdge;
-  Vertices *  graph;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>   graph = 0;
 
   nVertex = DEFAULT_N_VERTEX;
   nEdge = DEFAULT_N_EDGE;
 
   if(argc > 1)
   {
-    nVertex = atoi(argv[1]);
+    nVertex = atoi((const char*)argv[1]);
     if(argc > 2)
     {
-      nEdge = atoi(argv[2]);
+      nEdge = atoi((const char*)argv[2]);
       if(argc > 3)
       {
-        srandom(atoi(argv[3]));
+        srandom(atoi((const char*)argv[3]));
       }
     }
   }
@@ -122,12 +124,13 @@ main(int argc, char *argv[])
   return 0;
 }
 
-Vertices *
-MST(Vertices * graph)
+_Ptr<Vertices> 
+MST(_Ptr<Vertices>  graph)
 {
-  HeapP * heap;
-  Vertices * vertex;
-  Edges * edge;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<HeapP>  heap = 0;
+  _Ptr<Vertices>  vertex = 0;
+  _Ptr<Edges>  edge = 0;
   ;
 
   InitFHeap();
@@ -175,9 +178,10 @@ MST(Vertices * graph)
 }
 
 void
-PrintMST(Vertices * graph)
+PrintMST(_Ptr<Vertices>  graph)
 {
-  Vertices * vertex;
+    // CHECKEDC : automatic variable initialize required
+  _Ptr<Vertices>  vertex = 0;
 
   assert(graph != NULL_VERTEX);
 
