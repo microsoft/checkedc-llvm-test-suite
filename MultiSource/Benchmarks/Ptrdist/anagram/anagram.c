@@ -573,12 +573,13 @@ AddWords(void) {
             // pch[2..] = word itself
         {
             // FIXME
-            // - add addtional variable to represent words bounds (wordStart/wordEnd)
-            // - max word length is encoded in pch[0], use it
-            // - rewrite function call to hold bounds start/end in function argument
+            // - add addtional variable as word bounds (wordStart/wordEnd) not dictionary bounds
+            // - use word length encoded in pch[0]
+            // - rewrite function call to hold bounds of word in function argument
             unsigned char wordLength = pch[0];
             _Array_ptr<char> wordStart = pch;
             _Array_ptr<char> wordEnd = pch+wordLength;
+            _Dynamic_check(wordEnd <= pchUpperBounds);
             BuildWord(pch+2, wordStart, wordEnd);
         }
         // CHECKEDC : dereference(in-bounds check) && pointer arithmetic (non-null check only)
@@ -683,10 +684,10 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
         Stat(if (++ulLowCount == 0) ++ulHighCount;)
 
-            // CHECKEDC : checkedc array type array subscript
-            // aqNext[i], pqMask[i], pw->aqMask[i], aqMainSign[i]
-            // dynamic_check(i >= 0 && i < MAX_QUADS)
-            // In below macros, i is constant value (0/1/2/3)
+        // CHECKEDC : checkedc array type array subscript
+        // aqNext[i], pqMask[i], pw->aqMask[i], aqMainSign[i]
+        // dynamic_check(i >= 0 && i < MAX_QUADS)
+        // In below macros, i is constant value (0/1/2/3)
 #if MAX_QUADS > 0
         OneStep(0);                     /* lines of code. */
 #endif
@@ -708,8 +709,8 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 #endif
 
         /* If the pivot letter isn't present, defer this word until later */
-                // CHECKEDC : checkedc array type array subscript
-                // dynamic_check(iq >= 0 && iq < MAX_QUADS)
+        // CHECKEDC : checkedc array type array subscript
+        // dynamic_check(iq >= 0 && iq < MAX_QUADS)
         if ((pw->aqMask[iq] & qMask) == 0) {
             // CHECKEDC : pointer arithmetic(non-null check only) && dereference(in-bounds check)
             // dynamic_check(ppwStart != NULL && ppwEnd != NULL)
@@ -721,17 +722,17 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
         }
 
         /* If we get here, this means the word fits. */
-            // CHECKEDC : checkedc array type array subscript, in-bounds check
-            // dynamic_check(cpwLast >= 0 && cpwLast < MAXSOL)
+        // CHECKEDC : checkedc array type array subscript, in-bounds check
+        // dynamic_check(cpwLast >= 0 && cpwLast < MAXSOL)
         apwSol[cpwLast++] = pw;
         if (cchPhraseLength -= pw->cchLength) { /* recurse */
             Debug(DumpWords();)
             /* The recursive call scrambles the tail, so we have to be
              * pessimistic.
              */
-                // CHECKEDC : pointer arithmetic(non-null check only)
-                // dynamic_check(ppwEnd != NULL)
-                // dynamic_check((ppwEnd+cpwCand) >= apwCand && (ppwEnd+cpwCand) < (apwCand+MAXCAND))
+        // CHECKEDC : pointer arithmetic(non-null check only)
+        // dynamic_check(ppwEnd != NULL)
+        // dynamic_check((ppwEnd+cpwCand) >= apwCand && (ppwEnd+cpwCand) < (apwCand+MAXCAND))
 	    ppwEnd = &apwCand[0];
 	    ppwEnd += cpwCand;
         // CHECKEDC : function call actual argument passing
