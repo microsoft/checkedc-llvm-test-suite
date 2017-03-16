@@ -13,7 +13,7 @@ int mylog(int num)
   return j;
 } 
 
-int dealwithargs(int argc, char *argv[])
+int dealwithargs(int argc, char *argv[] : itype(array_ptr<char*>))
 {
   int num;
 

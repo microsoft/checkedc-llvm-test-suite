@@ -1,13 +1,12 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "tsp.h"
-#include <stdio.h>
 #define conquer_thresold 150  /* tsp() will use conquer for problems <= conquer_thresold */
 extern int flag;
 
 void print_tree(Tree t)
 {
-  Tree left,right;
+  Tree left = NULL, right = NULL;
 
   double x,y;
 
@@ -21,7 +20,7 @@ void print_tree(Tree t)
 
 void print_list(Tree t)
 {
-  Tree tmp;
+  Tree tmp = NULL;
   double x,y;
 
   if (!t) return;
@@ -36,7 +35,7 @@ void print_list(Tree t)
 
 int main(int argc,char *argv[])
 {
-  Tree t;
+  Tree t = NULL;
   int num;
  
   num=dealwithargs(argc,argv);
