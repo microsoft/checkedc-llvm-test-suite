@@ -5,13 +5,15 @@
 #include <fcntl.h>
 #endif
 
+#include "tree.h"
+
 #ifdef TORONTO
  int NumNodes;
 #else
 extern int __NumNodes;
 #endif
 
-extern int atoi(const char *);
+extern int atoi(const char * : itype(ptr<const char>));
 
 #ifndef TORONTO
 void filestuff()
@@ -23,7 +25,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, char *argv[])
+int dealwithargs(int argc, char *argv[] : itype(array_ptr<char*>))
 {
   int level;
 

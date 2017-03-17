@@ -4,18 +4,23 @@
  */
 
 #ifdef TORONTO
-#include <stdio.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
+#include <string_checked.h>
+#include <stdchecked.h>
 #define chatting printf
 #define PLAIN
 #endif
 
 typedef struct tree {
     int		val;
-    struct tree *left, *right;
-} tree_t;
+    ptr<struct tree> left;
+    ptr<struct tree> right;
+};
 
-extern tree_t *TreeAlloc (int level, int lo, int hi);
-int TreeAdd (tree_t *t);
+typedef ptr<struct tree> Tree;
+extern Tree TreeAlloc(int level, int lo, int hi);
+int TreeAdd (Tree t);
 
 
 

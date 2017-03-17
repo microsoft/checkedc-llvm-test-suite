@@ -21,7 +21,7 @@
 extern int NumNodes;
 #endif
 
-int dealwithargs(int argc, char *argv[]);
+int dealwithargs(int argc, char *argv[] : itype(array_ptr<char*>));
 
 typedef struct {
     long 	level;
@@ -29,7 +29,7 @@ typedef struct {
 
 int main (int argc, char *argv[])
 {
-    tree_t	*root;
+    Tree root = NULL;
     int level,result;
 
 #ifdef FUTURES
@@ -97,7 +97,7 @@ int main (int argc, char *argv[])
 
 /* TreeAdd:
  */
-int TreeAdd (tree_t *t)
+int TreeAdd (Tree t)
 {
   if (t == NULL)  {
     return 0;
@@ -124,7 +124,7 @@ int TreeAdd (tree_t *t)
 #else
     int leftval;
     int rightval;
-    tree_t *tleft, *tright;
+    Tree tleft = NULL, tright = NULL;
     int value;
 
     tleft = t->left;            /* <---- 57% load penalty */
