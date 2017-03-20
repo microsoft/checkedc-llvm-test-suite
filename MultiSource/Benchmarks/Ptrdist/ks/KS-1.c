@@ -8,66 +8,80 @@
  *	date:		Thursday, February 25, 1993
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
+#include <string_checked.h>
 #include <assert.h>
 
 #include "KS.h"
 
-NetPtr modules[G_SZ];		/* all modules -> nets */
+// CHECKEDC : checked array type
+NetPtr modules _Checked [G_SZ];		/* all modules -> nets */
 unsigned long numModules;
 
-ModulePtr nets[G_SZ];	     	/* all nets -> modules */
+ModulePtr nets _Checked [G_SZ];	     	/* all nets -> modules */
 unsigned long numNets;
 
 ModuleList groupA, groupB;			/* current A, B */
 ModuleList swapToA, swapToB;			/* swapped from A,B, ordered */
-float GP[G_SZ];			/* GPs, ordered */
+float GP _Checked [G_SZ];			/* GPs, ordered */
 
-Groups moduleToGroup[G_SZ];	/* current inverse mapping */
-float D[G_SZ];			/* module costs */
-float cost[G_SZ];			/* net costs */
+Groups moduleToGroup _Checked [G_SZ];	/* current inverse mapping */
+float D _Checked [G_SZ];			/* module costs */
+float cost _Checked [G_SZ];			/* net costs */
 
 
 /* read the netlist into the nets[] structure */
 void
-ReadNetList(char *fname)
+ReadNetList(char *fname : itype(_Ptr<char>))
 {
-    FILE *inFile;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    _Ptr<FILE> inFile = 0;
     char line[BUF_LEN];
     char *tok;
     unsigned long net, dest;
-    ModulePtr node, prev, head;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModulePtr node = 0, prev = 0, head = 0;
 
     TRY(inFile = fopen(fname, "r"),
 	inFile != NULL, "ReadData",
 	"unable to open input file [%s]", inFile, 0, 0,
 	exit(1));
 
-    TRY(fgets(line, BUF_LEN, inFile),
+    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
+    // related issue#143
+    TRY(fgets(line, BUF_LEN, (FILE*)inFile),
 	sscanf(line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
 	"unable to parse header in file [%s]", inFile, 0, 0,
 	exit(1));
 
     for (net = 0; net < numNets; net++) {
-	fgets(line, BUF_LEN, inFile);
+    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
+    // related issue#143
+	fgets(line, BUF_LEN, (FILE*)inFile);
 	
 	/* net connections for "dest" */
 	dest = atol(strtok(line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
-	TRY(head = prev = (Module *)malloc(sizeof(Module)),
+    // CHECKEDC : allocated pointer non-null check can be removed
+    // since compiler insert dynamic non-null check before dereference of _Ptr pointer type
+    // static checking is unnecessary with checkedc extension
+	TRY(head = prev = malloc(sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
+    // CHECKEDC : _Ptr pointer dereference (non-null check)
+    // dynamic_check(prev != NULL)
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
-	    TRY(node = (Module *)malloc(sizeof(Module)),
+	    TRY(node = malloc(sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
 		exit(1));
+        // CHECKEDC : _Ptr pointer dereference (non-null check)
+        // dynamic_check(node != NULL)
 	    (*node).module = atol(tok)-1;
 	    (*node).next = NULL;
 	    (*prev).next = node;
@@ -82,18 +96,33 @@ void
 NetsToModules(void)
 {
     unsigned long net, mod;
-    ModulePtr modNode;
-    NetPtr netNode;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModulePtr modNode = 0;
+    NetPtr netNode = 0;
 
+    // CHECKEDC : programmer-inserted dynamic_check
+    // dynamic_check(numModules < G_SZ)
     for (mod = 0; mod<numModules; mod++)
+        // CHECKEDC : checkedc array type, arrary subscript
+        // dynamic_check(mod >= 0 && mod < G_SZ)
+        // if (numModules < G_SZ), then compiler can remove redundant bounds check
+        // new facts can be inserted by programmer via dynamic_check built-in method
 	modules[mod] = NULL;
 
+    // CHECKEDC : programmer-inserted dynamic check
+    // dynamic_check(numNets < G_SZ)
     for (net=0; net<numNets; net++) {
+        // CHECKEDC : checkedc array type, array subscript
+        // dynamic_check(net >= 0 && net < G_SZ)
+        // programmer-inserted dynamic_check can remove unnecessary bounds check
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(netNode = (Net *)malloc(sizeof(Net)),
+	    TRY(netNode = malloc(sizeof(Net)),
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
+        // CHECKEDC : pointer dereference, memory read
+        // dynamic_check(netNode != NULL)
+        // : above non-null checks can be replaced with CheckedC pointer type & dynamic_check
 	    (*netNode).net = net;
 	    (*netNode).next = modules[(*modNode).module];
 	    modules[(*modNode).module] = netNode;
@@ -112,8 +141,12 @@ ComputeNetCosts(void)
 #endif /* WEIGHTED */
     unsigned long i;
 
+    // CHECKEDC : programmer-inserted dynamic_check can reduce performance overhead
+    // dynamic_check(numNets < G_SZ)
     for (i=0; i<numNets; i++) {
 #ifndef WEIGHTED
+        // CHECKEDC : checkedc array type, compiler inserts runtime bounds check
+        // dynamic_check(i >= 0 && i < G_SZ)
 	cost[i] = 1.0;
 #else
 	count = 0;
@@ -130,19 +163,28 @@ void
 InitLists(void)
 {
     unsigned long p;
-    ModuleRecPtr mr;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModuleRecPtr mr = 0;
 
     groupA.head = groupA.tail = NULL;
     groupB.head = groupB.tail = NULL;
 
     /* for all modules */
+    // CHECKEDC
+    // dynamic_check(numModules < G_SZ)
+    // programmer-inserted dynamic_check introduce a new fact
+    // Those facts can help the compiler to remove unnecessary runtime bounds check
     for (p = 0; p<numModules/2; p++) {
 
 	/* build the group A module list */
-	TRY(mr = (ModuleRec *)malloc(sizeof(ModuleRec)),
+        // CHECKEDC : checkedc pointer type non-null check at dereference
+        // dynamic_check(mr != NULL)
+	TRY(mr = malloc(sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
+    // CHECKEDC : _Ptr dereference (non-null check)
+    // dynamic_check(mr != NULL)
 	(*mr).module = p;
 	if (groupA.head == NULL) {
 	    /* first item */
@@ -155,13 +197,20 @@ InitLists(void)
 	    (*groupA.tail).next = mr;
 	    groupA.tail = mr;
 	}
+    // CHECKEDC : checkedc array type
+    // dynamic_check(p >= 0 && p < G_SZ)
+    // To remove useless dynamic_check, insert dynamic_check outside for-loop
+    // programmer-inserted dynamic_check can reduce performance overhead of runtime bounds check
 	moduleToGroup[p] = GroupA;
 
 	/* build the group B module list */
-	TRY(mr = (ModuleRec *)malloc(sizeof(ModuleRec)),
+    // CHECKEDC : _Ptr dereference (non-null check)
+	TRY(mr = malloc(sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
+    // CHECKEDC : dereference
+    // dynamic_check(mr != NULL)
 	(*mr).module = (numModules/2) + p;
 	if (groupB.head == NULL) {
 	    /* first item */
@@ -174,6 +223,8 @@ InitLists(void)
 	    (*groupB.tail).next = mr;
 	    groupB.tail = mr;
 	}
+    // CHECKEDC : checkedc array type
+    // dynamic_check(((numMouldes/2)+p) >= 0 && ((numModules/2)+p) < G_SZ)
 	moduleToGroup[(numModules/2) + p] = GroupB;
     }
 
@@ -189,20 +240,29 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 {
 #ifdef KS_MODE
 
-    NetPtr netNode;
-    ModulePtr modNode;
-    ModuleRecPtr groupNode;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    NetPtr netNode = 0;
+    ModulePtr modNode = 0;
+    ModuleRecPtr groupNode = 0;
     unsigned long numInG, numInNet;
-    ModulePtr oneInG;
+    ModulePtr oneInG = 0;
 
     /* for all modules in group */
+    // CHECKEDC : dereference (non-null check)
+    // dynamic_check(group != NULL && groupNode != NULL)
     for (groupNode = (*group).head;
 	 groupNode != NULL;
 	 groupNode = (*groupNode).next) {
 
+        // CHECKEDC : _Ptr dereference (non-null check)
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check(groupNode != NULL)
+        // dynamic_check(0 <= (*groupNode).module < G_SZ)
 	assert(moduleToGroup[(*groupNode).module] == myGroup);
 
 	/* for all nets on this module, check if groupNode move unifies net */
+    // CHECKEDC : dereference (non-null check) && checked array type (in-bounds check)
+    // reasoning facts can remove unnecessary bounds check
 	for (netNode = modules[(*groupNode).module];
 	     netNode != NULL;
 	     netNode = (*netNode).next) {
@@ -211,6 +271,8 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 	    numInG = numInNet = 0;
 	    oneInG = NULL;
 	    /* for all modules on this net */
+        // CHECKEDC : non-null check before pointer dereference
+        // dynamic_check(netNode != NULL)
 	    for (modNode = nets[(*netNode).net];
 		 modNode != NULL;
 		 modNode = (*modNode).next) {
@@ -234,11 +296,15 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 
     float I, E;
 
-    NetPtr netNode;
-    ModulePtr modNode;
-    ModuleRecPtr groupNode;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    NetPtr netNode = 0;
+    ModulePtr modNode = 0;
+    ModuleRecPtr groupNode = 0;
 
     /* for all modules in group */
+    // CHECKEDC : _Ptr dereference (non-null check)
+    // dynamic_check(group != NULL && groupNode != NULL)
+    // dynamic_check(0 <= (*groupNode).module < G_SZ)
     for (groupNode = (*group).head;
 	 groupNode != NULL;
 	 groupNode = (*groupNode).next) {
@@ -249,18 +315,32 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 	I = E = 0.0;
 
 	/* for all nets on this module */
+    // CHECKEDC : dereference
+    // dynamic_check(groupNode != NULL)
+    // dynamic_check(0 <= (*groupNode).module < G_SZ)
+    // reaonsing facts can remove unnecessary bounds check
 	for (netNode = modules[(*groupNode).module];
 	     netNode != NULL;
 	     netNode = (*netNode).next) {
 	    
 	    /* for all modules on this net */
+        // CHECKEDC : dereference (non-null check)
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check(netNode != NULL)
+        // dynamic_check(0 <= (*netNode).net < G_SZ)
 	    for (modNode = nets[(*netNode).net];
 		 modNode != NULL;
 		 modNode = (*modNode).next) {
 
 		/* only check nodes other than self, and not swapped */
+            // CHECKEDC : dereference (non-null check), checked array type (in-bounds check)
+            // dynamic_check(modNode != NULL && groupNode != NULL)
+            // dynamic_check(0 <= (*modNode).module < G_SZ)
 		if (((*modNode).module != (*groupNode).module) &&
 		    (moduleToGroup[(*modNode).module] < SwappedToA)) {
+            // CHECKEDC : checked array type (in-bounds check)
+            // dynamic_check(0 <= (*netNode).net < G_SZ)
+            // reasoning facts remove redundant bounds check
 		    if (moduleToGroup[(*modNode).module] == myGroup)
 			I = I + cost[(*netNode).net]; /* internal */
 		    else
@@ -268,6 +348,9 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 		}
 	    }
 	}
+    // CHECKEDC : checkedc array type, in-bounds check & non-null check
+    // dynamic_check(groupNode != NULL)
+    // dynamic_check((*groupNode).module >= 0 && (*groupNode).module < G_SZ)
 	D[(*groupNode).module] = E - I;
     }
 

@@ -279,7 +279,7 @@ void Fatal(char *pchMsg, unsigned u) {
  * byte streams are concatenated, and terminated with a 0.
  */
 
-void ReadDict(_Ptr<char> pchFile) {
+void ReadDict(char *pchFile : itype(_Ptr<char>)) {
     _Ptr<FILE> fp = 0;
     // CHECKEDC : automatic checkedc pointer value initializer
     unsigned cWords = 0;
@@ -311,19 +311,19 @@ void ReadDict(_Ptr<char> pchFile) {
     if(pchDictionary == NULL)
 	Fatal("Unable to allocate memory for dictionary\n", 0);
 
-    if ((fp = fopen((const char*)pchFile, "r")) == NULL)
+    if ((fp = fopen(pchFile, "r")) == NULL)
 	Fatal("Cannot open dictionary\n", 0);
 
     // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
     // TODO : after handling issue#143, commit
-    while (!feof((FILE*)fp)) {
+    while (!feof(fp)) {
         // CHECKEDC : pointer arithmetic (non-null check only)
         // dynamic_check(pchBase != NULL)
         pch = pchBase+2;                /* reserve for length */
         cLetters = 0;
         // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
         // TODO : after handling issue#143, commit
-        while ((ch = fgetc((FILE*)fp)) != '\n' && ch != EOF) {
+        while ((ch = fgetc(fp)) != '\n' && ch != EOF) {
             if (isalpha(ch)) cLetters++;
             // CHECKEDC : pointer arithmetic(non-null check only) & dereference(in-bounds check)
             // dynamic_check(pch != NULL && (pch >= buffer && pch < (buffer+ulLen)))
@@ -343,7 +343,7 @@ void ReadDict(_Ptr<char> pchFile) {
     }
     // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
     // TODO : after handling issue#143, commit
-    fclose((FILE*)fp);
+    fclose(fp);
 
     // CHECKEDC : pointer arithmetic(non-null check only) & dereference (in-bounds check)
     // dynamic_check(pchBase != NULL)
@@ -369,9 +369,9 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
 
     // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
     // rewrite bzero with memset to use bounds-safe interface
-    memset(alPhrase, 0, sizeof(Letter)*ALPHABET);
-    memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
-    memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
+    memset((void*)alPhrase, 0, sizeof(Letter)*ALPHABET);
+    memset((void*)aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
+    memset((void*)aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
 /*
     Zero(alPhrase);
     Zero(aqMainMask);
@@ -496,7 +496,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
 
     // CHECKEDC : bounds-safe interface is required
     // rewrite bzero with memset to use bounds-safe interface
-    memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
+    memset((void*)cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
     /* Zero(cchFrequency); */
 
     /* Build frequency table */
@@ -530,7 +530,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     pw = NextWord();
     // CHECKEDC : bounds-safe interface is required
     // rewrite bzero with memset to use bounds-safe interface
-    memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
+    memset((void*)pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
     /* Zero(pw->aqMask); */
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;

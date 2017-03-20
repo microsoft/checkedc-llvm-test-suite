@@ -67,7 +67,7 @@ _Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
 int debug = 1;
 
 int
-main(int argc, _Array_ptr<_Ptr<char>> argv )
+main(int argc, _Array_ptr<const char*> argv : count(argc) )
 {
   int            nVertex;
   int            nEdge;
@@ -79,13 +79,13 @@ main(int argc, _Array_ptr<_Ptr<char>> argv )
 
   if(argc > 1)
   {
-    nVertex = atoi((const char*)argv[1]);
+    nVertex = atoi(argv[1]);
     if(argc > 2)
     {
-      nEdge = atoi((const char*)argv[2]);
+      nEdge = atoi(argv[2]);
       if(argc > 3)
       {
-        srandom(atoi((const char*)argv[3]));
+        srandom(atoi(argv[3]));
       }
     }
   }
