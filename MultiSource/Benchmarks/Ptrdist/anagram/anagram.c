@@ -128,9 +128,6 @@
  * prototypes, for those of you who have K&R compilers.
  */
 
-// CHECKEDC : To use bounds-safe interface, use header files in checkedc repo
-// checked header files are copied from checkedc repo to checkedc-llvm-test-suite/include path
-// To include checkedc header file, make include directory within checkedc-llvm-test-suite
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include <string_checked.h>
@@ -314,15 +311,11 @@ void ReadDict(char *pchFile : itype(_Ptr<char>)) {
     if ((fp = fopen(pchFile, "r")) == NULL)
 	Fatal("Cannot open dictionary\n", 0);
 
-    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
-    // TODO : after handling issue#143, commit
     while (!feof(fp)) {
         // CHECKEDC : pointer arithmetic (non-null check only)
         // dynamic_check(pchBase != NULL)
         pch = pchBase+2;                /* reserve for length */
         cLetters = 0;
-        // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
-        // TODO : after handling issue#143, commit
         while ((ch = fgetc(fp)) != '\n' && ch != EOF) {
             if (isalpha(ch)) cLetters++;
             // CHECKEDC : pointer arithmetic(non-null check only) & dereference(in-bounds check)
@@ -341,8 +334,6 @@ void ReadDict(char *pchFile : itype(_Ptr<char>)) {
         pchBase = pch;
         cWords++;
     }
-    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
-    // TODO : after handling issue#143, commit
     fclose(fp);
 
     // CHECKEDC : pointer arithmetic(non-null check only) & dereference (in-bounds check)

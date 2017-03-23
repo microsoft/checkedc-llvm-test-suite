@@ -48,17 +48,13 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	"unable to open input file [%s]", inFile, 0, 0,
 	exit(1));
 
-    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
-    // related issue#143
-    TRY(fgets(line, BUF_LEN, (FILE*)inFile),
+    TRY(fgets(line, BUF_LEN, inFile),
 	sscanf(line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
 	"unable to parse header in file [%s]", inFile, 0, 0,
 	exit(1));
 
     for (net = 0; net < numNets; net++) {
-    // CHECKEDC : bounds-safe interface is required (implemented, stdio_checked.h)
-    // related issue#143
-	fgets(line, BUF_LEN, (FILE*)inFile);
+	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
 	dest = atol(strtok(line, " \t\n"))-1;

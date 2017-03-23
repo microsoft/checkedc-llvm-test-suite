@@ -8,7 +8,6 @@
  *	date:		Thursday, February 25, 1993
  */
 
-// CHECKEDC : bounds-safe interface, checked header inclusion
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include <string_checked.h>
