@@ -11,9 +11,9 @@ int mylog(int num)
   
   while(k<num) { k*=2; j++; }
   return j;
-} 
+}
 
-int dealwithargs(int argc, char *argv[] : itype(array_ptr<char*>))
+int dealwithargs(int argc, array_ptr<char *> argv : count(argc))
 {
   int num;
 

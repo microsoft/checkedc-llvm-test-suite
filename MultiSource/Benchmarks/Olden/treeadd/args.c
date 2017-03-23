@@ -13,7 +13,7 @@
 extern int __NumNodes;
 #endif
 
-extern int atoi(const char * : itype(ptr<const char>));
+extern int atoi(const char *);
 
 #ifndef TORONTO
 void filestuff()
@@ -25,7 +25,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, char *argv[] : itype(array_ptr<char*>))
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int level;
 

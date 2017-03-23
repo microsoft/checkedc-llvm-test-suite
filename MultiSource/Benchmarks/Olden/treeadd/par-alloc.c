@@ -10,12 +10,12 @@
 
 #include "tree.h"
 
-Tree TreeAlloc (int level, int lo, int proc) {
+ptr<tree_t> TreeAlloc (int level, int lo, int proc) {
   if (level == 0)
     return NULL;
   else {
-    Tree new = NULL, right = NULL, left = NULL;
-    new = (Tree) malloc(sizeof(*new));
+    ptr<tree_t> new = NULL, right = NULL, left = NULL;
+    new = (ptr<tree_t>) malloc(sizeof(ptr<tree_t>));
     left = TreeAlloc(level -1, lo+proc/2, proc/2);
     right=TreeAlloc(level-1,lo,proc/2);
     new->val = 1;

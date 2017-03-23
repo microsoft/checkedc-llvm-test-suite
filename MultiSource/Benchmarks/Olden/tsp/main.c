@@ -33,7 +33,7 @@ void print_list(Tree t)
     }
 }
 
-int main(int argc,char *argv[])
+int main(int argc,array_ptr<char*> argv : count(argc))
 {
   Tree t = NULL;
   int num;

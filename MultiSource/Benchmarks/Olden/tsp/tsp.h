@@ -1,9 +1,9 @@
-#ifdef TORONTO
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include <string_checked.h>
 #include <stdchecked.h>
 
+#ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      malloc(sz)
 #define chatting          printf  
@@ -12,8 +12,8 @@ extern int NumNodes, NDim;
 
 extern int flag;
 
-int atoi(const char * : itype(ptr<const char>));
-int dealwithargs(int argc, char ** argv : itype(array_ptr<char*>));
+int atoi(const char *);
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
