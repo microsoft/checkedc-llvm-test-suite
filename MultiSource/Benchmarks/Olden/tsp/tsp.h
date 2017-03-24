@@ -1,3 +1,8 @@
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
+#include <string_checked.h>
+#include <stdchecked.h>
+
 #ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      malloc(sz)
@@ -8,22 +13,26 @@ extern int NumNodes, NDim;
 extern int flag;
 
 int atoi(const char *);
-int dealwithargs(int argc, char *argv[]);
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
-  
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 typedef struct tree {
   int sz;
   double x,y;
-  struct tree *left, *right;
+  ptr<struct tree> left;
+  ptr<struct tree> right;
 #ifdef TORONTO
-  struct tree *next, *prev;
+  ptr<struct tree> next;
+  ptr<struct tree> prev;
 #else
-  struct tree *next {95}, *prev {95};
+  ptr<struct tree> next {95};
+  ptr<struct tree> prev {95};
 #endif
 
-} *Tree;
+};
+
+typedef ptr<struct tree> Tree;
 
 #ifdef ORDER
 
