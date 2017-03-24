@@ -12,8 +12,6 @@
  *
  */
 
-void *malloc(unsigned Size);
-
 typedef struct demand {
   double P;
   double Q;
@@ -47,47 +45,59 @@ typedef struct demand {
 #define H_EPSILON 0.000001
 #define ROOT_EPSILON 0.00001
 
-typedef struct root {
+struct root {
   Demand D;
   double theta_R; 
   double theta_I; 
   Demand last;
   double last_theta_R; 
   double last_theta_I;
-  struct lateral *feeders[NUM_FEEDERS];
-} *Root;  /* sizeof(struct root) = 108 bytes */
+  // CHECKEDC : checked array type of _Ptr type
+  _Ptr<struct lateral> feeders _Checked[NUM_FEEDERS];
+};  /* sizeof(struct root) = 108 bytes */
 
-typedef struct lateral {
+typedef _Ptr<struct root> Root;
+
+struct lateral {
   Demand D;
   double alpha;
   double beta;
   double R;
   double X;
-  struct lateral *next_lateral;
-  struct branch *branch;
-} *Lateral; /* sizeof(struct lateral) = 64 bytes */
+  // CHECKEDC : checked pointer
+  _Ptr<struct lateral> next_lateral;
+  _Ptr<struct branch> branch;
+}; /* sizeof(struct lateral) = 64 bytes */
 
-typedef struct branch {
+typedef _Ptr<struct lateral> Lateral;
+
+struct branch {
   Demand D;
   double alpha;
   double beta;
   double R;
   double X;
-  struct branch *next_branch;
-  struct leaf *leaves[LEAVES_PER_BRANCH];
-} *Branch; /* sizeof(struct branch) = 92 bytes */
+  // CHECKEDC
+  _Ptr<struct branch> next_branch;
+  _Ptr<struct leaf> leaves _Checked[LEAVES_PER_BRANCH];
+}; /* sizeof(struct branch) = 92 bytes */
 
-typedef struct leaf {
+typedef _Ptr<struct branch> Branch;
+
+struct leaf {
   Demand D;
   double pi_R;
   double pi_I;
-} *Leaf;  /* sizeof(struct leaf) = 32 bytes */
+};  /* sizeof(struct leaf) = 32 bytes */
+
+typedef _Ptr<struct leaf> Leaf;
 
 /* Prototypes */
 Root build_tree(void);
 Lateral build_lateral(int i, int num);
 Branch build_branch(int i, int j, int num);
-Leaf build_leaf();
+// CHECKEDC : function without a prototype cannot have checked return type
+Leaf build_leaf(void);
 
 void Compute_Tree(Root r);
 Demand Compute_Lateral(Lateral l, double theta_R, double theta_I,
