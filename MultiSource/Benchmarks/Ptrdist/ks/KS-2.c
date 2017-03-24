@@ -8,9 +8,9 @@
  *	date:		Thursday, February 25, 1993
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
+#include <string_checked.h>
 #include <assert.h>
 
 #include "KS.h"
@@ -19,18 +19,26 @@
 float
 CAiBj(ModuleRecPtr mrA, ModuleRecPtr mrB)
 {
-    NetPtr netNode;
-    ModulePtr modNode;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    NetPtr netNode = 0;
+    ModulePtr modNode = 0;
     float gain = 0.0;
     float netCost;
     unsigned long module = (*mrB).module;
 
     /* is mrA connected to mrB? */
     /* mrA and mrB are both un-Swapped */
+    // CHECKEDC : checkedc array type, in-bounds check
+    // CHECKEDC : pointer dereference non-null check
+    // dynamic_check(mrA != NULL)
+    // dynamic_check((*mrA).module >= 0 && (*mrA).module < G_SZ)
     for (netNode = modules[(*mrA).module];
 	 netNode != NULL;
 	 netNode = (*netNode).next) {
 	netCost = cost[(*netNode).net];
+    // CHECKEDC : checkedc array type, in-bounds check
+    // dynamic_check(netNode != NULL)
+    // dynamic_check((*netNode).net >= 0 && (*netNode).net < G_SZ)
 	for (modNode = nets[(*netNode).net];
 	     modNode != NULL;
 	     modNode = (*modNode).next) {
@@ -47,6 +55,9 @@ void
 SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
 	 ModuleListPtr group, ModuleListPtr swapTo)
 {
+    // CHECKEDC : _Ptr type dereference (non-null check)
+    // dynamic_check(group != NULL)
+    // dynamic_check(max != NULL)
     if (maxPrev == NULL) {	/* found at head of list */
 	if ((*group).head == (*group).tail)	{ /* only one in the list */
 	    (*group).head = NULL;
@@ -66,6 +77,8 @@ SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
     }
 
     /* put max on the tail of swapTo */
+    // CHECKEDC : _Ptr type dereference (non-null check)
+    // dynamic_check(swapTo != NULL)
     if ((*swapTo).tail == NULL) {	/* empty */
 #if 0
 	(*swapTo).head = (*swapTo).tail = max;
@@ -74,6 +87,10 @@ SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
 	(*swapTo).head = max;
     }
     else { /* end of list */
+        // CHECKEDC : _Ptr type dereference (non-null check)
+        // dynamic_check((*swapTo).tail != NULL)
+        // reasoning facts ((*swapTo).tail != NULL) since else stmt
+        // reasoning facts can remove unnecessary runtime bounds check
 	(*(*swapTo).tail).next = max;
 	(*swapTo).tail = max;
     }
@@ -84,13 +101,24 @@ SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
 void
 UpdateDs(ModuleRecPtr max, Groups group)
 {
-    NetPtr net;
-    ModulePtr mod;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    NetPtr net = 0;
+    ModulePtr mod = 0;
 
     /* for all nets this is connected to */
+    // CHECKEDC : _Ptr type dereference (non-null check)
+    // CHECKEDC : checkedc array type (in-bounds check)
+    // dynamic_check(max != NULL)
+    // dynamic_check((*max).module >= 0 && (*max).module < G_SZ)
     for (net = modules[(*max).module]; net != NULL; net = (*net).next) {
 
 	/* for a modules this net is connected to */
+        // CHECKEDC : _Ptr type dereference (non-null check)
+        // CHECKEDC : checkedc array type (in-bounds check)
+        // dynamic_check(net != NULL)
+        // dynamic_check(mod != NULL)
+        // dynamic_check((*net).net >= 0 && (*net).net < G_SZ)
+        // dynamic_check((*mod).module >= 0 && (*mod).module < G_SZ)
 	for (mod = nets[(*net).net]; mod != NULL; mod = (*mod).next) {
 
 	    if (moduleToGroup[(*mod).module] < SwappedToA) {
@@ -107,20 +135,28 @@ UpdateDs(ModuleRecPtr max, Groups group)
 float
 FindMaxGpAndSwap()
 {
-    ModuleRecPtr mrA, mrPrevA, mrB, mrPrevB;
-    ModuleRecPtr maxA, maxPrevA, maxB, maxPrevB;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModuleRecPtr mrA = 0, mrPrevA = 0, mrB = 0, mrPrevB = 0;
+    ModuleRecPtr maxA = 0, maxPrevA = 0, maxB = 0, maxPrevB = 0;
     float gp, gpMax;
 
     gpMax = -9999999;
     maxA = maxPrevA = maxB = maxPrevB = NULL;
+    // CHECKEDC : dereference (non-null check)
+    // dynamic_check(mrA != NULL)
     for (mrA = groupA.head, mrPrevA = NULL;
 	 mrA != NULL;
 	 mrPrevA = mrA, mrA = (*mrA).next) {
 
+        // CHECKEDC : dereference (non-null check)
+        // dynamic_check(mrB != NULL)
 	for (mrB = groupB.head, mrPrevB = NULL;
 	     mrB != NULL;
 	     mrPrevB = mrB, mrB = (*mrB).next) {
 
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check((*mrA).module >= 0 && (*mrA).module < G_SZ)
+        // dynamic_check((*mrB).module >= 0 && (*mrB).module < G_SZ)
 #ifdef KS_MODE
 	    gp = D[(*mrA).module] + D[(*mrB).module] - CAiBj(mrA, mrB);
 #else /* !KS_MODE */
@@ -142,6 +178,9 @@ FindMaxGpAndSwap()
 
 
     /* update the inverse mapping, these two node are now gone */
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check((*maxA).module >= 0 && (*maxA).module < G_SZ)
+    // dynamic_check((*maxB).module >= 0 && (*maxB).module < G_SZ)
     assert(moduleToGroup[(*maxA).module] == GroupA);
     moduleToGroup[(*maxA).module] = SwappedToB;
 
@@ -159,7 +198,7 @@ FindMaxGpAndSwap()
 
 /* find the best point, during the last numModules/2 swaps */
 float
-FindGMax(unsigned long * iMax)
+FindGMax(_Ptr<unsigned long> iMax)
 {
     int i;
     float gMax;
@@ -180,8 +219,11 @@ void
 SwapSubsetAndReset(unsigned long iMax)
 {
     unsigned long i;
-    ModuleRecPtr mrPrevA, mrA, mrPrevB, mrB;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModuleRecPtr mrPrevA = 0, mrA = 0, mrPrevB = 0, mrB = 0;
 
+    // CHECKEDC : non-null check for _Ptr checkedc pointer type
+    // dynamic_check(mrA != NULL && mrB != NULL)
     /* re-splice the lists @ iMax pointers into the lists */
     for (mrPrevA = NULL, mrA = swapToA.head,
 	 mrPrevB = NULL, mrB = swapToB.head, i=0;
@@ -192,6 +234,9 @@ SwapSubsetAndReset(unsigned long iMax)
 
     /* must at least select one to swap, case where gMax is first */
     assert(mrPrevA != NULL && mrPrevB != NULL);
+    // CHECKEDC : programmer-inserted dynamic_check
+    // introduce new facts which can be used in later analysis
+    // dynamic_check(mrPrevA != NULL && mrPrevB != NULL)
 
     if (mrA == NULL) {	
 	/* swap entire list */
@@ -200,6 +245,9 @@ SwapSubsetAndReset(unsigned long iMax)
     }
     else {
 	/* splice the lists */
+        // CHECKEDC : _Ptr dereference (non-null check)
+        // dynamic_check(mrPrevA != NULL && mrPrevB != NULL)
+        // reasoning facts can optimize. compiler can remove unnecessary bounds check
 	(*mrPrevA).next = mrB;
 	groupA.head = swapToA.head;
 	groupA.tail = swapToB.tail;
@@ -210,6 +258,9 @@ SwapSubsetAndReset(unsigned long iMax)
     }
 
     /* reset the inverse mappings */
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check(0 <= (*mrA).module < G_SZ)
+    // dynamic_check(0 <= (*mrB).module < G_SZ)
     for (mrA = groupA.head; mrA != NULL; mrA = (*mrA).next)
 	moduleToGroup[(*mrA).module] = GroupA;
     for (mrB = groupB.head; mrB != NULL; mrB = (*mrB).next)
@@ -225,16 +276,17 @@ struct {
     unsigned long total;
     unsigned long edgesCut;
     unsigned long netsCut;
-} netStats[256];
+} netStats _Checked [256];
 long maxStat;
 
 /* print the current groups, and their edge and net cut counts */
 void
 PrintResults(int verbose)
 {
-    ModuleRecPtr mr;
-    NetPtr nn;
-    ModulePtr mn;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModuleRecPtr mr = 0;
+    NetPtr nn = 0;
+    ModulePtr mn = 0;
     unsigned long cuts;
     Groups grp;
     int i, netSz;
@@ -243,6 +295,9 @@ PrintResults(int verbose)
 
     maxStat = -1;
     for (i=0; i<256; i++)
+        // CHECKEDC : checkedc array type, in-bounds check
+        // dynamic_check(i >= 0 && i < 256)
+        // compiler can remove unnecessary bounds check
 	netStats[i].total = netStats[i].edgesCut = netStats[i].netsCut = 0; 
 
     /* partitions */
@@ -262,12 +317,19 @@ PrintResults(int verbose)
     cuts = 0;
     for (mr = groupA.head; mr != NULL; mr = (*mr).next) {
 
+        // CHECKEDC
+        // dynamic_check(mr != NULL)
+        // dynamic_check((*mr).module < G_SZ)
 	assert(moduleToGroup[(*mr).module] == GroupA);
 
 	/* for all nets on this module */
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check((*mr).module < G_SZ)
 	for (nn = modules[(*mr).module]; nn != NULL; nn = (*nn).next) {
 	    
 	    netSz = 0;
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check((*mr).net < G_SZ)
 	    for (mn = nets[(*nn).net]; mn != NULL; mn = (*mn).next)
 		netSz++;
 	    assert(netSz >= 2);
@@ -276,6 +338,9 @@ PrintResults(int verbose)
 	    for (mn = nets[(*nn).net]; mn != NULL; mn = (*mn).next) {
 
 		/* only check nodes other than self, and not swapped */
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check((*mr).module < G_SZ)
+        // dynamic_check((*mn).module < G_SZ)
 		if (moduleToGroup[(*mr).module] != moduleToGroup[(*mn).module]) {
 		    if (verbose)
 			fprintf(stdout, "Conn %3lu - %3lu cut.\n",
@@ -293,22 +358,37 @@ PrintResults(int verbose)
     for (i=0; i<numNets; i++) {
 
 	netSz = 0;
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check(0 <= i < G_SZ)
+    // dynamic_check(mn != NULL)
 	for (mn = nets[i]; mn != NULL; mn = (*mn).next)
 	    netSz++;
 	assert(netSz >= 2);
+    // CHECKEDC : in bounds check
+    // dynamic_check(0 <= netSz < 256)
 	netStats[netSz].total++;
 	if (netSz > maxStat)
 	    maxStat = netSz;
 
+    // CHECKEDC : non-null check && in-bounds check
+    // dynamic_check(i >= 0 && i < G_SZ)
+    // dynamic_check(nets[i] != NULL)
+    // dynamic_check(0 <= (*(nets[i])).module < G_SZ)
 	for (grp=moduleToGroup[(*(nets[i])).module],mn = (*(nets[i])).next;
 	     mn != NULL;
 	     mn = (*mn).next) {
 	    
 	    /* only check nodes other than self, and not swapped */
+        // CHECKEDC : _Ptr type (non-null check)
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check(mn != NULL)
+        // dynamic_check(0 <= (*mn).module < G_SZ)
 	    if (grp != moduleToGroup[(*mn).module]) {
 		if (verbose)
 		    fprintf(stdout, "Net %3lu cut.\n", i+1);
 		cuts++;
+        // CHECKEDC : checked array type (in-bounds check)
+        // dynamic_check(0 <= netSz < G_SZ)
 		netStats[netSz].netsCut++;
 		break;
 	    }
@@ -316,7 +396,12 @@ PrintResults(int verbose)
     }
     fprintf(stdout, "Total net cuts  = %lu\n", cuts);
 
+    // CHECKEDC : programmer-inserted dynamic_checks can enhance runtime overhead
+    // dynamic_check(maxStat < 256)
     for (i=2; i<=maxStat; i++)
+        // CHECKEDC
+        // dynamic_check(0 <= i < 256)
+        // compile can remove unnecessary bounds check
 	fprintf(stdout,
 		"sz:%5lu     total:%5lu     edgesCut:%5lu     netsCuts:%5lu\n",
 		i, netStats[i].total,
@@ -328,7 +413,8 @@ main(int argc, char **argv)
 {
     unsigned long p, iMax;
     float gMax, lastGMax;
-    ModuleRecPtr mr;
+    // CHECKEDC : automatic checkedc pointer variable initializer
+    ModuleRecPtr mr = 0;
     ;
 
     /* parse argument */
@@ -368,6 +454,8 @@ main(int argc, char **argv)
 #endif /* KS_MODE */
 
 	    /* find the max swap opportunity, and swap */
+        // CHECKEDC : checkedc array type (in-bounds check)
+        // dynamic_check(p >= 0 && p < G_SZ)
 	    GP[p] = FindMaxGpAndSwap();
 
 	}
@@ -390,9 +478,13 @@ main(int argc, char **argv)
 
     /* all swaps rejected */
     groupA = swapToB;
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check(0 <= (*mr).module < G_SZ)
     for (mr = groupA.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupA;
     groupB = swapToA;
+    // CHECKEDC : checked array type (in-bounds check)
+    // dynamic_check(0 <= (*mr).module < G_SZ)
     for (mr = groupB.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupB;
 

@@ -43,47 +43,50 @@
  */
 /* modular view */
 typedef struct _Net {
-    struct _Net * next;
+    // CHECKEDC : linked list having next pointer
+    _Ptr<struct _Net> next;
     unsigned long net;
 } Net;
-typedef Net * NetPtr;
+typedef _Ptr<Net> NetPtr;
 
-extern NetPtr modules[G_SZ];	/* all modules -> nets */
+extern NetPtr modules _Checked [G_SZ];	/* all modules -> nets */
 extern unsigned long numModules;
 
 /* net-ular view */
 typedef struct _Module {
-    struct _Module * next;
+    // CHECKEDC : linked list having next pointer
+    _Ptr<struct _Module> next;
     unsigned long module;
 } Module;
-typedef Module * ModulePtr;
+typedef _Ptr<Module> ModulePtr;
 
-extern ModulePtr nets[G_SZ];	/* all nets -> modules */
+extern ModulePtr nets _Checked [G_SZ];	/* all nets -> modules */
 extern unsigned long numNets;
 
 typedef struct _ModuleRec {
-    struct _ModuleRec * next;
+    // CHECKEDC : linked list having next pointer
+    _Ptr<struct _ModuleRec> next;
     unsigned long module;
 } ModuleRec;
-typedef ModuleRec * ModuleRecPtr;
+typedef _Ptr<ModuleRec> ModuleRecPtr;
 
 typedef struct _ModuleList {
     ModuleRecPtr head;
     ModuleRecPtr tail;
 } ModuleList;
-typedef ModuleList * ModuleListPtr;
+typedef _Ptr<ModuleList> ModuleListPtr;
 
 extern ModuleList groupA, groupB;		/* current A, B */
 extern ModuleList swapToA, swapToB;		/* swapped from A,B, ordered */
-extern float GP[G_SZ];		/* GPs, ordered */
+extern float GP _Checked [G_SZ];		/* GPs, ordered */
 
 typedef enum { GroupA, GroupB, SwappedToA, SwappedToB } Groups;
 
-extern Groups moduleToGroup[G_SZ];	/* current inverse mapping */
-extern float D[G_SZ];		/* module costs */
-extern float cost[G_SZ];		/* net costs */
+extern Groups moduleToGroup _Checked [G_SZ];	/* current inverse mapping */
+extern float D _Checked [G_SZ];		/* module costs */
+extern float cost _Checked [G_SZ];		/* net costs */
 
-void ReadNetList(char *fname);
+void ReadNetList(char *fname : itype(_Ptr<char>));
 void NetsToModules(void);
 void ComputeNetCosts(void);
 void InitLists(void);

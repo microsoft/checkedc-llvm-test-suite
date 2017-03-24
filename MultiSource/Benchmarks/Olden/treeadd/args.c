@@ -5,6 +5,8 @@
 #include <fcntl.h>
 #endif
 
+#include "tree.h"
+
 #ifdef TORONTO
  int NumNodes;
 #else
@@ -23,7 +25,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, char *argv[])
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int level;
 
