@@ -26,16 +26,17 @@ static double Q=1.0;
 void optimize_node (double pi_R, double pi_I);
 double find_g ();
 double find_h ();
-double find_gradient_f (double pi_R, double pi_I, double* gradient);
-double find_gradient_g (double* gradient);
-double find_gradient_h (double* gradient);
-void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad);
-double make_orthogonal (double* v_mod, double* v_static);
+double find_gradient_f (double pi_R, double pi_I, _Array_ptr<double> gradient : count(2));
+double find_gradient_g (_Array_ptr<double> gradient : count(2));
+double find_gradient_h (_Array_ptr<double> gradient : count(2));
+void find_dd_grad_f (double pi_R, double pi_I, _Array_ptr<double> dd_grad : count(2));
+double make_orthogonal (_Array_ptr<double> v_mod : count(2), _Array_ptr<double> v_static : count(2));
 
 
 void Compute_Tree(Root r) {
   int i;
-  Lateral l;
+  // CHECKEDC : automatic checked pointer must have a initializer
+  Lateral l = 0;
   Demand a;
   Demand tmp;
   double theta_R,theta_I;
@@ -43,6 +44,10 @@ void Compute_Tree(Root r) {
   tmp.P = 0.0;
   tmp.Q = 0.0;
   for (i=0; i<NUM_FEEDERS; i++) {
+    // CHECKEDC : ptr checked pointer dereference && array_ptr array subscript
+    // dynamic_check (l != NULL);
+    // dynamic_check (i > = 0 && i < NUM_FEEDERS);
+    // : reasoning facts can remove redundant dynamic_check
     l = r->feeders[i];
     theta_R = r->theta_R;
     theta_I = r->theta_I;
@@ -60,12 +65,18 @@ Demand Compute_Lateral(Lateral l, double theta_R, double theta_I,
   Demand a2;
   double new_pi_R, new_pi_I;
   double a,b,c,root;
-  Lateral next;
-  Branch br;
+  // CHECKEDC : automatic checked pointer must have a initializer
+  Lateral next = 0;
+  Branch br = 0;
   
+  // CHECKEDC : l->X == (*l).X, pointer type dereference, non-null check
+  // dynamic_check (l != NULL);
   new_pi_R = pi_R + l->alpha*(theta_R+(theta_I*l->X)/l->R);
   new_pi_I = pi_I + l->beta*(theta_I+(theta_R*l->R)/l->X);
 
+  // CHECKEDC
+  // dynamic_check (l != NULL);
+  // : reasoning facts can remove away redundant dynamic_check
   next = l->next_lateral;
   if (next != NULL) 
     a1 = Compute_Lateral(next,theta_R,theta_I,new_pi_R,new_pi_I);
@@ -103,11 +114,14 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
   Demand a2,tmp;
   double new_pi_R, new_pi_I;
   double a,b,c,root;
-  Leaf l;
-  Branch next;
+  // CHECKEDC : automatic checked pointer must have a initializer
+  Leaf l = 0;
+  Branch next = 0;
   int i;
   Demand a1;
   
+  // CHECKEDC : br->X == (*br).X, pointer type dereference, non-null check
+  // dynamic_check (br != NULL);
   new_pi_R = pi_R + br->alpha*(theta_R+(theta_I*br->X)/br->R);
   new_pi_I = pi_I + br->beta*(theta_I+(theta_R*br->R)/br->X);
 
@@ -120,6 +134,9 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
   tmp.P = 0.0; tmp.Q = 0.0;
 
   for (i=0; i<LEAVES_PER_BRANCH; i++) {
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check (i >= 0 && i < LEAVERS_PER_BRANCH);
+    // : reasoning facts can remove away redundant dynamic_check
     l = br->leaves[i];
     a2 = Compute_Leaf(l,new_pi_R,new_pi_I);
     tmp.P += a2.P;
@@ -151,6 +168,8 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
 }
 
 Demand Compute_Leaf(Leaf l, double pi_R, double pi_I) {
+  // CHECKEDC : ptr type dereference, non-null check
+  // dynamic_check(l != NULL);
   P = l->D.P;
   Q = l->D.Q;
   
@@ -172,10 +191,10 @@ void optimize_node (double pi_R, double pi_I)
     double	    g;
     double	    h;
 
-    double	    grad_f[2];
-    double	    grad_g[2];
-    double	    grad_h[2];
-    double	    dd_grad_f[2];
+    double	    grad_f _Checked[2];
+    double	    grad_g _Checked[2];
+    double	    grad_h _Checked[2];
+    double	    dd_grad_f _Checked[2];
     double	    magnitude;
 
     int		    i;
@@ -188,6 +207,10 @@ void optimize_node (double pi_R, double pi_I)
 	if (fabs (h)>H_EPSILON) {
 	    magnitude=find_gradient_h (grad_h);
 	    total=h/magnitude;
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check ( 0 >= 0 && 0 < 2);
+      // dynamic_check ( 1 >= 0 && 1 < 2);
+      // : constant folding, compiler can remove away
 	    P-=total*grad_h[0];
 	    Q-=total*grad_h[1];
 	}
@@ -199,6 +222,10 @@ void optimize_node (double pi_R, double pi_I)
 	    find_gradient_h (grad_h);
 	    magnitude*=make_orthogonal (grad_g,grad_h);
 	    total=g/magnitude;
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check ( 0 >= 0 && 0 < 2);
+      // dynamic_check ( 1 >= 0 && 1 < 2);
+      // : constant folding, compiler can remove away
 	    P-=total*grad_g[0];
 	    Q-=total*grad_g[1];
 	}
@@ -208,6 +235,9 @@ void optimize_node (double pi_R, double pi_I)
 	find_dd_grad_f (pi_R,pi_I,dd_grad_f);
 	total=0.0;
 	for (i=0; i<2; i++)
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check (i >= 0 && i < 2);
+    // : reasoning facts can remove this
 	    total+=grad_f[i]*dd_grad_f[i];
 	magnitude/=fabs (total);
 	find_gradient_h (grad_h);
@@ -215,12 +245,19 @@ void optimize_node (double pi_R, double pi_I)
 	find_gradient_g (grad_g);
 	total=0.0;
 	for (i=0; i<2; i++)
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check (i >= 0 && i < 2);
+    // : reasoning facts can remove this
 	    total+=grad_f[i]*grad_g[i];
 	if (total>0) {
 	    max_dist=-find_g ()/total;
 	    if (magnitude>max_dist)
 		magnitude=max_dist;
 	}
+  // CHECKEDC : checked array type array subscript
+  // dynamic_check ( 0 >= 0 && 0 < 2);
+  // dynamic_check ( 1 >= 0 && 1 < 2);
+  // : constant folding, compiler can remove away
 	P+=magnitude*grad_f[0];
 	Q+=magnitude*grad_f[1];
 
@@ -244,55 +281,85 @@ double find_h ()
     return (P-5*Q);
 }
 
-double find_gradient_f (double pi_R, double pi_I, double* gradient)
+double find_gradient_f (double pi_R, double pi_I, _Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
 
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check ( 0 >= 0 && 0 < 2);
+    // dynamic_check ( 1 >= 0 && 1 < 2);
+    // : constant folding, compiler can remove away
     gradient[0]=1/(1+P)-pi_R;
     gradient[1]=1/(1+Q)-pi_I;
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	magnitude+=gradient[i]*gradient[i];
     magnitude=sqrt (magnitude);
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	gradient[i]/=magnitude;
 
     return magnitude;
 }
 
-double find_gradient_g (double* gradient)
+double find_gradient_g (_Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
 
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check ( 0 >= 0 && 0 < 2);
+    // dynamic_check ( 1 >= 0 && 1 < 2);
+    // : constant folding, compiler can remove away
     gradient[0]=2*P;
     gradient[1]=2*Q;
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	magnitude+=gradient[i]*gradient[i];
     magnitude=sqrt (magnitude);
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	gradient[i]/=magnitude;
 
     return magnitude;
 }
 
-double find_gradient_h (double* gradient)
+double find_gradient_h (_Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
 
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check ( 0 >= 0 && 0 < 2);
+    // dynamic_check ( 1 >= 0 && 1 < 2);
+    // : constant folding, compiler can remove away
     gradient[0]=1.0;
     gradient[1]=-5.0;
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	magnitude+=gradient[i]*gradient[i];
     magnitude=sqrt (magnitude);
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	gradient[i]/=magnitude;
 
     return magnitude;
 }
 
-void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad)
+void find_dd_grad_f (double pi_R, double pi_I, _Array_ptr<double> dd_grad : count(2))
 {
     double	    P_plus_1_inv=1/(P+1);
     double	    Q_plus_1_inv=1/(Q+1);
@@ -302,24 +369,37 @@ void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad)
     
     grad_mag=sqrt (P_grad_term*P_grad_term+Q_grad_term*Q_grad_term);
 
+    // CHECKEDC : checked array type array subscript
+    // dynamic_check ( 0 >= 0 && 0 < 2);
+    // dynamic_check ( 1 >= 0 && 1 < 2);
+    // : constant folding, compiler can remove away
     dd_grad[0]=-P_plus_1_inv*P_plus_1_inv*P_grad_term/grad_mag;
     dd_grad[1]=-Q_plus_1_inv*Q_plus_1_inv*Q_grad_term/grad_mag;
 }
 
-double make_orthogonal (double* v_mod, double* v_static)
+double make_orthogonal (_Array_ptr<double> v_mod : count(2), _Array_ptr<double> v_static : count(2))
 {
     int		    i;
     double	    total=0.0;
     double	    length=0.0;
 
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	total+=v_mod[i]*v_static[i];
     for (i=0; i<2; i++) {
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	v_mod[i]-=total*v_static[i];
 	length+=v_mod[i]*v_mod[i];
     }
     length=sqrt (length);
     for (i=0; i<2; i++)
+      // CHECKEDC : checked array type array subscript
+      // dynamic_check (i >= 0 && i < 2);
+      // : reasoning facts can remove this
 	v_mod[i]/=length;
 
     if (1-total*total<0)    /* Roundoff error--vectors are parallel */

@@ -15,7 +15,8 @@
 #include <stdio.h>
 
 /* Domain of thetaR->P map is 0.65 to 1.00 [index*0.01+0.65] */
-double map_P[36] =
+// CHECKEDC : checked array type
+double map_P _Checked[36] =
 {8752.218091048, 8446.106670416, 8107.990680283,
  7776.191574285, 7455.920518777, 7146.602181352,
  6847.709026813, 6558.734204024, 6279.213382291,
@@ -34,7 +35,8 @@ double map_P[36] =
 #define      MAX_THETA_R       0.995
 
 /* Domain of thetaI->Q map is 0.130 to 0.200 [index*0.002+0.130] */
-double map_Q[36] =
+// CHECKEDC : checked array type
+double map_Q _Checked[36] =
 {1768.846590190, 1706.229490046, 1637.253873079,
  1569.637451623, 1504.419525242, 1441.477913810,
  1380.700660446, 1321.980440476, 1265.218982201,
@@ -52,9 +54,11 @@ double map_Q[36] =
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
 
+// CHECKEDC : string character pointer stays as it is
 int main(int argc,char *argv[])
 {
-  Root r;
+  // CHECKEDC : automatic checked pointer must have a initializer
+  Root r = 0;
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
@@ -65,6 +69,8 @@ int main(int argc,char *argv[])
   printf("Built tree\n");
   Compute_Tree(r);
   printf("COMPUTED TREE\n");
+  // CHECKEDC : ptr type dereference, non-null check
+  // dynamic_check(r != NULL)
   r->last.P = r->D.P;
   r->last.Q = r->D.Q;
   r->last_theta_R = r->theta_R;
@@ -74,6 +80,8 @@ int main(int argc,char *argv[])
   
   while (!finished) {
     Compute_Tree(r);
+    // CHECKEDC : ptr type dereference, non-null check
+    // dynamic_check (r != NULL);
     printf("TR=%4.2f, TI=%4.2f, P0=%4.2f, Q0=%4.2f\n",
            r->theta_R,r->theta_I,r->D.P,r->D.Q);
     if (fabs(r->D.P/10000.0 - r->theta_R) < ROOT_EPSILON &&
@@ -83,16 +91,28 @@ int main(int argc,char *argv[])
       i = (int)((r->theta_R - MIN_THETA_R) / PER_INDEX_R);
       if (i<0) i=0;
       if (i>35) i=35;
+      // CHECKEDC : checked array type dereference
+      // dynamic_check( (i+1) > =0 && (i+1) < 36);
+      // dynamic_check( i >= 0 && i < 36);
+      // : reasoning facts since above if-stmt makes always (0 <= i < 36)
+      // : if compiler can calculate reason facts, compiler can remove away those
       d_theta_R = -(r->theta_R - r->D.P/10000.0) /
         (1 - (map_P[i+1] - map_P[i]) / (PER_INDEX_R * 10000.0));
 
       i = (int)((r->theta_I - MIN_THETA_I) / PER_INDEX_I);
       if (i<0) i=0;
       if (i>35) i=35;
+      // CHECKEDC : checked array type dereference
+      // dynamic_check( (i+1) > =0 && (i+1) < 36);
+      // dynamic_check( i >= 0 && i < 36);
+      // : for same reason, above dynamic check can be removed away
       d_theta_I = -(r->theta_I - r->D.Q/10000.0) /
         (1 - (map_Q[i+1] - map_Q[i]) / (PER_INDEX_I * 10000.0));
  
       printf("D TR-%4.2f, TI=%4.2f\n", d_theta_R,d_theta_I);
+      // CHECKEDC : ptr type dereference, non-null check
+      // dynamic_check(r != NULL);
+      // : can be remove away
       r->last.P = r->D.P;
       r->last.Q = r->D.Q;
       r->last_theta_R = r->theta_R;
