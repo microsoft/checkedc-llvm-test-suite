@@ -11,7 +11,7 @@ int mylog(int num) {
   return j;
 } 
 
-int dealwithargs(int argc, char *argv[])
+int dealwithargs(int argc, _Array_ptr<char*> argv : count(argc))
 {
   int size;
 

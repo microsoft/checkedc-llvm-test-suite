@@ -3,11 +3,11 @@
 /* ========== PROCEDURE TYPES/NUMS ================== */
 
 
-HANDLE *RandTree();
+_Ptr<HANDLE> RandTree(int n, int seed, int node, int level);
 
-void SwapValue();
-void SwapValLeft();
-void SwapValRight();
-int Bimerge();
-int Bisort();
-int dealwithargs(int argc, char *argv[]);
+void SwapValue(_Ptr<HANDLE>, _Ptr<HANDLE>);
+void SwapValLeft(_Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, int, int);
+void SwapValRight(_Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, int, int);
+int Bimerge(_Ptr<HANDLE>, int, int);
+int Bisort(_Ptr<HANDLE>, int, int);
+int dealwithargs(int argc, _Array_ptr<char*> argv : count(argc));
