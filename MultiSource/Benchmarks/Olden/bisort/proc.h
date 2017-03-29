@@ -2,12 +2,13 @@
 
 /* ========== PROCEDURE TYPES/NUMS ================== */
 
+#include <stdchecked.h>
 
-_Ptr<HANDLE> RandTree(int n, int seed, int node, int level);
+ptr<HANDLE> RandTree(int, int, int, int);
 
-void SwapValue(_Ptr<HANDLE>, _Ptr<HANDLE>);
-void SwapValLeft(_Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, int, int);
-void SwapValRight(_Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, _Ptr<HANDLE>, int, int);
-int Bimerge(_Ptr<HANDLE>, int, int);
-int Bisort(_Ptr<HANDLE>, int, int);
-int dealwithargs(int argc, _Array_ptr<char*> argv : count(argc));
+void SwapValue(ptr<HANDLE>, ptr<HANDLE>);
+void SwapValLeft(ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, int, int);
+void SwapValRight(ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, int, int);
+int Bimerge(ptr<HANDLE>, int, int);
+int Bisort(ptr<HANDLE>, int, int);
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc));

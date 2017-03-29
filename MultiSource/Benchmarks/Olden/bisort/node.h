@@ -2,18 +2,20 @@
 
 /* =============== NODE STRUCTURE =================== */
 
+#include <stdchecked.h>
+
 struct node { 
   int value;
-  _Ptr<struct node> left;
-  _Ptr<struct node> right;
+  ptr<struct node> left;
+  ptr<struct node> right;
 };
 
 typedef struct node HANDLE;
 
 typedef struct future_cell_int{
-  _Ptr<HANDLE> value;
+  ptr<HANDLE> value;
 } future_cell_int;
 
 extern void *malloc(unsigned);
 
-#define NIL ((_Ptr<HANDLE>) 0)
+#define NIL ((ptr<HANDLE>) 0)

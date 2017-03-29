@@ -4,11 +4,9 @@
 /* UP - 0, DOWN - 1 */
 #include "node.h"   /* Node Definition */
 #include "proc.h"   /* Procedure Types/Nums */
-#include <stdio.h>
-
-#include <stdio_checked.h>
-// Has to come after stdio_checked.h, as fread uses ptr as an argument name.
 #include <stdchecked.h>
+#include <stdio.h>
+#include <stdio_checked.h>
 
 #define CONST_m1 10000
 #define CONST_b 31415821
