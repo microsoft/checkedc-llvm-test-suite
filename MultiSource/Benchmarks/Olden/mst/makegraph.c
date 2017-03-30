@@ -54,7 +54,8 @@ static void AddEdges(int count1, Graph retval, int numproc,
       for (i=0; i<numproc*perproc; i++) 
         {
           int pn,offset,dist;
-          Vertex dest;
+          // CHECKED C: This was converted using checked-c-convert
+          _Ptr<struct vert_st>  dest;
           Hash hash;
           
           if (i!=count1) 

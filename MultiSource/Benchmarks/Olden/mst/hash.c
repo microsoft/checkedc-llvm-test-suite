@@ -43,7 +43,8 @@ Hash MakeHash(int size, int (*map)(unsigned int))
 void *HashLookup(unsigned int key, Hash hash)
 {
   int j;
-  HashEntry ent;
+  // CHECKED C: This was converted using checked-c-convert
+  _Ptr<struct hash_entry>  ent;
 
   j = (hash->mapfunc)(key);        /* 14% miss in hash->mapfunc */  
   assert(1,j>=0);
@@ -71,10 +72,13 @@ void HashInsert(void *entry,unsigned int key,Hash hash)
   ent->entry = entry;
 }
 
-void HashDelete(unsigned key, Hash hash) {
-  HashEntry tmp;
+// CHECKED C: This was converted using checked-c-convert
+void HashDelete(unsigned key, _Ptr<struct hash>  hash) {
+  // CHECKED C: This was converted using checked-c-convert
+  _Ptr<struct hash_entry>  tmp;
   int j = (hash->mapfunc)(key);
-  HashEntry *ent = &hash->array[j];
+  // CHECKED C: This was converted using checked-c-convert
+  _Ptr<_Ptr<struct hash_entry>>  ent = &hash->array[j];
 
   while (*ent && (*ent)->key != key) {
     ent = &(*ent)->next;
