@@ -5,7 +5,9 @@
  *******************************************************************/ 
 
 #include <stdio.h>
+#include <stdio_checked.h>
 #include <stdlib.h>
+#include <stdlib_checked.h>
 #include <math.h>
 #include "health.h"
 #include <assert.h>
@@ -14,15 +16,15 @@ int  max_level;
 long max_time;
 long long seed;
 
-struct Village *alloc_tree(int level, int label, struct Village *back) {
+ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back) {
   if (level == 0)
     return NULL;
   else {
-    struct Village       *new;
+    ptr<struct Village>  new = NULL;
     int                  i;
-    struct Village       *fval[4];
+    ptr<struct Village>  fval checked[4] = { NULL, NULL, NULL, NULL };
 
-    new = (struct Village *)malloc(sizeof(struct Village));
+    new = (ptr<struct Village>)malloc(sizeof(struct Village));
 
     for (i = 3; i >= 0; i--)
       fval[i] = alloc_tree(level - 1, label*4 + i + 1, new); 
@@ -56,11 +58,11 @@ struct Village *alloc_tree(int level, int label, struct Village *back) {
 }
 
 
-struct Results get_results(struct Village *village) {
+struct Results get_results(ptr<struct Village> village) {
   int                    i;
-  struct List            *list;
-  struct Patient         *p;
-  struct Results         fval[4];
+  ptr<struct List>       list = NULL;
+  ptr<struct Patient>    p = NULL;
+  struct Results         fval checked[4];
   struct Results         r1;
 
   r1.total_hosps = 0.0;
@@ -70,7 +72,7 @@ struct Results get_results(struct Village *village) {
   if (village == NULL) return r1;
 
   for (i = 3; i > 0; i--) {
-    struct Village *V = village->forward[i];
+    ptr<struct Village> V = village->forward[i];
     fval[i] = get_results(V);
   }
 
@@ -94,10 +96,10 @@ struct Results get_results(struct Village *village) {
   return r1; 
 }
 
-void check_patients_inside(struct Village *village, struct List *list) 
+void check_patients_inside(ptr<struct Village> village, ptr<struct List> list) 
 {
-  struct List            *l;
-  struct Patient         *p;
+  ptr<struct List>        l = NULL;
+  ptr<struct Patient>     p = NULL;
   int                     t;
   
   while (list != NULL) {
@@ -115,10 +117,10 @@ void check_patients_inside(struct Village *village, struct List *list)
   } 
 }
 
-struct List *check_patients_assess(struct Village *village, struct List *list) {
+ptr<struct List> check_patients_assess(ptr<struct Village> village, ptr<struct List> list) {
   float rand;
-  struct Patient *p;
-  struct List *up = NULL;
+  ptr<struct Patient> p = NULL;
+  ptr<struct List> up = NULL;
   long long s;
   int label, t;
 
@@ -153,9 +155,9 @@ struct List *check_patients_assess(struct Village *village, struct List *list) {
   return up;
 }
 
-void check_patients_waiting(struct Village *village, struct List *list) {
+void check_patients_waiting(ptr<struct Village> village, ptr<struct List> list) {
   int i, t;
-  struct Patient *p;
+  ptr<struct Patient> p = NULL;
   
   while (list != NULL) {
     i = village->hosp.free_personnel;
@@ -176,7 +178,8 @@ void check_patients_waiting(struct Village *village, struct List *list) {
 }
 
 
-void put_in_hosp(struct Hosp *hosp, struct Patient *patient) {
+// CHECKED C: converter managed `hosp` here
+void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient> patient) {
   int t = patient->hosps_visited;
 
   patient->hosps_visited = t + 1;
@@ -192,10 +195,10 @@ void put_in_hosp(struct Hosp *hosp, struct Patient *patient) {
   }
 }
 
-struct Patient *generate_patient(struct Village *village) 
+ptr<struct Patient> generate_patient(ptr<struct Village> village)
 {
   long long       s,newseed;
-  struct Patient *patient;
+  ptr<struct Patient> patient = NULL;
   float rand;
   int label;
   
@@ -215,10 +218,10 @@ struct Patient *generate_patient(struct Village *village)
   return NULL; 
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, array_ptr<char*> argv : count(argc))
 { 
   struct Results         results;
-  struct Village         *top = 0;
+  ptr<struct Village>    top = NULL;
   int                    i;
   float total_time, total_patients, total_hosps;  
   
@@ -251,13 +254,14 @@ int main(int argc, char *argv[])
 }
 
 
-struct List *sim(struct Village *village)
+ptr<struct List> sim(ptr<struct Village> village)
 {
   int                    i;
-  struct Patient         *patient;
-  struct List            *l, *up;
-  struct Hosp            *h;
-  struct List            *val[4];
+  ptr<struct Patient>    patient = NULL;
+  ptr<struct List>       l = NULL, up = NULL;
+  // CHECKED C: converter managed `h` here
+  ptr<struct Hosp>       h = NULL;
+  ptr<struct List>       val checked[4] = {NULL, NULL, NULL, NULL};
   
   int label;
   if (village == NULL) return NULL;
@@ -265,8 +269,8 @@ struct List *sim(struct Village *village)
   label = village->label;
 
   for (i = 3; i > 0; i--) {
-    struct Village *V = village->forward[i];
-    struct List *L = sim(V);
+    ptr<struct Village> V = village->forward[i];
+    ptr<struct List> L = sim(V);
     val[i] = L;
   }
 
@@ -274,7 +278,7 @@ struct List *sim(struct Village *village)
   h = &village->hosp;
 
   for (i = 3; i >= 0; i--) {
-    struct List *valI = l = val[i];
+    ptr<struct List> valI = l = val[i];
     if (l != NULL) {
       l = l->forward;
       while (l != NULL) {

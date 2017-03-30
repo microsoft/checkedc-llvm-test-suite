@@ -8,8 +8,11 @@
 #ifndef _HEALTH
 #define _HEALTH
 
+#include <stdchecked.h>
 #include <stdio.h>
+#include <stdio_checked.h>
 #include <stdlib.h>
+#include <stdlib_checked.h>
 
 #define chatting printf
 
@@ -31,16 +34,16 @@ struct Results {
 };
 
 struct Patient {
-  int                    hosps_visited;
-  int                    time;
-  int                    time_left;
-  struct Village         *home_village;
+  int                     hosps_visited;
+  int                     time;
+  int                     time_left;
+  ptr<struct Village>     home_village;
 };
 
 struct List {
-  struct List            *forward;
-  struct Patient         *patient;
-  struct List            *back;
+  ptr<struct List>        forward;
+  ptr<struct Patient>     patient;
+  ptr<struct List>        back;
 };
 
 struct Hosp {
@@ -65,8 +68,8 @@ struct Hosp {
  
 struct Village {
 #if 1
-  struct Village         *forward[4];
-  struct Village         *back;
+  ptr<struct Village>    forward checked[4];
+  ptr<struct Village>    back;
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
@@ -74,28 +77,28 @@ struct Village {
 #else
   struct Hosp            hosp;   
   long                   seed;
-  struct Village         *forward[4];
+  ptr<struct Village>    forward checked[4];
   int                    label;
   struct List            returned;
-  struct Village         *back;
+  ptr<struct Village>    back;
 #endif
 };
 
-struct Village *alloc_tree(int level, int label, struct Village *back);
-void dealwithargs(int argc, char *argv[]);
+ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back);
+void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 float my_rand(long long idum);
-struct Patient *generate_patient(struct Village *village);
-void put_in_hosp(struct Hosp *hosp, struct Patient *patient);
-void addList(struct List *list, struct Patient *patient);
-void removeList(struct List *list, struct Patient *patient);
-struct List *sim(struct Village *village);
-void check_patients_inside(struct Village *village, struct List *list);
-struct List *check_patients_assess(struct Village *village, struct List *list);
-void check_patients_waiting(struct Village *village, struct List *list);
-float get_num_people(struct Village *village);
-float get_total_time(struct Village *village);
-float get_total_hosps(struct Village *village);
-struct Results get_results(struct Village *village);
+ptr<struct Patient> generate_patient(ptr<struct Village> village);
+void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient>patient);
+void addList(ptr<struct List> list, ptr<struct Patient> patient);
+void removeList(ptr<struct List> list, ptr<struct Patient> patient);
+ptr<struct List> sim(ptr<struct Village> village);
+void check_patients_inside(ptr<struct Village> village, ptr<struct List> list);
+ptr<struct List> check_patients_assess(ptr<struct Village> village, ptr<struct List> list);
+void check_patients_waiting(ptr<struct Village> village, ptr<struct List> list);
+float get_num_people(ptr<struct Village> village);
+float get_total_time(ptr<struct Village> village);
+float get_total_hosps(ptr<struct Village> village);
+struct Results get_results(ptr<struct Village> village);
 
 #endif
 
