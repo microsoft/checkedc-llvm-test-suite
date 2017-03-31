@@ -93,7 +93,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<ptr<node_t>*>table : count(P
         }
 
         for (k=0; k<j; k++)
-          if (other_node == (_Ptr<double>)cur_node->to_nodes[k]) break;
+          if (other_node == cur_node->to_nodes[k]) break;
 
 #if 0
         if ((((unsigned long long) other_node) >> 7) < 2048)
@@ -109,7 +109,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<ptr<node_t>*>table : count(P
         exit(1);
       }
 
-      cur_node->to_nodes[j] = (node_t*)other_node;       /* <------ 6.5% store penalty */
+      cur_node->to_nodes[j] = other_node;       /* <------ 6.5% store penalty */
 #if 0
       if ((((unsigned long long) other_node) >> 7) < 2048)
         chatting("post other_node = 0x%x\n",other_node);
