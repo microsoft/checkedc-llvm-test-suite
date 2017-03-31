@@ -11,7 +11,10 @@ register node_t *nodelist;
   for (; nodelist; ) {
     register double cur_value;
     register int from_count ;
-    register double *other_value;
+    // CHECKED C: Changed by checked-c-convert
+    // CHECKED C: checked-c-convert drops "register" modifier. re-added manually
+    // CHECKED C: manually added null initializer
+    register _Ptr<double>  other_value = NULL;
     register double coeff;
     register double value;
     /*register double *coeffs;*/
@@ -21,7 +24,7 @@ register node_t *nodelist;
     cur_value = *localnode->value;
     from_count = localnode->from_count-1;
     for (i=0; i < from_count; i+=2) {
-      other_value = localnode->from_values[i];
+      other_value = (_Ptr<double>)localnode->from_values[i];
       coeff = localnode->coeffs[i];
 
       if (other_value)
@@ -30,7 +33,7 @@ register node_t *nodelist;
         value = 0;
       
       cur_value -= coeff*value;
-      other_value = localnode->from_values[i+1];
+      other_value = (_Ptr<double>)localnode->from_values[i+1];
       coeff = localnode->coeffs[i];
       
       if (other_value)
@@ -44,7 +47,7 @@ register node_t *nodelist;
     }
 
     if (i==from_count)  {
-      other_value = localnode->from_values[i];
+      other_value = (_Ptr<double>)localnode->from_values[i];
       coeff = localnode->coeffs[i];
       
       if (other_value)

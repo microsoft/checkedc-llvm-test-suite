@@ -59,7 +59,9 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
   node_t *cur_node;
 
   for(cur_node = nodelist; cur_node; cur_node=cur_node->next) {
-    node_t *other_node;
+    // CHECKED C: Changed by checked-c-convert
+    // CHECKED C: manually added null initializer
+    _Ptr<node_t>  other_node = NULL;
     int j,k;
     int dest_proc;
 
@@ -82,14 +84,14 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
 
         /* We expect these accesses to be remote */
         local_table = table[dest_proc];
-        other_node = local_table[number];   /* <------ 4% load miss penalty */
+        other_node = (_Ptr<double>)local_table[number];   /* <------ 4% load miss penalty */
         if (!other_node) {
           chatting("Error! on dest %d @ %d\n",number,dest_proc);
           exit(1);
         }
 
         for (k=0; k<j; k++)
-          if (other_node == cur_node->to_nodes[k]) break;
+          if (other_node == (_Ptr<double>)cur_node->to_nodes[k]) break;
 
 #if 0
         if ((((unsigned long long) other_node) >> 7) < 2048)
@@ -105,7 +107,7 @@ void make_neighbors(node_t *nodelist, node_t **table[], int tablesz,
         exit(1);
       }
 
-      cur_node->to_nodes[j]=other_node;       /* <------ 6.5% store penalty */
+      cur_node->to_nodes[j] = (node_t*)other_node;       /* <------ 6.5% store penalty */
 #if 0
       if ((((unsigned long long) other_node) >> 7) < 2048)
         chatting("post other_node = 0x%x\n",other_node);
@@ -142,7 +144,8 @@ void fill_from_fields(node_t *nodelist, int degree) {
 
     for (j=0; j<degree; j++) {
       int count,thecount;
-      node_t *other_node = cur_node->to_nodes[j]; /* <-- 6% load miss penalty */
+      // CHECKED C: Changed by checked-c-convert
+      _Ptr<node_t>  other_node = (_Ptr<node_t>)cur_node->to_nodes[j]; /* <-- 6% load miss penalty */
       double **otherlist;
       double *value = cur_node->value;
 
@@ -322,16 +325,18 @@ graph_t *initialize_graph() {
     local_node_r = local_table[0];
     retval->h_nodes[i] = local_node_r;
     for (j = 1; j < blocksize; j++) {
-      node_t *local_node_l;
+      // CHECKED C: Changed by checked-c-convert
+      // CHECKED C: manually added null initializer
+      _Ptr<node_t>  local_node_l = NULL;
 
       local_table = table->e_table[i*blocksize+j-1];
-      local_node_l = local_table[(n_nodes/PROCS)-1];
+      local_node_l = (_Ptr<node_t>)local_table[(n_nodes/PROCS)-1];
       local_table = table->e_table[i*blocksize+j];
       local_node_r = local_table[0];
       local_node_l->next = local_node_r;
       
       local_table = table->h_table[i*blocksize+j-1];
-      local_node_l = local_table[(n_nodes/PROCS)-1];
+      local_node_l = (_Ptr<node_t>)local_table[(n_nodes/PROCS)-1];
       local_table = table->h_table[i*blocksize+j];
       local_node_r = local_table[0];
       local_node_l->next = local_node_r;
