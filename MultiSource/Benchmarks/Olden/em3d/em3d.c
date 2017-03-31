@@ -3,10 +3,10 @@
 #include "em3d.h"
 int nonlocals=0;
 void compute_nodes(nodelist)
-register node_t *nodelist;
+register ptr<node_t> nodelist;
 {
   register int i;
-  register node_t *localnode;
+  register ptr<node_t> localnode = NULL;
   
   for (; nodelist; ) {
     register double cur_value;
@@ -24,7 +24,7 @@ register node_t *nodelist;
     cur_value = *localnode->value;
     from_count = localnode->from_count-1;
     for (i=0; i < from_count; i+=2) {
-      other_value = (_Ptr<double>)localnode->from_values[i];
+      other_value = localnode->from_values[i];
       coeff = localnode->coeffs[i];
 
       if (other_value)
@@ -33,7 +33,7 @@ register node_t *nodelist;
         value = 0;
       
       cur_value -= coeff*value;
-      other_value = (_Ptr<double>)localnode->from_values[i+1];
+      other_value = localnode->from_values[i+1];
       coeff = localnode->coeffs[i];
       
       if (other_value)
@@ -47,7 +47,7 @@ register node_t *nodelist;
     }
 
     if (i==from_count)  {
-      other_value = (_Ptr<double>)localnode->from_values[i];
+      other_value = localnode->from_values[i];
       coeff = localnode->coeffs[i];
       
       if (other_value)
