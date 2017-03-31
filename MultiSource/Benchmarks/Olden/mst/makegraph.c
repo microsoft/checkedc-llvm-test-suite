@@ -41,29 +41,29 @@ static int hashfunc(unsigned int key)
 static void AddEdges(int count1, Graph retval, int numproc, 
                      int perproc, int numvert, int j) 
 {
-  Vertex tmp;
-  Vertex helper[MAXPROC];
+  Vertex tmp = NULL;
+  VertexArr helper checked[MAXPROC];
   int i;
 
   for (i=0; i<numproc; i++) {
     helper[i] = retval->vlist[i];
   }
 
-  for (tmp = retval->vlist[j]; tmp; tmp=tmp->next) 
+  for (tmp = (Vertex)(retval->vlist[j]); tmp; tmp=tmp->next) 
     {
       for (i=0; i<numproc*perproc; i++) 
         {
           int pn,offset,dist;
           // CHECKED C: This was converted using checked-c-convert
-          _Ptr<struct vert_st>  dest;
-          Hash hash;
+          Vertex dest = NULL;
+          Hash hash = NULL;
           
           if (i!=count1) 
             {
               dist = compute_dist(i,count1,numvert);
               pn = i/perproc;
               offset = i % perproc;
-              dest = ((helper[pn])+offset);
+              dest = (Vertex)((helper[pn])+offset);
               hash = tmp->edgehash;
               HashInsert((void *) dist,(unsigned int) dest,hash);
               /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
@@ -78,9 +78,9 @@ Graph MakeGraph(int numvert, int numproc)
   int perproc = numvert/numproc;
   int i,j;
   int count1;
-  Vertex v,tmp;
-  Vertex block;
-  Graph retval;
+  Vertex v = NULL, tmp = NULL;
+  VertexArr block : count(perproc) = NULL;
+  Graph retval = NULL;
   retval = (Graph)malloc(sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
@@ -89,18 +89,18 @@ Graph MakeGraph(int numvert, int numproc)
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = (Vertex) malloc(perproc*(sizeof(*tmp)));
+      block = malloc(perproc*(sizeof(*tmp)));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {
-          tmp = block+(perproc-i-1);
+          tmp = (Vertex)(block+(perproc-i-1));
           HashRange = numvert/4;
           tmp->mindist = 9999999;
           tmp->edgehash = MakeHash(numvert/4,hashfunc);
           tmp->next = v;
           v=tmp;
         }
-      retval->vlist[j] = v;
+      retval->vlist[j] = (VertexArr)v;
     }
 
   chatting("Make phase 3\n");

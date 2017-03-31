@@ -26,9 +26,9 @@ static char *localmalloc(int size)
 
 #define localfree(sz)
 
-Hash MakeHash(int size, int (*map)(unsigned int)) 
+Hash MakeHash(int size, ptr<int(unsigned int)> map)
 {
-  Hash retval;
+  Hash retval = NULL;
   int i;
 
   retval = (Hash) localmalloc(sizeof(*retval));
@@ -44,7 +44,7 @@ void *HashLookup(unsigned int key, Hash hash)
 {
   int j;
   // CHECKED C: This was converted using checked-c-convert
-  _Ptr<struct hash_entry>  ent;
+  HashEntry ent = NULL;
 
   j = (hash->mapfunc)(key);        /* 14% miss in hash->mapfunc */  
   assert(1,j>=0);
@@ -59,7 +59,7 @@ void *HashLookup(unsigned int key, Hash hash)
 
 void HashInsert(void *entry,unsigned int key,Hash hash) 
 {
-  HashEntry ent;
+  HashEntry ent = NULL;
   int j;
   
   assert(3,!HashLookup(key,hash));
@@ -73,12 +73,12 @@ void HashInsert(void *entry,unsigned int key,Hash hash)
 }
 
 // CHECKED C: This was converted using checked-c-convert
-void HashDelete(unsigned key, _Ptr<struct hash>  hash) {
+void HashDelete(unsigned key, Hash hash) {
   // CHECKED C: This was converted using checked-c-convert
-  _Ptr<struct hash_entry>  tmp;
+  HashEntry tmp = NULL;
   int j = (hash->mapfunc)(key);
   // CHECKED C: This was converted using checked-c-convert
-  _Ptr<_Ptr<struct hash_entry>>  ent = &hash->array[j];
+  ptr<HashEntry> ent = &hash->array[j];
 
   while (*ent && (*ent)->key != key) {
     ent = &(*ent)->next;
