@@ -1,7 +1,9 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdchecked.h>
 #include "perimeter.h"
 #include <stdlib.h>
+#include <stdlib_checked.h>
 
 static int CheckOutside(int x, int y) 
 {
@@ -32,7 +34,7 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 		  int hi_proc, QuadTree parent, ChildType ct, int level) 
 {
   int intersect=0;
-  QuadTree retval;
+  QuadTree retval = NULL;
 
 #ifdef FUTURES
   retval = (QuadTree) ALLOC(lo_proc,sizeof(*retval));
