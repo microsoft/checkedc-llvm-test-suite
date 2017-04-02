@@ -49,9 +49,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
       count++;
       if (tmp==inserted) 
         {
-          Vertex next = NULL;
-
-          next = tmp->next;
+          Vertex next = tmp->next;
           prev->next = next;
         }
       else 
@@ -107,8 +105,7 @@ static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
 
 static int ComputeMst(Graph graph,int numproc,int numvert) 
 {
-  VertexArr inserted : count(numproc) = NULL; 
-  VertexArr tmp : count(numproc) = NULL;
+  Vertex inserted = NULL, tmp = NULL;
   int cost=0,dist;
 
   /* make copy of graph */
@@ -135,7 +132,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   return cost;
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, array_ptr<char*> argv : count(argc))
 {
   Graph graph = NULL;
   int dist;

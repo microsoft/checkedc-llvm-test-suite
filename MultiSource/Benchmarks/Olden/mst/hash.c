@@ -1,6 +1,8 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdchecked.h>
 #include <stdlib.h>
+#include <stdlib_checked.h>
 #include "hash.h"
 
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
@@ -8,7 +10,7 @@
 static int remaining = 0;
 static char *temp;
 
-static char *localmalloc(int size) 
+static char *localmalloc(int size) : byte_count(size)
 {
   char *blah;
   
@@ -43,7 +45,6 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
 void *HashLookup(unsigned int key, Hash hash)
 {
   int j;
-  // CHECKED C: This was converted using checked-c-convert
   HashEntry ent = NULL;
 
   j = (hash->mapfunc)(key);        /* 14% miss in hash->mapfunc */  
@@ -65,20 +66,17 @@ void HashInsert(void *entry,unsigned int key,Hash hash)
   assert(3,!HashLookup(key,hash));
   
   j = (hash->mapfunc)(key);
-  ent = (HashEntry) localmalloc(sizeof(*ent));
+  ent = (HashEntry)localmalloc(sizeof(*ent));
   ent->next = hash->array[j];
   hash->array[j]=ent;
   ent->key = key;
   ent->entry = entry;
 }
 
-// CHECKED C: This was converted using checked-c-convert
 void HashDelete(unsigned key, Hash hash) {
-  // CHECKED C: This was converted using checked-c-convert
   HashEntry tmp = NULL;
   int j = (hash->mapfunc)(key);
-  // CHECKED C: This was converted using checked-c-convert
-  ptr<HashEntry> ent = &hash->array[j];
+  HashEntry *ent = &hash->array[j];
 
   while (*ent && (*ent)->key != key) {
     ent = &(*ent)->next;

@@ -2,16 +2,18 @@
 
 #include <stdchecked.h>
 #include "stdio.h"
+#include <stdio_checked.h>
 
 struct hash_entry {
   unsigned int key;
   void *entry;
   ptr<struct hash_entry> next;
 };
+
 typedef ptr<struct hash_entry> HashEntry;
 
 struct hash {
-  HashEntry *array; // Has count(size) bounds, but this currently errors
+  HashEntry *array : itype(array_ptr<HashEntry>);
   ptr<int(unsigned int)> mapfunc;
   int size;
 };

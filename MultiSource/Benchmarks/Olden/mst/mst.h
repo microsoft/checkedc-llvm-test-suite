@@ -16,10 +16,10 @@ struct vert_st {
 };
 
 typedef ptr<struct vert_st> Vertex;
-typedef array_ptr<struct vert_st> VertexArr;
+typedef struct vert_st *UncheckedVertex;
 
 struct graph_st {
-  VertexArr vlist checked[MAXPROC];
+  Vertex vlist checked[MAXPROC];
 };
 
 typedef ptr<struct graph_st> Graph;
