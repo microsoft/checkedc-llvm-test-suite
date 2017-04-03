@@ -108,13 +108,15 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   Vertex inserted = NULL, tmp = NULL;
   int cost=0,dist;
 
+  dynamic_check(numproc <= MAXPROC);
+
   /* make copy of graph */
   printf("Compute phase 1\n");
 
   /* Insert first node */
-  inserted = graph->vlist[0];
+  inserted = (Vertex)graph->vlist[0].starting_vertex;
   tmp = inserted->next;
-  graph->vlist[0] = tmp;
+  graph->vlist[0].starting_vertex = tmp;
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */

@@ -13,7 +13,7 @@ struct hash_entry {
 typedef ptr<struct hash_entry> HashEntry;
 
 struct hash {
-  HashEntry *array : itype(array_ptr<HashEntry>);
+  array_ptr<HashEntry> array : count(size);
   ptr<int(unsigned int)> mapfunc;
   int size;
 };

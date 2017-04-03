@@ -42,19 +42,19 @@ static void AddEdges(int count1, Graph retval, int numproc,
                      int perproc, int numvert, int j) 
 {
   Vertex tmp = NULL;
-  UncheckedVertex helper checked[MAXPROC];
+  array_ptr<VertexArray> helper : count(numproc) = NULL;
   int i;
 
   for (i=0; i<numproc; i++) {
-    helper[i] = (UncheckedVertex)retval->vlist[i];
+    helper[i] = retval->vlist[i];
   }
 
-  for (tmp = retval->vlist[j]; tmp; tmp=tmp->next)
+  for (tmp = retval->vlist[j].starting_vertex; tmp; tmp=tmp->next)
     {
       for (i=0; i<numproc*perproc; i++) 
         {
           int pn,offset,dist;
-          UncheckedVertex dest;
+          Vertex dest = NULL;
           Hash hash = NULL;
           
           if (i!=count1) 
@@ -62,7 +62,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
               dist = compute_dist(i,count1,numvert);
               pn = i/perproc;
               offset = i % perproc;
-              dest = ((helper[pn])+offset);
+              dest = ((helper[pn].block)+offset);
               hash = tmp->edgehash;
               HashInsert((void*)dist,(unsigned int) dest,hash);
               /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
@@ -80,15 +80,18 @@ Graph MakeGraph(int numvert, int numproc)
   Vertex v = NULL, tmp = NULL;
   array_ptr<struct vert_st> block : count(perproc) = NULL;
   Graph retval = NULL;
-  retval = (Graph)malloc(sizeof(*retval));
+
+  dynamic_check(numproc <= MAXPROC);
+
+  retval = (Graph)calloc(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
-      retval->vlist[i]=NULL;
+      retval->vlist[i].starting_vertex = NULL;
     }
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = malloc(perproc*(sizeof(struct vert_st)));
+      block = calloc(perproc, sizeof(*tmp));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {
@@ -97,9 +100,11 @@ Graph MakeGraph(int numvert, int numproc)
           tmp->mindist = 9999999;
           tmp->edgehash = MakeHash(numvert/4,hashfunc);
           tmp->next = v;
-          v=tmp;
+          v = tmp;
         }
-      retval->vlist[j] = v;
+      retval->vlist[j].block = block;
+      retval->vlist[j].len = perproc;
+      retval->vlist[j].starting_vertex = v;
     }
 
   chatting("Make phase 3\n");

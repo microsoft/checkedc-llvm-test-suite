@@ -8,16 +8,17 @@
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
 static int remaining = 0;
-static char *temp;
+static array_ptr<char> temp : count(remaining);
 
-static char *localmalloc(int size) : byte_count(size)
+static array_ptr<char> localmalloc(int size) : byte_count(size)
 {
-  char *blah;
+  array_ptr<char> blah;
   
   if (size>remaining) 
     {
-      temp = (char *) malloc(32768);
-      if (!temp) printf("Error! malloc returns null\n");
+      temp = (char *) calloc(32768, sizeof(char));
+      dynamic_check(temp != NULL);
+      // if (!temp) printf("Error! malloc returns null\n");
       remaining = 32768;
     }
   blah = temp;

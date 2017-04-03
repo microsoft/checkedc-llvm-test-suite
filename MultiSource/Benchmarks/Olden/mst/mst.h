@@ -16,10 +16,18 @@ struct vert_st {
 };
 
 typedef ptr<struct vert_st> Vertex;
-typedef struct vert_st *UncheckedVertex;
 
+struct vert_arr_st {
+  array_ptr<struct vert_st> block : count(len);
+  int len;
+  array_ptr<struct vert_st> starting_vertex : bounds(block, block + len);
+};
+
+typedef struct vert_arr_st VertexArray;
+
+// CHECKED C: We should probably verify that MAXPROC == NumNodes
 struct graph_st {
-  Vertex vlist checked[MAXPROC];
+  struct vert_arr_st vlist checked[MAXPROC];
 };
 
 typedef ptr<struct graph_st> Graph;
