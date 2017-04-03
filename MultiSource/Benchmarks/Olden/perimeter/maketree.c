@@ -39,7 +39,7 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 #ifdef FUTURES
   retval = (QuadTree) ALLOC(lo_proc,sizeof(*retval));
 #else
-  retval = (QuadTree) malloc(sizeof(*retval));
+  retval = (QuadTree) calloc(1, sizeof(*retval));
 #endif
   retval->parent = parent;
   retval->childtype = ct;
