@@ -24,7 +24,7 @@ int d_nodes;
 int local_p;
 
 array_ptr<ptr<node_t>> make_table(int size, int procname) : count(size) {
-  array_ptr<ptr<node_t>> retval : count(size) = malloc(size*sizeof(ptr<node_t>));
+  array_ptr<ptr<node_t>> retval : count(size) = calloc(size, sizeof(ptr<node_t>));
   assert(retval);
   return retval;
 }
@@ -36,7 +36,7 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   ptr<node_t> prev_node = NULL;
   int i;
   
-  prev_node = malloc(sizeof(node_t));
+  prev_node = calloc(1, sizeof(node_t));
   node_table[0] = prev_node;
   *values = gen_uniform_double();
   prev_node->value = values++;
@@ -44,7 +44,7 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   
   /* Now we fill the node_table with allocated nodes */
   for (i=1; i<size; i++) {
-    cur_node = (node_t *)malloc(sizeof(node_t));
+    cur_node = calloc(1, sizeof(node_t));
     *values = gen_uniform_double();
     cur_node->value = values++;
     cur_node->from_count = 0;
@@ -67,9 +67,9 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<ptr<node_t>*>table : count(P
     int j,k;
     int dest_proc;
 
-    cur_node->to_nodes = (ptr<node_t> *)malloc(degree*(sizeof(ptr<node_t>)));
+    cur_node->to_nodes = (ptr<node_t> *)calloc(degree, (sizeof(ptr<node_t>)));
     if (!cur_node->to_nodes) {
-      chatting("Uncaught malloc error\n");
+      chatting("Uncaught calloc error\n");
       exit(0);
     }
 
@@ -128,12 +128,12 @@ void update_from_coeffs(ptr<node_t> nodelist) {
     
     if (from_count < 1) {
       chatting("Help! no from count (from_count=%d) \n", from_count);
-      cur_node->from_values = (array_ptr<ptr<double>>)malloc(20 * sizeof(ptr<double>));
-      cur_node->coeffs = (array_ptr<double>)malloc(20 * sizeof(double));
+      cur_node->from_values = (array_ptr<ptr<double>>)calloc(20, sizeof(ptr<double>));
+      cur_node->coeffs = (array_ptr<double>)calloc(20, sizeof(double));
       cur_node->from_length = 0;
     } else {
-      cur_node->from_values = (array_ptr<ptr<double>>)malloc(from_count * sizeof(ptr<double>));
-      cur_node->coeffs = (array_ptr<double>)malloc(from_count * sizeof(double));
+      cur_node->from_values = (array_ptr<ptr<double>>)calloc(from_count, sizeof(ptr<double>));
+      cur_node->coeffs = (array_ptr<double>)calloc(from_count, sizeof(double));
       cur_node->from_length = 0;
     }
   }
@@ -189,10 +189,10 @@ void make_tables(ptr<table_t> table,int groupname) {
   int procname = 0;
 
   init_random(SEED1*groupname);
-  h_values = (double *)malloc(n_nodes/PROCS*sizeof(double));
+  h_values = (double *)calloc(n_nodes/PROCS, sizeof(double));
   h_table = make_table(n_nodes/PROCS,procname);
   fill_table(h_table,h_values,n_nodes/PROCS,procname);
-  e_values = (double *)malloc(n_nodes/PROCS*sizeof(double));
+  e_values = (double *)calloc(n_nodes/PROCS, sizeof(double));
   e_table = make_table(n_nodes/PROCS,procname);
   fill_table(e_table,e_values,n_nodes/PROCS,procname);
 
@@ -291,8 +291,8 @@ ptr<graph_t> initialize_graph(void) {
   int i,j,blocksize;
   int groupsize;
 
-  table = (ptr<table_t>)malloc(sizeof(table_t));
-  retval = (ptr<graph_t>)malloc(sizeof(graph_t));
+  table = calloc(1, sizeof(table_t));
+  retval = calloc(1, sizeof(graph_t));
 
   groupsize = PROCS/NumNodes;
 
