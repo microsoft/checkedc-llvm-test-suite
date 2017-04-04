@@ -22,7 +22,7 @@ Root build_tree(void)
   Root t = 0;
   Lateral l = 0;
 
-  t = (Root) malloc(sizeof(*t));
+  t = (Root) calloc(1, sizeof(*t));
 
   for (i=0; i<NUM_FEEDERS; i++) {
     /* Insert future here, split into two loops */
@@ -45,7 +45,7 @@ Lateral build_lateral(int i, int num)
   Lateral next = 0;
  
   if (num == 0) return NULL;
-  l = (Lateral) malloc(sizeof(*l));
+  l = (Lateral) calloc(1, sizeof(*l));
 
   next = build_lateral(i,num-1);
   b = build_branch(i*BRANCHES_PER_LATERAL,(num-1)*BRANCHES_PER_LATERAL,
@@ -70,7 +70,7 @@ Branch build_branch(int i, int j, int num)
 
   if (num == 0) return NULL;
   /* allocate branch */
-  b = (Branch) malloc(sizeof(*b));
+  b = (Branch) calloc(1, sizeof(*b));
   
   /* fill in children */
   // CHECKEDC : p->m == (*p).m, ptr type dereference, non-null check
@@ -104,7 +104,7 @@ Leaf build_leaf(void) {
   // CHECKEDC : automatic checked pointer must have a initializer
   Leaf l = 0;
 
-  l = (Leaf) malloc(sizeof(*l));
+  l = (Leaf) calloc(1, sizeof(*l));
   // CHECKEDC : ptr type dereference (l->)
   // dynamic_check(l != NULL);
   l->D.P = 1.0;

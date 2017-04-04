@@ -524,7 +524,7 @@ NewHeap(_Ptr<Item>  i)
     // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h = 0;
 
-  h = (HeapP *)malloc(sizeof(HeapP));
+  h = (HeapP *)calloc(1, sizeof(HeapP));
 
   if(h == NULL)
   {

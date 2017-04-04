@@ -231,7 +231,7 @@ NewVertex(void)
     // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex = 0;
 
-  vertex = malloc(sizeof(Vertices));
+  vertex = calloc(1, sizeof(Vertices));
 
   if(vertex == NULL)
   {
@@ -252,7 +252,7 @@ NewEdge(void)
     // CHECKEDC : automatic variable initialize required
   _Ptr<Edges>  edge = 0;
 
-  edge = malloc(sizeof(Edges));
+  edge = calloc(1, sizeof(Edges));
 
   if(edge == NULL)
   {

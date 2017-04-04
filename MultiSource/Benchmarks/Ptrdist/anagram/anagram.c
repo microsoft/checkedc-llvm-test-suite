@@ -303,7 +303,7 @@ void ReadDict(char *pchFile : itype(_Ptr<char>)) {
     // buffer : count(ulLen)
     // pchDictionary : count(pchDictionarySize)
     // dynamic_check(pchDictionarySize == ulLen);
-    pchBase = buffer = pchDictionary = malloc(pchDictionarySize);
+    pchBase = buffer = pchDictionary = calloc(pchDictionarySize, sizeof(char));
 
     if(pchDictionary == NULL)
 	Fatal("Unable to allocate memory for dictionary\n", 0);
@@ -424,7 +424,7 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
 
 // CHECKEDC
 PWord NewWord(void) {
-    PWord pw = malloc(sizeof(Word));
+    PWord pw = calloc(1, sizeof(Word));
     if (pw == NULL)
         Fatal("Out of memory after %d candidates\n", cpwCand);
     return pw;
