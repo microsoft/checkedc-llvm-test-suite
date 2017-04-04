@@ -20,7 +20,7 @@ int flag=0,foo=0;
 
 #define LocalNewNode(h,v) \
 { \
-    h = (ptr<HANDLE>) malloc(sizeof(struct node)); \
+    h = (ptr<HANDLE>) calloc(1,sizeof(struct node)); \
       h->value = v; \
 	h->left = NIL; \
 	  h->right = NIL; \

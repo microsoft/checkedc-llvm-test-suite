@@ -24,7 +24,7 @@ ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back) {
     int                  i;
     ptr<struct Village>  fval checked[4] = { NULL, NULL, NULL, NULL };
 
-    new = (ptr<struct Village>)malloc(sizeof(struct Village));
+    new = calloc(1, sizeof(struct Village));
 
     for (i = 3; i >= 0; i--)
       fval[i] = alloc_tree(level - 1, label*4 + i + 1, new); 
@@ -208,7 +208,7 @@ ptr<struct Patient> generate_patient(ptr<struct Village> village)
   newseed = village->seed;
   label = village->label;
   if (rand > 0.666) {
-    patient = (struct Patient *)malloc(sizeof(struct Patient));
+    patient = calloc(1, sizeof(struct Patient));
     patient->hosps_visited = 0;
     patient->time = 0;
     patient->time_left = 0;
