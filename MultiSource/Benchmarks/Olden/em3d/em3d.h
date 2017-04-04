@@ -24,8 +24,8 @@ long lrand48(void);
 
 #define chatting printf
 
-extern char * min_ptr;
-extern char * max_ptr;
+// extern char * min_ptr;
+// extern char * max_ptr;
 
 extern int n_nodes; /* number of nodes (E and H) */
 extern int d_nodes; /* degree of nodes */
@@ -42,11 +42,12 @@ extern int local_p; /* percentage of local edges */
 typedef struct node_t {
   ptr<double> value;
   ptr<struct node_t> next;
-  ptr<struct node_t>* to_nodes : itype(array_ptr<ptr<struct node_t>>); /* array of nodes pointed to */
-  ptr<double> *from_values : itype(array_ptr<ptr<double>>); /* array of ptrs to vals where data comes from */
-  double *coeffs : itype(array_ptr<double>); /* array of coeffs on edges */
+  array_ptr<ptr<struct node_t>> to_nodes : count(degree); /* array of nodes pointed to */
+  array_ptr<ptr<double>> from_values : count(from_count); /* array of ptrs to vals where data comes from */
+  array_ptr<double> coeffs : count(from_count); /* array of coeffs on edges */
   int from_count;
   int from_length;
+  int degree;
 } node_t;
 
 typedef struct graph_t {
@@ -54,9 +55,14 @@ typedef struct graph_t {
   ptr<node_t> h_nodes checked[PROCS];
 } graph_t;
 
+typedef struct table_arr_t {
+  array_ptr<ptr<node_t>> table : count(size);
+  int size;
+} table_arr_t;
+
 typedef struct table_t {
-  ptr<node_t> *e_table checked[PROCS] : itype(array_ptr<ptr<node_t>> checked[PROCS]);
-  ptr<node_t> *h_table checked[PROCS] : itype(array_ptr<ptr<node_t>> checked[PROCS]);
+  table_arr_t e_table checked[PROCS];
+  table_arr_t h_table checked[PROCS];
 } table_t;
 
 /* Perform 1 step for a nodelist */
