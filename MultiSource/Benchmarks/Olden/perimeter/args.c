@@ -1,5 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdchecked.h>
+
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #include <fcntl.h>
@@ -23,7 +25,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, char *argv[])
+int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int level;
 
