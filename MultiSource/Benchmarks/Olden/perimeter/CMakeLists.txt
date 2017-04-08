@@ -1,7 +1,7 @@
 set(PROG perimeter)
 list(APPEND CPPFLAGS -DTORONTO)
 if(LARGE_PROBLEM_SIZE)
-  set(RUN_OPTIONS 11)
+  set(RUN_OPTIONS 12)
 else()
   if(SMALL_PROBLEM_SIZE)
     set(RUN_OPTIONS 9)
