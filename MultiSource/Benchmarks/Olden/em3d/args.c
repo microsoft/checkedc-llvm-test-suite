@@ -1,6 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "em3d.h"
+#include <stdchecked.h>
 
 #ifndef TORONTO
 #include <cm/cmmd.h>
@@ -27,7 +28,7 @@ void filestuff()
 }
 #endif
 
-void dealwithargs(int argc, char *argv[])
+void dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
 #ifdef TORONTO
   if (argc > 4)

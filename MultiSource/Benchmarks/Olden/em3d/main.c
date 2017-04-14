@@ -2,15 +2,15 @@
 
 #include "em3d.h"
 #include "make_graph.h"
+#include <stdchecked.h>
 
 extern int NumNodes;
 
 int DebugFlag;
 
-void print_graph(graph_t *graph, int id) 
+void print_graph(ptr<graph_t> graph, int id) 
 {
-  node_t *cur_node;
-  cur_node=graph->e_nodes[id];
+  ptr<node_t> cur_node = graph->e_nodes[id];
 
   for(; cur_node; cur_node=cur_node->next)
     {
@@ -27,10 +27,10 @@ void print_graph(graph_t *graph, int id)
 
 extern int nonlocals;
 
-int main(int argc, char *argv[])
+int main(int argc, array_ptr<char*> argv : count(argc))
 {
   int i;
-  graph_t *graph;
+  ptr<graph_t> graph = NULL;
 
   dealwithargs(argc,argv);
 
