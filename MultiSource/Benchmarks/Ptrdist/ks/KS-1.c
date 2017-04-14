@@ -63,7 +63,7 @@ ReadNetList(char *fname : itype(_Ptr<char>))
     // CHECKEDC : allocated pointer non-null check can be removed
     // since compiler insert dynamic non-null check before dereference of _Ptr pointer type
     // static checking is unnecessary with checkedc extension
-	TRY(head = prev = malloc(sizeof(Module)),
+	TRY(head = prev = calloc(1, sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
@@ -72,7 +72,7 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
-	    TRY(node = malloc(sizeof(Module)),
+	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
 		exit(1));
@@ -112,7 +112,7 @@ NetsToModules(void)
         // dynamic_check(net >= 0 && net < G_SZ)
         // programmer-inserted dynamic_check can remove unnecessary bounds check
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(netNode = malloc(sizeof(Net)),
+	    TRY(netNode = calloc(1, sizeof(Net)),
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
@@ -175,7 +175,7 @@ InitLists(void)
 	/* build the group A module list */
         // CHECKEDC : checkedc pointer type non-null check at dereference
         // dynamic_check(mr != NULL)
-	TRY(mr = malloc(sizeof(ModuleRec)),
+	TRY(mr = calloc(1, sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -201,7 +201,7 @@ InitLists(void)
 
 	/* build the group B module list */
     // CHECKEDC : _Ptr dereference (non-null check)
-	TRY(mr = malloc(sizeof(ModuleRec)),
+	TRY(mr = calloc(1, sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));

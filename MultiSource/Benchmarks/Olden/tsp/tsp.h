@@ -5,7 +5,7 @@
 
 #ifdef TORONTO
 /* Toronto's hack */
-#define ALLOC(p, sz)      malloc(sz)
+#define ALLOC(p, sz)      calloc(1, sz)
 #define chatting          printf  
 extern int NumNodes, NDim;
 #endif
