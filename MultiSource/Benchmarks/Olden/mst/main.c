@@ -16,8 +16,8 @@ typedef struct fc_br {
 static BlueReturn BlueRule(Vertex inserted, Vertex vlist) 
 {
   BlueReturn retval;
-  Vertex tmp,prev;
-  Hash hash;
+  Vertex tmp = NULL, prev = NULL;
+  Hash hash = NULL;
   int dist,dist2;
   int count;
   
@@ -49,9 +49,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
       count++;
       if (tmp==inserted) 
         {
-          Vertex next;
-
-          next = tmp->next;
+          Vertex next = tmp->next;
           prev->next = next;
         }
       else 
@@ -107,16 +105,18 @@ static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
 
 static int ComputeMst(Graph graph,int numproc,int numvert) 
 {
-  Vertex inserted,tmp;
+  Vertex inserted = NULL, tmp = NULL;
   int cost=0,dist;
+
+  dynamic_check(numproc <= MAXPROC);
 
   /* make copy of graph */
   printf("Compute phase 1\n");
 
   /* Insert first node */
-  inserted = graph->vlist[0];
+  inserted = (Vertex)graph->vlist[0].starting_vertex;
   tmp = inserted->next;
-  graph->vlist[0] = tmp;
+  graph->vlist[0].starting_vertex = tmp;
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */
@@ -134,9 +134,9 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   return cost;
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, array_ptr<char*> argv : count(argc))
 {
-  Graph graph;
+  Graph graph = NULL;
   int dist;
   int size;
  

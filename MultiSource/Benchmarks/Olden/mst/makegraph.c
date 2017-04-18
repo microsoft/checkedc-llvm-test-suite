@@ -41,30 +41,32 @@ static int hashfunc(unsigned int key)
 static void AddEdges(int count1, Graph retval, int numproc, 
                      int perproc, int numvert, int j) 
 {
-  Vertex tmp;
-  Vertex helper[MAXPROC];
+  Vertex tmp = NULL;
+  // CHECKED C: numproc must be less than MAXPROC,
+  // because of dynamic_check in MakeGraph
+  VertexArray helper checked[MAXPROC];
   int i;
 
   for (i=0; i<numproc; i++) {
     helper[i] = retval->vlist[i];
   }
 
-  for (tmp = retval->vlist[j]; tmp; tmp=tmp->next) 
+  for (tmp = retval->vlist[j].starting_vertex; tmp; tmp=tmp->next)
     {
       for (i=0; i<numproc*perproc; i++) 
         {
           int pn,offset,dist;
-          Vertex dest;
-          Hash hash;
+          Vertex dest = NULL;
+          Hash hash = NULL;
           
           if (i!=count1) 
             {
               dist = compute_dist(i,count1,numvert);
               pn = i/perproc;
               offset = i % perproc;
-              dest = ((helper[pn])+offset);
+              dest = ((helper[pn].block)+offset);
               hash = tmp->edgehash;
-              HashInsert((void *) dist,(unsigned int) dest,hash);
+              HashInsert((void*)dist,(unsigned int) dest,hash);
               /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
             }
         } /* for i... */
@@ -77,18 +79,21 @@ Graph MakeGraph(int numvert, int numproc)
   int perproc = numvert/numproc;
   int i,j;
   int count1;
-  Vertex v,tmp;
-  Vertex block;
-  Graph retval;
-  retval = (Graph)malloc(sizeof(*retval));
+  Vertex v = NULL, tmp = NULL;
+  array_ptr<struct vert_st> block : count(perproc) = NULL;
+  Graph retval = NULL;
+
+  dynamic_check(numproc <= MAXPROC);
+
+  retval = (Graph)calloc(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
-      retval->vlist[i]=NULL;
+      retval->vlist[i].starting_vertex = NULL;
     }
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = (Vertex) malloc(perproc*(sizeof(*tmp)));
+      block = calloc(perproc, sizeof(*tmp));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {
@@ -97,9 +102,11 @@ Graph MakeGraph(int numvert, int numproc)
           tmp->mindist = 9999999;
           tmp->edgehash = MakeHash(numvert/4,hashfunc);
           tmp->next = v;
-          v=tmp;
+          v = tmp;
         }
-      retval->vlist[j] = v;
+      retval->vlist[j].block = block;
+      retval->vlist[j].len = perproc;
+      retval->vlist[j].starting_vertex = v;
     }
 
   chatting("Make phase 3\n");

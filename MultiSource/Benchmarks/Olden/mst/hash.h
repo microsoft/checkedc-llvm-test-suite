@@ -1,20 +1,26 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
+#include <stdchecked.h>
 #include "stdio.h"
+#include <stdio_checked.h>
 
-typedef struct hash_entry {
+struct hash_entry {
   unsigned int key;
   void *entry;
-  struct hash_entry *next;
-} *HashEntry;
+  ptr<struct hash_entry> next;
+};
 
-typedef struct hash {
-  HashEntry *array;
-  int (*mapfunc)(unsigned int);
+typedef ptr<struct hash_entry> HashEntry;
+
+struct hash {
+  array_ptr<HashEntry> array : count(size);
+  ptr<int(unsigned int)> mapfunc;
   int size;
-} *Hash;
+};
 
-Hash MakeHash(int size, int (*map)(unsigned int));
+typedef ptr<struct hash> Hash;
+
+Hash MakeHash(int size, ptr<int(unsigned int)> map);
 void *HashLookup(unsigned int key, Hash hash);
-void HashInsert(void *entry,unsigned int key, Hash hash);
+void HashInsert(void *entry, unsigned int key, Hash hash);
 void HashDelete(unsigned int key, Hash hash);
