@@ -36,10 +36,11 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
 
   retval = (Hash) localmalloc(sizeof(*retval));
   retval->array = (HashEntry *) localmalloc(size*sizeof(HashEntry));
-  for (i=0; i<size; i++)
-    retval->array[i]=NULL;
-  retval->mapfunc = map;
   retval->size = size;
+  // CHECKEC C: Not required, as localmalloc now uses calloc internally
+  // for (i=0; i<size; i++)
+  //   retval->array[i] = NULL;
+  retval->mapfunc = map;
   return retval;
 }
 
