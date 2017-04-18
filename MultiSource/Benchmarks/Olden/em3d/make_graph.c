@@ -200,7 +200,7 @@ void make_tables(ptr<table_t> table,int groupname) {
   /* This is done on procname-- we expect table to be remote */
   /* We use remote writes */
   table->e_table[groupname].size = n_nodes/PROCS;
-  table->e_table[groupname].size = n_nodes/PROCS;
+  table->h_table[groupname].size = n_nodes/PROCS;
   table->e_table[groupname].table = e_table;
   table->h_table[groupname].table = h_table;
 }
