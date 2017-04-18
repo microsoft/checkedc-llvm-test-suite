@@ -72,7 +72,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
       chatting("Uncaught calloc error\n");
       exit(0);
     }
-    curr_node->degree = degree;
+    cur_node->degree = degree;
 
     for (j=0; j<degree; j++) {
       do {
