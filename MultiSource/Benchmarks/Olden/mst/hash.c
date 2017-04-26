@@ -10,13 +10,13 @@
 static int remaining = 0;
 static array_ptr<char> temp : count(remaining);
 
-static array_ptr<char> localmalloc(int size) : byte_count(size)
+static array_ptr<void> localmalloc(int size) : byte_count(size)
 {
-  array_ptr<char> blah;
+  array_ptr<void> blah;
   
   if (size>remaining) 
     {
-      temp = (char *) calloc(32768, sizeof(char));
+      temp = calloc(32768, sizeof(char));
       dynamic_check(temp != NULL);
       // if (!temp) printf("Error! malloc returns null\n");
       remaining = 32768;
@@ -35,7 +35,7 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
   int i;
 
   retval = (Hash) localmalloc(sizeof(*retval));
-  retval->array = (HashEntry *) localmalloc(size*sizeof(HashEntry));
+  retval->array = (array_ptr<HashEntry>)localmalloc(size*sizeof(HashEntry));
   retval->size = size;
   // CHECKEC C: Not required, as localmalloc now uses calloc internally
   // for (i=0; i<size; i++)
@@ -78,7 +78,8 @@ void HashInsert(void *entry,unsigned int key,Hash hash)
 void HashDelete(unsigned key, Hash hash) {
   HashEntry tmp = NULL;
   int j = (hash->mapfunc)(key);
-  HashEntry *ent = &hash->array[j];
+  int size = hash->size;
+  array_ptr<HashEntry> ent : count(size) = &hash->array[j];
 
   while (*ent && (*ent)->key != key) {
     ent = &(*ent)->next;
