@@ -42,8 +42,6 @@ static void AddEdges(int count1, Graph retval, int numproc,
                      int perproc, int numvert, int j) 
 {
   Vertex tmp = NULL;
-  // CHECKED C: numproc must be less than MAXPROC,
-  // because of dynamic_check in MakeGraph
   VertexArray helper checked[MAXPROC];
   int i;
 

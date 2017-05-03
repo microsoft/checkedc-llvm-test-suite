@@ -34,11 +34,6 @@ extern int local_p; /* percentage of local edges */
 
 #define assert(a) if (!a) {printf("Assertion failure\n"); exit(-1);}
 
-// CHECKED C: Here we cannot reason about the length of the array_ptrs for
-// coeffs and from_values because array_ptrs in structs do not yet work.
-// CHECKED C: Here we cannot reason about the length of the array_ptr for 
-// to_nodes because that information is not kept in this struct (it's kept
-// in a global).
 typedef struct node_t {
   ptr<double> value;
   ptr<struct node_t> next;

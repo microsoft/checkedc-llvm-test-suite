@@ -11,9 +11,6 @@ register ptr<node_t> nodelist;
   for (; nodelist; ) {
     register double cur_value;
     register int from_count ;
-    // CHECKED C: Changed by checked-c-convert
-    // CHECKED C: checked-c-convert drops "register" modifier. re-added manually
-    // CHECKED C: manually added null initializer
     register _Ptr<double>  other_value = NULL;
     register double coeff;
     register double value;
