@@ -28,7 +28,6 @@
  *
  */
 
-// CHECKEDC : checked header include
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include <assert.h>
