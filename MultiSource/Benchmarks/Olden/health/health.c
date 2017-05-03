@@ -178,7 +178,6 @@ void check_patients_waiting(ptr<struct Village> village, ptr<struct List> list) 
 }
 
 
-// CHECKED C: converter managed `hosp` here
 void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient> patient) {
   int t = patient->hosps_visited;
 
@@ -259,7 +258,6 @@ ptr<struct List> sim(ptr<struct Village> village)
   int                    i;
   ptr<struct Patient>    patient = NULL;
   ptr<struct List>       l = NULL, up = NULL;
-  // CHECKED C: converter managed `h` here
   ptr<struct Hosp>       h = NULL;
   ptr<struct List>       val checked[4] = {NULL, NULL, NULL, NULL};
   

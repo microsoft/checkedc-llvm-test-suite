@@ -35,7 +35,6 @@
  */
 
 #include <limits.h>
-// CHECKEDC
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include <assert.h>
@@ -71,7 +70,6 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
 {
   int            nVertex;
   int            nEdge;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>   graph = 0;
 
   nVertex = DEFAULT_N_VERTEX;
@@ -127,7 +125,6 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
 _Ptr<Vertices> 
 MST(_Ptr<Vertices>  graph)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  heap = 0;
   _Ptr<Vertices>  vertex = 0;
   _Ptr<Edges>  edge = 0;
@@ -180,7 +177,6 @@ MST(_Ptr<Vertices>  graph)
 void
 PrintMST(_Ptr<Vertices>  graph)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex = 0;
 
   assert(graph != NULL_VERTEX);

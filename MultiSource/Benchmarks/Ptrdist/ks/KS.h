@@ -43,7 +43,6 @@
  */
 /* modular view */
 typedef struct _Net {
-    // CHECKEDC : linked list having next pointer
     _Ptr<struct _Net> next;
     unsigned long net;
 } Net;
@@ -54,7 +53,6 @@ extern unsigned long numModules;
 
 /* net-ular view */
 typedef struct _Module {
-    // CHECKEDC : linked list having next pointer
     _Ptr<struct _Module> next;
     unsigned long module;
 } Module;
@@ -64,7 +62,6 @@ extern ModulePtr nets _Checked [G_SZ];	/* all nets -> modules */
 extern unsigned long numNets;
 
 typedef struct _ModuleRec {
-    // CHECKEDC : linked list having next pointer
     _Ptr<struct _ModuleRec> next;
     unsigned long module;
 } ModuleRec;

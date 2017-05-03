@@ -52,7 +52,6 @@ struct root {
   Demand last;
   double last_theta_R; 
   double last_theta_I;
-  // CHECKEDC : checked array type of _Ptr type
   _Ptr<struct lateral> feeders _Checked[NUM_FEEDERS];
 };  /* sizeof(struct root) = 108 bytes */
 
@@ -64,7 +63,6 @@ struct lateral {
   double beta;
   double R;
   double X;
-  // CHECKEDC : checked pointer
   _Ptr<struct lateral> next_lateral;
   _Ptr<struct branch> branch;
 }; /* sizeof(struct lateral) = 64 bytes */
@@ -77,7 +75,6 @@ struct branch {
   double beta;
   double R;
   double X;
-  // CHECKEDC
   _Ptr<struct branch> next_branch;
   _Ptr<struct leaf> leaves _Checked[LEAVES_PER_BRANCH];
 }; /* sizeof(struct branch) = 92 bytes */
@@ -96,7 +93,6 @@ typedef _Ptr<struct leaf> Leaf;
 Root build_tree(void);
 Lateral build_lateral(int i, int num);
 Branch build_branch(int i, int j, int num);
-// CHECKEDC : function without a prototype cannot have checked return type
 Leaf build_leaf(void);
 
 void Compute_Tree(Root r);

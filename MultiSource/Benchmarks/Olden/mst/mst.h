@@ -25,7 +25,6 @@ struct vert_arr_st {
 
 typedef struct vert_arr_st VertexArray;
 
-// CHECKED C: We should probably verify that MAXPROC == NumNodes
 struct graph_st {
   struct vert_arr_st vlist checked[MAXPROC];
 };

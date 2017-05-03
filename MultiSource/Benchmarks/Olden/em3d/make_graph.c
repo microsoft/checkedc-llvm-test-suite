@@ -61,8 +61,6 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
   ptr<node_t> cur_node = nodelist;
 
   for(; cur_node; cur_node=cur_node->next) {
-    // CHECKED C: Changed by checked-c-convert
-    // CHECKED C: manually added null initializer
     ptr<node_t> other_node = NULL;
     int j,k;
     int dest_proc;
@@ -147,7 +145,6 @@ void fill_from_fields(ptr<node_t> nodelist, int degree) {
 
     for (j=0; j<degree; j++) {
       int count,thecount;
-      // CHECKED C: Changed by checked-c-convert
       ptr<node_t> other_node = cur_node->to_nodes[j]; /* <-- 6% load miss penalty */
       array_ptr<ptr<double>> otherlist : count(other_node->from_count) = NULL;
       ptr<double> value = cur_node->value;
@@ -346,8 +343,6 @@ ptr<graph_t> initialize_graph(void) {
     local_node_r = local_table[0];
     retval->h_nodes[i] = local_node_r;
     for (j = 1; j < blocksize; j++) {
-      // CHECKED C: Changed by checked-c-convert
-      // CHECKED C: manually added null initializer
       _Ptr<node_t>  local_node_l = NULL;
 
       local_table_size = table->e_table[i*blocksize+j-1].size;
