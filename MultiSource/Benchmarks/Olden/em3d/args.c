@@ -8,6 +8,8 @@
 #include <fcntl.h>
 #endif
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 int NumNodes;
 #else
@@ -19,7 +21,7 @@ extern int __NumNodes;
 extern int DebugFlag;
 
 #ifndef TORONTO
-void filestuff()
+unchecked void filestuff()
 {
   CMMD_fset_io_mode(stdout, CMMD_independent);
   fcntl(fileno(stdout), F_SETFL, O_APPEND);
@@ -28,7 +30,7 @@ void filestuff()
 }
 #endif
 
-void dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
 #ifdef TORONTO
   if (argc > 4)

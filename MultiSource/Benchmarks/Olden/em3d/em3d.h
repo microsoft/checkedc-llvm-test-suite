@@ -12,7 +12,7 @@
 
 #include <stdchecked.h>
 
-void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 void printstats(void);
 void srand48(long);
 long lrand48(void);
@@ -22,6 +22,7 @@ long lrand48(void);
 #include <stdlib.h>
 #include <stdlib_checked.h>
 
+#pragma BOUNDS_CHECKED ON
 #define chatting printf
 
 // extern char * min_ptr;
@@ -32,7 +33,7 @@ extern int d_nodes; /* degree of nodes */
 extern int local_p; /* percentage of local edges */
 #define PROCS 1
 
-#define assert(a) if (!a) {printf("Assertion failure\n"); exit(-1);}
+#define assert(a) if (!a) unchecked { printf("Assertion failure\n"); exit(-1); }
 
 typedef struct node_t {
   ptr<double> value;
@@ -64,4 +65,5 @@ typedef struct table_t {
 void compute_nodes(ptr<node_t> nodelist);
 double gen_uniform_double(void);
 
+#pragma BOUNDS_CHECKED OFF
 #endif
