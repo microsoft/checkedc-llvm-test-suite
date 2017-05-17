@@ -10,6 +10,12 @@
 /////////////////////////////////////////////////////////////////////////
 #include <stdlib.h>
 
+// The Mac OS X Headers overwrite NULL to expand to ((void*) 0)
+// which doesn't work in a checked scope. 0 will work fine.
+#ifdef __DARWIN_NULL
+#define NULL 0
+#endif
+
 // TODO: strings
 // double atof(const char *s);
 // int atoi(const char *s);

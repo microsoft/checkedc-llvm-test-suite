@@ -1,9 +1,10 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "mst.h"
+#pragma BOUNDS_CHECKED ON
 
 /*#define assert(num,a) \
-   if (!(a)) {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}*/
+   if (!(a)) unchecked {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}*/
 
 #define CONST_m1 10000
 #define CONST_b 31415821
@@ -64,7 +65,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
               offset = i % perproc;
               dest = ((helper[pn].block)+offset);
               hash = tmp->edgehash;
-              HashInsert((void*)dist,(unsigned int) dest,hash);
+              unchecked { HashInsert((void*)dist,(unsigned int) dest,hash); }
               /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
             }
         } /* for i... */
@@ -88,7 +89,7 @@ Graph MakeGraph(int numvert, int numproc)
     {
       retval->vlist[i].starting_vertex = NULL;
     }
-  chatting("Make phase 2\n");
+  unchecked { chatting("Make phase 2\n"); }
   for (j=numproc-1; j>=0; j--) 
     {
       block = calloc(perproc, sizeof(*tmp));
@@ -107,15 +108,15 @@ Graph MakeGraph(int numvert, int numproc)
       retval->vlist[j].starting_vertex = v;
     }
 
-  chatting("Make phase 3\n");
+  unchecked { chatting("Make phase 3\n"); }
   for (j=numproc-1; j>=0; j--) 
     {
       count1 = j*perproc;
       AddEdges(count1, retval, numproc, perproc, numvert, j);
     } /* for j... */
-  chatting("Make phase 4\n");
+  unchecked { chatting("Make phase 4\n"); }
 
-  chatting("Make returning\n");
+  unchecked { chatting("Make returning\n"); }
   return retval;
 }
 

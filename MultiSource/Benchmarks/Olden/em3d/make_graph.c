@@ -15,6 +15,7 @@
 #include "em3d.h"
 #include "util.h"
 #include <stdchecked.h>
+#pragma BOUNDS_CHECKED ON
 
 extern int NumNodes;
 int NumMisses;
@@ -67,7 +68,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
 
     cur_node->to_nodes = calloc(degree, (sizeof(ptr<node_t>)));
     if (!cur_node->to_nodes) {
-      chatting("Uncaught calloc error\n");
+      unchecked { chatting("Uncaught calloc error\n"); }
       exit(0);
     }
     cur_node->degree = degree;
@@ -87,7 +88,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
         local_table = table[dest_proc].table;
         other_node = local_table[number];   /* <------ 4% load miss penalty */
         if (!other_node) {
-          chatting("Error! on dest %d @ %d\n",number,dest_proc);
+          unchecked { chatting("Error! on dest %d @ %d\n",number,dest_proc); }
           exit(1);
         }
 
@@ -104,7 +105,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
       while (k<j);
 
       if (!cur_node || !cur_node->to_nodes) {
-        chatting("Error! no to_nodes filed!\n");
+        unchecked { chatting("Error! no to_nodes filed!\n"); }
         exit(1);
       }
 
@@ -126,7 +127,7 @@ void update_from_coeffs(ptr<node_t> nodelist) {
     int from_count = cur_node->from_count;
     
     if (from_count < 1) {
-      chatting("Help! no from count (from_count=%d) \n", from_count);
+      unchecked { chatting("Help! no from count (from_count=%d) \n", from_count); }
       cur_node->from_values = (array_ptr<ptr<double>>)calloc(20, sizeof(ptr<double>));
       cur_node->coeffs = (array_ptr<double>)calloc(20, sizeof(double));
       cur_node->from_length = 0;
@@ -149,7 +150,7 @@ void fill_from_fields(ptr<node_t> nodelist, int degree) {
       array_ptr<ptr<double>> otherlist : count(other_node->from_count) = NULL;
       ptr<double> value = cur_node->value;
 
-      if (!other_node) chatting("Help!!\n");
+      if (!other_node) unchecked { chatting("Help!!\n"); }
       count=(other_node->from_length)++;  /* <----- 30% load miss penalty */
       otherlist=other_node->from_values;  /* <----- 10% load miss penalty */
       thecount=other_node->from_count;
@@ -187,10 +188,10 @@ void make_tables(ptr<table_t> table,int groupname) {
   int procname = 0;
 
   init_random(SEED1*groupname);
-  h_values = (double *)calloc(n_nodes/PROCS, sizeof(double));
+  h_values = (array_ptr<double>)calloc(n_nodes/PROCS, sizeof(double));
   h_table = make_table(n_nodes/PROCS,procname);
   fill_table(h_table,h_values,n_nodes/PROCS,procname);
-  e_values = (double *)calloc(n_nodes/PROCS, sizeof(double));
+  e_values = (array_ptr<double>)calloc(n_nodes/PROCS, sizeof(double));
   e_table = make_table(n_nodes/PROCS,procname);
   fill_table(e_table,e_values,n_nodes/PROCS,procname);
 
@@ -308,29 +309,29 @@ ptr<graph_t> initialize_graph(void) {
 
   groupsize = PROCS/NumNodes;
 
-  chatting("making tables \n");
+  unchecked { chatting("making tables \n"); }
   do_all(table,0,PROCS,make_tables,groupsize);
 
   /* At this point, for each h node, we give it the appropriate number
      of neighbors as defined by the degree */
-  chatting("making neighbors\n");
+  unchecked { chatting("making neighbors\n"); }
 
   do_all(table,0,PROCS,make_all_neighbors,groupsize);
 
   /* We now create from count and initialize coefficients */
-  chatting("updating from and coeffs\n");
+  unchecked { chatting("updating from and coeffs\n"); }
   do_all(table,0,PROCS,update_all_from_coeffs,groupsize);
 
   /* Fill the from fields in the nodes */
-  chatting("filling from fields\n");
+  unchecked { chatting("filling from fields\n"); }
   do_all(table,0,PROCS,fill_all_from_fields,groupsize);
 
-  chatting("localizing coeffs, from_nodes\n");
+  unchecked { chatting("localizing coeffs, from_nodes\n"); }
   do_all(table,0,PROCS,localize,groupsize);
 
   blocksize = PROCS/NumNodes;
 
-  chatting("cleanup for return now\n");
+  unchecked { chatting("cleanup for return now\n"); }
   for (i=0; i<NumNodes; i++) {
     int local_table_size = table->e_table[i*blocksize].size;
     array_ptr<ptr<node_t>> local_table : count(local_table_size) = table->e_table[i*blocksize].table;
@@ -363,9 +364,9 @@ ptr<graph_t> initialize_graph(void) {
     }
   }
   
-  chatting("Clearing NumMisses\n");
+  unchecked { chatting("Clearing NumMisses\n"); }
   do_all(table,0,PROCS,clear_nummiss,groupsize);
-  chatting("Returning\n");
+  unchecked { chatting("Returning\n"); }
 
   return retval;
 }

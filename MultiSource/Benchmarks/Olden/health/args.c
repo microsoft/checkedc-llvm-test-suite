@@ -10,7 +10,7 @@
 #include <stdlib_checked.h>
 #include "health.h"
 
-void dealwithargs(int argc, array_ptr<char*> argv : count(argc)) {
+unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc)) {
   if (argc < 4) {
     max_level = 3;
     max_time = 15;
