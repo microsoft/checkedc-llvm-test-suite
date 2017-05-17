@@ -17,9 +17,7 @@ void printstats(void);
 void srand48(long);
 long lrand48(void);
 
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
 
 #define chatting printf

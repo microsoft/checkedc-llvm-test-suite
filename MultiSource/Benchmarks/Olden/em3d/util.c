@@ -1,6 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-#include <stdlib.h>
+#include <stdlib_checked.h>
 #include "em3d.h"
 
 #ifdef TORONTO
