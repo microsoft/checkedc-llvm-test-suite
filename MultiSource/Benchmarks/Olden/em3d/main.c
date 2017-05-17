@@ -16,13 +16,13 @@ unchecked void print_graph(ptr<graph_t> graph, int id)
   for(; cur_node; cur_node=cur_node->next)
     {
       chatting("E: value %f, from_count %d\n", *cur_node->value,
-               cur_node->from_count);
+	       cur_node->from_count);
     }
   cur_node=graph->h_nodes[id];
   for(; cur_node; cur_node=cur_node->next)
     {
       chatting("H: value %f, from_count %d\n", *cur_node->value,
-	             cur_node->from_count);
+	       cur_node->from_count);
     }
 }
 
