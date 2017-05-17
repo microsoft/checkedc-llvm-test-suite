@@ -29,7 +29,6 @@
  */
 
 #include <assert.h>
-// CHECKEDC
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include "graph.h"
@@ -75,7 +74,6 @@ static id = 1;
 _Ptr<Vertices> 
 GenGraph(int nVertex, int nEdge)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  graph = 0;
 
   assert(nEdge + 1 >= nVertex);
@@ -93,7 +91,6 @@ GenTree(int nVertex)
 {
   int       i;
   int       weight;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex = 0;
   _Ptr<Vertices>  graph = 0;
   _Ptr<Edges>  edge = 0;
@@ -144,7 +141,6 @@ _Ptr<Vertices>
 AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge)
 {
   int       i;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex1 = 0;
   _Ptr<Vertices>  vertex2 = 0;
 
@@ -184,7 +180,6 @@ void
 Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 {
   int    weight;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Edges>  edge = 0;
 
   weight = GET_WEIGHT;
@@ -207,7 +202,6 @@ Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 int
 Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Edges>  edge = 0;
 
   edge = EDGES(vertex1);
@@ -228,10 +222,9 @@ Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 _Ptr<Vertices> 
 NewVertex(void)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex = 0;
 
-  vertex = malloc(sizeof(Vertices));
+  vertex = calloc(1, sizeof(Vertices));
 
   if(vertex == NULL)
   {
@@ -249,10 +242,9 @@ NewVertex(void)
 _Ptr<Edges> 
 NewEdge(void)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Edges>  edge = 0;
 
-  edge = malloc(sizeof(Edges));
+  edge = calloc(1, sizeof(Edges));
 
   if(edge == NULL)
   {
@@ -270,7 +262,6 @@ NewEdge(void)
 void
 PrintGraph(_Ptr<Vertices>  graph)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Vertices>  vertex = 0;
 
   assert(graph != NULL);
@@ -289,7 +280,6 @@ PrintGraph(_Ptr<Vertices>  graph)
 void
 PrintNeighbors(_Ptr<Vertices>  vertex)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<Edges>  edge = 0;
 
   edge = EDGES(vertex);

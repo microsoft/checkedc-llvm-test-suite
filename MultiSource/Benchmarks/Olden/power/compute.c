@@ -26,16 +26,16 @@ static double Q=1.0;
 void optimize_node (double pi_R, double pi_I);
 double find_g ();
 double find_h ();
-double find_gradient_f (double pi_R, double pi_I, double* gradient);
-double find_gradient_g (double* gradient);
-double find_gradient_h (double* gradient);
-void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad);
-double make_orthogonal (double* v_mod, double* v_static);
+double find_gradient_f (double pi_R, double pi_I, _Array_ptr<double> gradient : count(2));
+double find_gradient_g (_Array_ptr<double> gradient : count(2));
+double find_gradient_h (_Array_ptr<double> gradient : count(2));
+void find_dd_grad_f (double pi_R, double pi_I, _Array_ptr<double> dd_grad : count(2));
+double make_orthogonal (_Array_ptr<double> v_mod : count(2), _Array_ptr<double> v_static : count(2));
 
 
 void Compute_Tree(Root r) {
   int i;
-  Lateral l;
+  Lateral l = 0;
   Demand a;
   Demand tmp;
   double theta_R,theta_I;
@@ -60,8 +60,8 @@ Demand Compute_Lateral(Lateral l, double theta_R, double theta_I,
   Demand a2;
   double new_pi_R, new_pi_I;
   double a,b,c,root;
-  Lateral next;
-  Branch br;
+  Lateral next = 0;
+  Branch br = 0;
   
   new_pi_R = pi_R + l->alpha*(theta_R+(theta_I*l->X)/l->R);
   new_pi_I = pi_I + l->beta*(theta_I+(theta_R*l->R)/l->X);
@@ -103,8 +103,8 @@ Demand Compute_Branch(Branch br, double theta_R, double theta_I,
   Demand a2,tmp;
   double new_pi_R, new_pi_I;
   double a,b,c,root;
-  Leaf l;
-  Branch next;
+  Leaf l = 0;
+  Branch next = 0;
   int i;
   Demand a1;
   
@@ -172,10 +172,10 @@ void optimize_node (double pi_R, double pi_I)
     double	    g;
     double	    h;
 
-    double	    grad_f[2];
-    double	    grad_g[2];
-    double	    grad_h[2];
-    double	    dd_grad_f[2];
+    double	    grad_f _Checked[2];
+    double	    grad_g _Checked[2];
+    double	    grad_h _Checked[2];
+    double	    dd_grad_f _Checked[2];
     double	    magnitude;
 
     int		    i;
@@ -244,7 +244,7 @@ double find_h ()
     return (P-5*Q);
 }
 
-double find_gradient_f (double pi_R, double pi_I, double* gradient)
+double find_gradient_f (double pi_R, double pi_I, _Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
@@ -260,7 +260,7 @@ double find_gradient_f (double pi_R, double pi_I, double* gradient)
     return magnitude;
 }
 
-double find_gradient_g (double* gradient)
+double find_gradient_g (_Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
@@ -276,7 +276,7 @@ double find_gradient_g (double* gradient)
     return magnitude;
 }
 
-double find_gradient_h (double* gradient)
+double find_gradient_h (_Array_ptr<double> gradient : count(2))
 {
     int		    i;
     double	    magnitude=0.0;
@@ -292,7 +292,7 @@ double find_gradient_h (double* gradient)
     return magnitude;
 }
 
-void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad)
+void find_dd_grad_f (double pi_R, double pi_I, _Array_ptr<double> dd_grad : count(2))
 {
     double	    P_plus_1_inv=1/(P+1);
     double	    Q_plus_1_inv=1/(Q+1);
@@ -306,7 +306,7 @@ void find_dd_grad_f (double pi_R, double pi_I, double* dd_grad)
     dd_grad[1]=-Q_plus_1_inv*Q_plus_1_inv*Q_grad_term/grad_mag;
 }
 
-double make_orthogonal (double* v_mod, double* v_static)
+double make_orthogonal (_Array_ptr<double> v_mod : count(2), _Array_ptr<double> v_static : count(2))
 {
     int		    i;
     double	    total=0.0;

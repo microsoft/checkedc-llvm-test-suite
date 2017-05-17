@@ -28,7 +28,6 @@
  *
  */
 
-// CHECKEDC
 #include <stdio_checked.h>
 #include "Fheap.h"
 #include "Fstruct.h"
@@ -36,7 +35,6 @@
 int
 SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
 
   if(h == NULL_HEAP)
@@ -67,7 +65,6 @@ int
 SanityCheck2(_Ptr<HeapP>  h)
 {
   int   sum;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
   _Ptr<HeapP>  h2 = 0;
 
@@ -112,7 +109,6 @@ int
 SanityCheck3(_Ptr<HeapP>  h, int rank)
 {
   int   sum;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
   _Ptr<HeapP>  h2 = 0;
 
@@ -149,7 +145,6 @@ SanityCheck3(_Ptr<HeapP>  h, int rank)
 void
 PrettyPrint(_Ptr<HeapP>  h)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
 
   if(h == NULL_HEAP)

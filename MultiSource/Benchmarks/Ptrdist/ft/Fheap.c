@@ -65,9 +65,6 @@ InitFHeap()
 
   for(j = 0; j < MAX_RANK; j++)
   {
-      // CHECKEDC : checkedc array type array subscript
-      // dynamic_check(j >= 0 && j < MAX_RANK)
-      // : reasoning facts can optimize redundant bounds check
     hTable[j] = NULL;
   }
 }
@@ -94,7 +91,6 @@ FindMin(_Ptr<HeapP>  h)
 INLINE _Ptr<HeapP> 
 Insert(_Ptr<_Ptr<HeapP>>  h, _Ptr<Item>  i)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
 
   h1 = NewHeap(i);
@@ -131,7 +127,6 @@ INLINE _Ptr<HeapP>
 DeleteMin(_Ptr<HeapP>  h)
 {
   int   r, rMax, j;
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
   _Ptr<HeapP>  h2 = 0;
   _Ptr<HeapP>  h3 = 0;
@@ -175,11 +170,6 @@ DeleteMin(_Ptr<HeapP>  h)
     r = RANK(h2);
     assert(r < MAX_RANK);
 
-    // CHECKEDC : checkedc array type array subscript
-    // dynamic_check(r >= 0 && r < MAX_RANK)
-    // : reasoning facts from assertion statement (r < MAX_RANK)
-    // can optimize redundant bounds check
-    // : instead of using assertion, it can be replaced with dynamic_check
     while(hTable[r] != NULL)
     {
       if(LessThan(ITEM(hTable[r]), ITEM(h2)))
@@ -221,11 +211,6 @@ DeleteMin(_Ptr<HeapP>  h)
 
       r = RANK(h2);
       assert(r < MAX_RANK);
-      // CHECKEDC : checkedc array type array subscript
-      // dynamic_check(r >= 0 && r < MAX_RANK)
-      // : reasoning facts from assertion statement (r < MAX_RANK)
-      // can optimize redundant bounds check
-      // : instead of using assertion, it can be replaced with dynamic_check
       while(hTable[r] != NULL)
       {
         if(LessThan(ITEM(hTable[r]), ITEM(h2)))
@@ -258,10 +243,6 @@ DeleteMin(_Ptr<HeapP>  h)
    */
   for(j = 0; j <= rMax; j++)
   {
-      // CHECKEDC : checkedc array type array subscript
-      // dynamic_check(j >= 0 && j < MAX_RANK)
-      // if there is programmer-inserted dynamic_check outside for-loop
-      // compiler can optimize away redundant bounds check
     if(hTable[j] != NULL)
     {
       break;
@@ -273,10 +254,6 @@ DeleteMin(_Ptr<HeapP>  h)
   j++;
   for(; j <= rMax; j++)
   {
-      // CHECKEDC : checkedc array type array subscript
-      // dynamic_check(j >= 0 && j < MAX_RANK)
-      // if there is programmer-inserted dynamic_check outside for-loop
-      // compiler can optimize away redundant bounds check
     if(hTable[j] != NULL)
     {
       CombineLists(h1, hTable[j]);			/* TBD note that update to PARENT not necessary!! */
@@ -321,7 +298,6 @@ DecreaseKey(_Ptr<HeapP>  h, _Ptr<HeapP>  i, int delta)
 INLINE void
 RemoveChild(_Ptr<HeapP>  i)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  parent = 0;
 
   assert(i != NULL);
@@ -366,7 +342,6 @@ FixRank(_Ptr<HeapP>  h, int delta)
 INLINE _Ptr<HeapP> 
 Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
   _Ptr<HeapP>  h2 = 0;
 
@@ -521,10 +496,9 @@ RemoveEntry(_Ptr<HeapP>  h)
 INLINE _Ptr<HeapP> 
 NewHeap(_Ptr<Item>  i)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h = 0;
 
-  h = (HeapP *)malloc(sizeof(HeapP));
+  h = (HeapP *)calloc(1, sizeof(HeapP));
 
   if(h == NULL)
   {
@@ -551,7 +525,6 @@ ItemOf(_Ptr<HeapP>  h)
 INLINE _Ptr<HeapP> 
 Find(_Ptr<HeapP>  h, _Ptr<Item>  item)
 {
-    // CHECKEDC : automatic variable initialize required
   _Ptr<HeapP>  h1 = 0;
   _Ptr<HeapP>  h2 = 0;
 

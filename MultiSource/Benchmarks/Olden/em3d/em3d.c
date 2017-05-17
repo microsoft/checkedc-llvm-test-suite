@@ -3,15 +3,15 @@
 #include "em3d.h"
 int nonlocals=0;
 void compute_nodes(nodelist)
-register node_t *nodelist;
+register ptr<node_t> nodelist;
 {
   register int i;
-  register node_t *localnode;
+  register ptr<node_t> localnode = NULL;
   
   for (; nodelist; ) {
     register double cur_value;
     register int from_count ;
-    register double *other_value;
+    register _Ptr<double>  other_value = NULL;
     register double coeff;
     register double value;
     /*register double *coeffs;*/

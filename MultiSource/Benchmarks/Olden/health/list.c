@@ -5,29 +5,31 @@
  *           To be used with health.c                               *
  ********************************************************************/
 
+#include <stdchecked.h>
 #include <stdio.h>
+#include <stdio_checked.h>
 #include <stdlib.h>
+#include <stdlib_checked.h>
 #include "health.h"
 
-void addList(struct List *list, struct Patient *patient) {
-  struct List *b;
+void addList(ptr<struct List> list, ptr<struct Patient> patient) {
+  ptr<struct List> b = NULL;
 
   while (list != NULL) {
     b = list;
     list = list->forward; }
   
-  list = (struct List *)malloc(sizeof(struct List));
+  list = calloc(1, sizeof(struct List));
   list->patient = patient;
   list->forward = NULL;
   list->back = b;
   b->forward = list;
 } 
 
-void removeList(struct List *list, struct Patient *patient) {
-  struct List          *l1,*l2;
-  struct Patient       *p;
+void removeList(ptr<struct List> list, ptr<struct Patient> patient) {
+  ptr<struct List>      l1 = NULL, l2 = NULL;
+  ptr<struct Patient>   p = list->patient;
 
-  p = list->patient;
   while(p != patient) {
       list = list->forward; 
       p = list->patient;
