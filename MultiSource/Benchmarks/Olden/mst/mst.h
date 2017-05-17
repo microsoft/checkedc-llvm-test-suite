@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdlib_checked.h>
 #include "hash.h"
+#pragma BOUNDS_CHECKED ON
 #define MAXPROC 1
 
 #define chatting printf
@@ -32,6 +33,8 @@ struct graph_st {
 typedef ptr<struct graph_st> Graph;
 
 Graph MakeGraph(int numvert, int numproc);
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
-int atoi(const char *);
+unchecked int atoi(const char *);
+
+#pragma BOUNDS_CHECKED OFF

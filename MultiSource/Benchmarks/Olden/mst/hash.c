@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <stdlib_checked.h>
 #include "hash.h"
+#pragma BOUNDS_CHECKED ON
 
-#define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
+#define assert(num,a) if (!(a)) unchecked {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
 static int remaining = 0;
 static array_ptr<char> temp : count(remaining);
@@ -44,7 +45,7 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
   return retval;
 }
 
-void *HashLookup(unsigned int key, Hash hash)
+unchecked void *HashLookup(unsigned int key, Hash hash)
 {
   int j;
   HashEntry ent = NULL;
@@ -60,7 +61,7 @@ void *HashLookup(unsigned int key, Hash hash)
   return NULL;
 }
 
-void HashInsert(void *entry,unsigned int key,Hash hash) 
+unchecked void HashInsert(void *entry,unsigned int key,Hash hash)
 {
   HashEntry ent = NULL;
   int j;
