@@ -2,9 +2,7 @@
 
 #include <stdchecked.h>
 #include "perimeter.h"
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
 
 static int adj(Direction d, ChildType ct)

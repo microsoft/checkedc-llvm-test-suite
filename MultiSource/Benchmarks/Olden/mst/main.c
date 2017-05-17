@@ -1,6 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "mst.h"
+#pragma BOUNDS_CHECKED ON
 
 typedef struct blue_return {
   Vertex vert;
@@ -30,7 +31,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
   retval.vert = vlist;
   retval.dist = vlist->mindist;
   hash = vlist->edgehash;
-  dist = (int) HashLookup((unsigned int) inserted, hash);
+  unchecked { dist = (int) HashLookup((unsigned int) inserted, hash); }
   /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,vlist);*/
   if (dist) 
     {
@@ -40,7 +41,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
           retval.dist = dist;
         }
     }
-  else printf("Not found\n");
+  else unchecked{ printf("Not found\n"); }
   
   count = 0;
   /* We are guaranteed that inserted is not first in list */
@@ -56,7 +57,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
         {
           hash = tmp->edgehash; /* <------  6% miss in tmp->edgehash */ 
           dist2 = tmp->mindist;
-          dist = (int) HashLookup((unsigned int) inserted, hash);
+          unchecked { dist = (int) HashLookup((unsigned int) inserted, hash); }
           /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,tmp);*/
           if (dist) 
             {
@@ -66,7 +67,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
                   dist2 = dist;
                 }
             }
-          else printf("Not found\n");
+          else unchecked { printf("Not found\n"); }
           if (dist2<retval.dist) 
             {
               retval.vert = tmp;
@@ -111,7 +112,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   dynamic_check(numproc <= MAXPROC);
 
   /* make copy of graph */
-  printf("Compute phase 1\n");
+  unchecked { printf("Compute phase 1\n"); }
 
   /* Insert first node */
   inserted = (Vertex)graph->vlist[0].starting_vertex;
@@ -120,7 +121,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */
-  printf("Compute phase 2\n");
+  unchecked { printf("Compute phase 2\n"); }
   while (numvert) 
     {
       BlueReturn br;
@@ -134,7 +135,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   return cost;
 }
 
-int main(int argc, array_ptr<char*> argv : count(argc))
+unchecked int main(int argc, array_ptr<char*> argv : count(argc))
 {
   Graph graph = NULL;
   int dist;
@@ -143,12 +144,12 @@ int main(int argc, array_ptr<char*> argv : count(argc))
   size = dealwithargs(argc,argv);
   printf("Making graph of size %d\n",size);
 
-  graph = MakeGraph(size,NumNodes);
+  checked { graph = MakeGraph(size,NumNodes); }
   printf("Graph completed\n");
 
   printf("About to compute mst \n");
 
-  dist = ComputeMst(graph,NumNodes,size);
+  checked { dist = ComputeMst(graph,NumNodes,size); }
 
   printf("MST has cost %d\n",dist);
   exit(0);

@@ -9,10 +9,9 @@
 #define _HEALTH
 
 #include <stdchecked.h>
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
+#pragma BOUNDS_CHECKED ON
 
 #define chatting printf
 
@@ -85,7 +84,7 @@ struct Village {
 };
 
 ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back);
-void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 float my_rand(long long idum);
 ptr<struct Patient> generate_patient(ptr<struct Village> village);
 void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient>patient);
@@ -100,5 +99,6 @@ float get_total_time(ptr<struct Village> village);
 float get_total_hosps(ptr<struct Village> village);
 struct Results get_results(ptr<struct Village> village);
 
+#pragma BOUNDS_CHECKED OFF
 #endif
 

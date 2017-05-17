@@ -3,12 +3,13 @@
 #include "em3d.h"
 #include "make_graph.h"
 #include <stdchecked.h>
+#pragma BOUNDS_CHECKED ON
 
 extern int NumNodes;
 
 int DebugFlag;
 
-void print_graph(ptr<graph_t> graph, int id) 
+unchecked void print_graph(ptr<graph_t> graph, int id)
 {
   ptr<node_t> cur_node = graph->e_nodes[id];
 
@@ -27,7 +28,7 @@ void print_graph(ptr<graph_t> graph, int id)
 
 extern int nonlocals;
 
-int main(int argc, array_ptr<char*> argv : count(argc))
+unchecked int main(int argc, array_ptr<char*> argv : count(argc))
 {
   int i;
   ptr<graph_t> graph = NULL;
@@ -41,10 +42,10 @@ int main(int argc, array_ptr<char*> argv : count(argc))
     for(i=0; i<NumNodes;i++)
       print_graph(graph,i);
 
-
+  checked {
   compute_nodes(graph->e_nodes[0]);
   compute_nodes(graph->h_nodes[0]);
-  
+  }
   chatting("nonlocals = %d\n",nonlocals);
 
   printstats();

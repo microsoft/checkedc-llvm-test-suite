@@ -1,7 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include <stdchecked.h>
-#include "stdio.h"
 #include <stdio_checked.h>
 
 struct hash_entry {
@@ -9,6 +8,8 @@ struct hash_entry {
   void *entry;
   ptr<struct hash_entry> next;
 };
+
+#pragma BOUNDS_CHECKED ON
 
 typedef ptr<struct hash_entry> HashEntry;
 
@@ -21,6 +22,8 @@ struct hash {
 typedef ptr<struct hash> Hash;
 
 Hash MakeHash(int size, ptr<int(unsigned int)> map);
-void *HashLookup(unsigned int key, Hash hash);
-void HashInsert(void *entry, unsigned int key, Hash hash);
+unchecked void *HashLookup(unsigned int key, Hash hash);
+unchecked void HashInsert(void *entry, unsigned int key, Hash hash);
 void HashDelete(unsigned int key, Hash hash);
+
+#pragma BOUNDS_CHECKED OFF
