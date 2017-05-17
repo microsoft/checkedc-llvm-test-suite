@@ -6,9 +6,7 @@
  *****************************************************************/
 
 #include <stdchecked.h>
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
 #include "health.h"
 

@@ -1,7 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include <stdchecked.h>
-#include "stdio.h"
 #include <stdio_checked.h>
 
 struct hash_entry {

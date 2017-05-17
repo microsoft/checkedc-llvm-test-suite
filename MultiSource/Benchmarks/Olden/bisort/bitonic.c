@@ -5,7 +5,6 @@
 #include "node.h"   /* Node Definition */
 #include "proc.h"   /* Procedure Types/Nums */
 #include <stdchecked.h>
-#include <stdio.h>
 #include <stdio_checked.h>
 
 #define CONST_m1 10000

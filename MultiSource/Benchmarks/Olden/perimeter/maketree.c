@@ -2,7 +2,6 @@
 
 #include <stdchecked.h>
 #include "perimeter.h"
-#include <stdlib.h>
 #include <stdlib_checked.h>
 
 static int CheckOutside(int x, int y) 
