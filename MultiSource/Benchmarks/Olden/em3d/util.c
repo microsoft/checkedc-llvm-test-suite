@@ -1,7 +1,8 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-#include <stdlib.h>
+#include <stdlib_checked.h>
 #include "em3d.h"
+#pragma BOUNDS_CHECKED ON
 
 #ifdef TORONTO
 #define chatting printf
@@ -12,7 +13,7 @@
 #define lrand48() (rand() << 16 | rand())
 #define drand48() (1.0*rand() / RAND_MAX)
 #else
-extern double drand48();
+extern double drand48(void);
 #endif
 
 static int percentcheck=0,numlocal=0;
@@ -41,7 +42,7 @@ int gen_signed_number(int range)
 }
 
 /* Generate a double from 0.0 to 1.0 */
-double gen_uniform_double()
+double gen_uniform_double(void)
 {
   return drand48();
 }
@@ -55,7 +56,7 @@ int check_percent(int percent)
   return retval;
 }
 
-void printstats()
+unchecked void printstats()
 {
   chatting("percentcheck=%d,numlocal=%d\n",percentcheck,numlocal);
 }

@@ -1,6 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "em3d.h"
+#pragma BOUNDS_CHECKED ON
 int nonlocals=0;
 void compute_nodes(nodelist)
 register ptr<node_t> nodelist;
