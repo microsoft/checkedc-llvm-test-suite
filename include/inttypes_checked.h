@@ -12,6 +12,8 @@
 #include <stddef.h> // define wchar_t for wcstoimax and wcstoumax
 #include <inttypes.h>
 
+#pragma BOUNDS_CHECKED ON
+
 intmax_t strtoimax(const char * restrict nptr,
                    char ** restrict endptr : itype(restrict _Ptr<char *>),
                    int base);
@@ -25,3 +27,5 @@ intmax_t wcstoimax(const wchar_t * restrict nptr,
 uintmax_t wcstoumax(const wchar_t * restrict nptr,
                     wchar_t ** restrict endptr : itype(restrict _Ptr<wchar_t *>),
                     int base);
+
+#pragma BOUNDS_CHECKED OFF

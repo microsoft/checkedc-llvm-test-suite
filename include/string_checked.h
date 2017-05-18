@@ -12,9 +12,9 @@
 /////////////////////////////////////////////////////////////////////////
 #include <string.h>
 
-
 // TODO: Apple System Headers Support
 #if !defined (__APPLE__) && _FORTIFY_SOURCE > 0
+_Unchecked
 void *memcpy(void * restrict dest : byte_count(n),
              const void * restrict src : byte_count(n),
              size_t n) : bounds(dest, (char *) dest + n);
@@ -34,6 +34,7 @@ void *memmove(void * restrict dest : byte_count(n),
 
 // TODO: Apple System Headers Support
 #if !defined (__APPLE__) && _FORTIFY_SOURCE > 0
+_Unchecked
 char *strncpy(char * restrict dest : count(n),
               const char * restrict src : count(n),
               size_t n) : bounds(dest, (char *)dest + n);
@@ -46,10 +47,13 @@ char *strncpy(char * restrict dest : count(n),
 
 // TODO: Apple System Headers Support
 #ifndef __APPLE__
+_Unchecked
 char *strncat(char * restrict dest : count(n),
               const char * restrict src : count(n),
               size_t n) : bounds(dest, (char *)dest + n);
 #endif
+
+#pragma BOUNDS_CHECKED ON
 
 int memcmp(const void *src1 : byte_count(n), const void *src2 : byte_count(n),
            size_t n);
@@ -59,12 +63,16 @@ int memcmp(const void *src1 : byte_count(n), const void *src2 : byte_count(n),
 // int strcoll(const char *src1, const char *src2);
 
 //int strncmp(const char *src : count(n), const char *s2 : count(n), size_t n);
+_Unchecked
 size_t strxfrm(char * restrict dest : count(n),
                const char * restrict src,
                size_t n);
 
+#pragma BOUNDS_CHECKED OFF
+_Unchecked
 void *memchr(const void *s : byte_count(n), int c, size_t n) :
-  bounds(s, (char *) s + n);
+  bounds(s, (char*) s + n);
+#pragma BOUNDS_CHECKED ON
 
 // TODO: strings
 // char *strchr(const char *s, int c);
@@ -78,8 +86,11 @@ void *memchr(const void *s : byte_count(n), int c, size_t n) :
 
 // TODO: Apple System Headers Support
 #if !defined (__APPLE__) && _FORTIFY_SOURCE > 0
+#pragma BOUNDS_CHECKED OFF
+_Unchecked
 void *memset(void *s : byte_count(n), int c, size_t n) :
   bounds(s, (char *) s + n);
+#pragma BOUNDS_CHECKED ON
 #endif
 
 // TODO: strings
@@ -87,3 +98,5 @@ void *memset(void *s : byte_count(n), int c, size_t n) :
 // size_t strlen(const char *s);
 
 #include "_builtin_string_checked.h"
+
+#pragma BOUNDS_CHECKED OFF

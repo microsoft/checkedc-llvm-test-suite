@@ -13,8 +13,6 @@ void SwapValLeft(ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, int, int);
 void SwapValRight(ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, ptr<HANDLE>, int, int);
 int Bimerge(ptr<HANDLE>, int, int);
 int Bisort(ptr<HANDLE>, int, int);
-
-#pragma BOUNDS_CHECKED OFF
-
 unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
+#pragma BOUNDS_CHECKED OFF

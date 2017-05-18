@@ -97,6 +97,6 @@ void UpdateDs(ModuleRecPtr max, Groups group);
 float FindMaxGpAndSwap(void);
 void SwapSubsetAndReset(unsigned long iMax);
 void PrintResults(int verbose);
-int main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc));
+_Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc));
 
 #pragma BOUNDS_CHECKED OFF

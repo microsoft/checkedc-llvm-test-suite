@@ -13,8 +13,6 @@
 #include <stdlib_checked.h>
 #pragma BOUNDS_CHECKED ON
 
-#define NULL 0
-
 #define chatting printf
 
 #define IA 16807

@@ -10,11 +10,7 @@
 /////////////////////////////////////////////////////////////////////////
 #include <stdlib.h>
 
-// The Mac OS X Headers overwrite NULL to expand to ((void*) 0)
-// which doesn't work in a checked scope. 0 will work fine.
-#ifdef __DARWIN_NULL
-#define NULL 0
-#endif
+#pragma BOUNDS_CHECKED ON
 
 // TODO: strings
 // double atof(const char *s);
@@ -22,24 +18,31 @@
 // long int atol(const char *s);
 // long long int atoll(const char *s);
 
+_Unchecked
 double strtod(const char * restrict nptr,
               char ** restrict endptr : itype(restrict _Ptr<char *>));
+_Unchecked
 float strtof(const char * restrict nptr,
              char ** restrict endptr : itype(restrict _Ptr<char *>));
+_Unchecked
 long double strtold(const char * restrict nptr,
                     char ** restrict endptr : itype(restrict _Ptr<char *>));
 
+_Unchecked
 long int strtol(const char * restrict nptr,
                 char ** restrict endptr : itype(restrict _Ptr<char *>),
                 int base);
+_Unchecked
 long long int strtoll(const char * restrict nptr,
                       char ** restrict endptr : itype(restrict _Ptr<char *>),
                       int base);
+_Unchecked
 unsigned long int strtoul(const char * restrict nptr,
                           char ** restrict endptr :
                             itype(restrict _Ptr<char *>),
                           int base);
 
+_Unchecked
 unsigned long long int strtoull(const char * restrict nptr,
                                 char ** restrict endptr:
                                    itype(restrict _Ptr<char *>),
@@ -91,10 +94,14 @@ int mbtowc(wchar_t * restrict output : itype(restrict _Ptr<wchar_t>),
 // 
 // int wctomb(char *s : count(MB_CUR_MAX), wchar_t wc);
 
+_Unchecked
 size_t mbstowcs(wchar_t * restrict pwcs : count(n),
                 const char * restrict s,
                 size_t n);
 
+_Unchecked
 size_t wcstombs(char * restrict output : count(n),
                 const wchar_t * restrict pwcs,
                 size_t n);
+
+#pragma BOUNDS_CHECKED OFF

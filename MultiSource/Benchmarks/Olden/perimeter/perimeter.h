@@ -9,8 +9,6 @@ extern int NumNodes;
 #define chatting      printf
 #endif
 
-#define NULL 0
-
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #ifdef FUTURES
@@ -49,7 +47,6 @@ typedef ptr<struct quad_struct> QuadTree;
 
 QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
                   int hi_proc, QuadTree parent, ChildType ct, int level);
-
 
 
 
