@@ -90,15 +90,15 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
           unchecked { chatting("Error! on dest %d @ %d\n",number,dest_proc); }
           exit(1);
         }
-      
+
         array_ptr<ptr<node_t>> ub = tmp + j;
         array_ptr<ptr<node_t>> tmp2 : bounds(tmp2, ub) = tmp;
-        for ( ; tmp2 < ub; tmp2++) 
+        for ( ; tmp2 < ub; tmp2++)
           if (other_node == *tmp2) break;
         k = tmp2 - tmp;
-        /*
+        /* Original code:
         for (k=0; k<j; k++)
-          if (other_node == tmp[k]) break;
+          if (other_node == cur_node->to_nodes[k]) break;
         */
 #if 0
         if ((((unsigned long long) other_node) >> 7) < 2048)
