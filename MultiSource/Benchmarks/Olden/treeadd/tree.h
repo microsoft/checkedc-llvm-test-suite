@@ -8,12 +8,12 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 #define chatting printf
 #define PLAIN
 #endif
-
-#define NULL 0
 
 typedef struct tree {
     int		val;
@@ -30,3 +30,4 @@ int TreeAdd (ptr<tree_t> t);
 
 
 
+#pragma BOUNDS_CHECKED OFF

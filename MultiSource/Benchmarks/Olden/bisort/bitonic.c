@@ -4,7 +4,6 @@
 /* UP - 0, DOWN - 1 */
 #include "node.h"   /* Node Definition */
 #include "proc.h"   /* Procedure Types/Nums */
-#include <stdchecked.h>
 #include <stdio_checked.h>
 
 #pragma BOUNDS_CHECKED ON
@@ -97,8 +96,6 @@ void SwapValue(ptr<HANDLE> l, ptr<HANDLE> r) {
   l->value = temp2;
 } 
 
-// CHECKED-C: KNR parameter function can be called in checked scope
-// since it is no-prototype function call
 void
 /***********/
 SwapValLeft(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> ll, ptr<HANDLE> rl, int lval, int rval)

@@ -341,9 +341,11 @@ main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc))
     }
 
     /* prepare the data structures */
-    _Checked {ReadNetList(argv[1]);}
-    _Checked {NetsToModules();}
-    _Checked {ComputeNetCosts();}
+    _Checked {
+      ReadNetList(argv[1]);
+      NetsToModules();
+      ComputeNetCosts();
+    }
 
     assert((numModules % 2) == 0);
 

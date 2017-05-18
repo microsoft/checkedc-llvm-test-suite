@@ -58,7 +58,7 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	_Unchecked {dest = atol(strtok((char*)line, " \t\n"))-1;}
 
 	/* parse out all the net module connections */
-	TRY(head = prev = calloc(1, sizeof(Module)),
+	TRY(_Checked {head = prev = calloc(1, sizeof(Module));},
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
@@ -67,11 +67,10 @@ ReadNetList(char *fname : itype(_Ptr<char>))
   _Unchecked {
     char *tok;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
-    _Checked {
-	    TRY(node = calloc(1, sizeof(Module)),
+	    TRY(_Checked {node = calloc(1, sizeof(Module));},
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
-		exit(1)); }
+		exit(1));
 	    (*node).module = atol(tok)-1;
 	    (*node).next = NULL;
 	    (*prev).next = node;
@@ -95,7 +94,7 @@ NetsToModules(void)
 
     for (net=0; net<numNets; net++) {
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(netNode = calloc(1, sizeof(Net)),
+	    TRY(_Checked {netNode = calloc(1, sizeof(Net));},
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
@@ -144,7 +143,7 @@ InitLists(void)
     for (p = 0; p<numModules/2; p++) {
 
 	/* build the group A module list */
-	TRY(mr = calloc(1, sizeof(ModuleRec)),
+	TRY(_Checked {mr = calloc(1, sizeof(ModuleRec));},
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -163,7 +162,7 @@ InitLists(void)
 	moduleToGroup[p] = GroupA;
 
 	/* build the group B module list */
-	TRY(mr = calloc(1, sizeof(ModuleRec)),
+	TRY(_Checked {mr = calloc(1, sizeof(ModuleRec));},
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));

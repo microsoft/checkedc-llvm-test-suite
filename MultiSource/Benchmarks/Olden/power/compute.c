@@ -11,6 +11,7 @@
  *
  */
 
+#include <stdlib_checked.h>
 #include "power.h"
 
 #pragma BOUNDS_CHECKED ON

@@ -3,14 +3,14 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      calloc(1, sz)
 #define chatting          printf  
 extern int NumNodes, NDim;
 #endif
-
-#define NULL 0
 
 extern int flag;
 
@@ -67,3 +67,4 @@ Tree tsp(Tree t, int sz, int nproc);
 
 
 
+#pragma BOUNDS_CHECKED OFF

@@ -142,7 +142,6 @@ jmp_buf jbAnagram;
 void *memset(void *s : byte_count(n), int c, size_t n) : bounds(s, (char *) s + n);
 
 #pragma BOUNDS_CHECKED ON
-#define NULL 0
 
 /* Before compiling, make sure Quad and MASK_BITS are set properly.  For best
  * results, make Quad the largest integer size supported on your machine.
@@ -595,8 +594,8 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 }
 
 int Cdecl CompareFrequency(_Ptr<const void> ch1, _Ptr<const void> ch2) {
-  _Ptr<char> pch1 = (_Ptr<char>)ch1;
-  _Ptr<char> pch2 = (_Ptr<char>)ch2;
+  _Ptr<const char> pch1 = (_Ptr<const char>)ch1;
+  _Ptr<const char> pch2 = (_Ptr<const char>)ch2;
     if (auGlobalFrequency[*pch1] < auGlobalFrequency[*pch2])
         return -1;
 	if (auGlobalFrequency[*pch1] > auGlobalFrequency[*pch2])
@@ -660,8 +659,10 @@ _Unchecked int Cdecl main(int cpchArgc, _Array_ptr<_Ptr<char>> ppchArgv : count(
         } else if (achPhrase[0] == '?') {
             DumpCandidates();
         } else {
-            _Checked {BuildMask(&achPhrase[0]);}
-            _Checked {AddWords();}
+          _Checked {
+            BuildMask(&achPhrase[0]);
+            AddWords();
+          }
             if (cpwCand == 0 || cchPhraseLength == 0) continue;
 
             Stat(ulHighCount = ulLowCount = 0;)

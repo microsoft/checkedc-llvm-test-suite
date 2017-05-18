@@ -2,12 +2,14 @@
 
 #include <stdchecked.h>
 
+extern int atoi(const char *);
+
+#pragma BOUNDS_CHECKED ON
+
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #include <fcntl.h>
 #endif
-
-extern int atoi(const char *);
 
 #ifndef TORONTO
 extern int __NumNodes;
@@ -25,7 +27,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int level;
 
