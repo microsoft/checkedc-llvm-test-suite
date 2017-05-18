@@ -20,7 +20,7 @@
 
 #if __has_builtin(__builtin_object_size)
 _Unchecked
-size_t __builtin_object_size(const void* ptr, int i);
+size_t __builtin_object_size(const void* obj, int i);
 #endif
 
 #ifdef _undef__has_builtin
