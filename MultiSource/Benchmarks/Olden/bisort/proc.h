@@ -16,5 +16,5 @@ int Bisort(ptr<HANDLE>, int, int);
 
 #pragma BOUNDS_CHECKED OFF
 
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 

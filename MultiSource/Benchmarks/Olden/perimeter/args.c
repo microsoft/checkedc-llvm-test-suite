@@ -2,14 +2,14 @@
 
 #include <stdchecked.h>
 
-extern int atoi(const char *);
-
 #pragma BOUNDS_CHECKED ON
 
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #include <fcntl.h>
 #endif
+
+extern unchecked int atoi(const char *);
 
 #ifndef TORONTO
 extern int __NumNodes;
