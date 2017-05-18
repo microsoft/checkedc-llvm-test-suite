@@ -14,6 +14,8 @@
 #include "power.h"
 #include <stdio.h>
 
+#pragma BOUNDS_CHECKED ON
+
 /* Domain of thetaR->P map is 0.65 to 1.00 [index*0.01+0.65] */
 double map_P _Checked[36] =
 {8752.218091048, 8446.106670416, 8107.990680283,
@@ -52,7 +54,7 @@ double map_Q _Checked[36] =
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
 
-int main(int argc,char *argv[])
+_Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc))
 {
   Root r = 0;
   int i,finished=0;
@@ -61,9 +63,9 @@ int main(int argc,char *argv[])
   printf("Past initialization\n");
 
   /* initial pass */
-  r = build_tree();
+  _Checked {r = build_tree();}
   printf("Built tree\n");
-  Compute_Tree(r);
+  _Checked {Compute_Tree(r);}
   printf("COMPUTED TREE\n");
   r->last.P = r->D.P;
   r->last.Q = r->D.Q;
@@ -73,7 +75,7 @@ int main(int argc,char *argv[])
   r->theta_I = 0.14;
   
   while (!finished) {
-    Compute_Tree(r);
+    _Checked {Compute_Tree(r);}
     printf("TR=%4.2f, TI=%4.2f, P0=%4.2f, Q0=%4.2f\n",
            r->theta_R,r->theta_I,r->D.P,r->D.Q);
     if (fabs(r->D.P/10000.0 - r->theta_R) < ROOT_EPSILON &&

@@ -2,6 +2,9 @@
 
 #include <fcntl.h>
 #include "tsp.h"
+
+#pragma BOUNDS_CHECKED ON
+
 int NumNodes, NDim;
 int flag;
 
@@ -13,7 +16,7 @@ int mylog(int num)
   return j;
 }
 
-int dealwithargs(int argc, array_ptr<char *> argv : count(argc))
+unchecked int dealwithargs(int argc, array_ptr<char *> argv : count(argc))
 {
   int num;
 

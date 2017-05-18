@@ -27,14 +27,18 @@
 #define BUF_LEN 1024    /* maximum line length */
 #define G_SZ    1024    /* maximum group size */
 
+#define NULL 0
+
 /* simple exception handler */
 #define TRY(exp, accpt_tst, fn, fail_fmt, arg1, arg2, arg3, fail_action) { \
               (exp); \
+              _Unchecked { \
               if (!(accpt_tst)) { \
                   fprintf(stderr, "(%s:%s():%d): ", __FILE__, fn, __LINE__); \
                   fprintf(stderr, fail_fmt, arg1, arg2, arg3); \
                   fprintf(stderr, "\n"); \
                   fail_action; \
+                  } \
                   } \
                   }
 
@@ -95,4 +99,4 @@ void UpdateDs(ModuleRecPtr max, Groups group);
 float FindMaxGpAndSwap();
 void SwapSubsetAndReset(unsigned long iMax);
 void PrintResults(int verbose);
-int main(int argc, char **argv);
+int main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc));

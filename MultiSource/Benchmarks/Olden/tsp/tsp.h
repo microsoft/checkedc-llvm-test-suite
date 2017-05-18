@@ -10,10 +10,12 @@
 extern int NumNodes, NDim;
 #endif
 
+#define NULL 0
+
 extern int flag;
 
-int atoi(const char *);
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int atoi(const char *);
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 

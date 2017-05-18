@@ -15,6 +15,8 @@
 
 #include "KS.h"
 
+#pragma BOUNDS_CHECKED ON
+
 NetPtr modules _Checked [G_SZ];		/* all modules -> nets */
 unsigned long numModules;
 
@@ -35,8 +37,7 @@ void
 ReadNetList(char *fname : itype(_Ptr<char>))
 {
     _Ptr<FILE> inFile = 0;
-    char line[BUF_LEN];
-    char *tok;
+    char line _Checked[BUF_LEN];
     unsigned long net, dest;
     ModulePtr node = 0, prev = 0, head = 0;
 
@@ -46,7 +47,7 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	exit(1));
 
     TRY(fgets(line, BUF_LEN, inFile),
-	sscanf(line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
+	sscanf((const char*)line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
 	"unable to parse header in file [%s]", inFile, 0, 0,
 	exit(1));
 
@@ -54,25 +55,29 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
-	dest = atol(strtok(line, " \t\n"))-1;
+	_Unchecked {dest = atol(strtok((char*)line, " \t\n"))-1;}
 
 	/* parse out all the net module connections */
 	TRY(head = prev = calloc(1, sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
-	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
+	_Unchecked {(*prev).module = atol(strtok(NULL, " \t\n"))-1;}
 	(*prev).next = NULL;
+  _Unchecked {
+    char *tok;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
+    _Checked {
 	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
-		exit(1));
+		exit(1)); }
 	    (*node).module = atol(tok)-1;
 	    (*node).next = NULL;
 	    (*prev).next = node;
 	    prev = node;
 	}
+  }
 	nets[dest] = head;
     }
 }

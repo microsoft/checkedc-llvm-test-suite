@@ -10,8 +10,10 @@
  * University of California at Berkeley
  */
 
-#include "power.h"
 #include <stdlib_checked.h>
+#include "power.h"
+
+#pragma BOUNDS_CHECKED ON
 
 Root build_tree(void)
 {

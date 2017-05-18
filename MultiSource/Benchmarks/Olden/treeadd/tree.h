@@ -13,6 +13,8 @@
 #define PLAIN
 #endif
 
+#define NULL 0
+
 typedef struct tree {
     int		val;
     ptr<struct tree> left;

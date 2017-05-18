@@ -10,6 +10,8 @@
 
 #include "tree.h"
 
+#pragma BOUNDS_CHECKED ON
+
 ptr<tree_t> TreeAlloc (int level, int lo, int proc) {
   if (level == 0)
     return NULL;
