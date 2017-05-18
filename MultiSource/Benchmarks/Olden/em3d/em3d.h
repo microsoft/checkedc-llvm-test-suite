@@ -17,7 +17,6 @@ void printstats(void);
 void srand48(long);
 long lrand48(void);
 
-#include <stddef_checked.h>
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 

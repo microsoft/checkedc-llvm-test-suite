@@ -2,7 +2,6 @@
 
 #include <stdchecked.h>
 #include <stdio_checked.h>
-#include <stddef_checked.h>
 
 struct hash_entry {
   unsigned int key;

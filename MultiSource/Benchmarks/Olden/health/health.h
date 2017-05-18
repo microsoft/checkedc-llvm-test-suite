@@ -9,7 +9,6 @@
 #define _HEALTH
 
 #include <stdchecked.h>
-#include <stddef_checked.h>
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #pragma BOUNDS_CHECKED ON
