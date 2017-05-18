@@ -1,6 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include <stdchecked.h>
+#include <stddef_checked.h>
 
 #pragma BOUNDS_CHECKED ON
 
@@ -8,8 +9,6 @@
 extern int NumNodes;
 #define chatting      printf
 #endif
-
-#define NULL 0
 
 #ifndef TORONTO
 #include <cm/cmmd.h>

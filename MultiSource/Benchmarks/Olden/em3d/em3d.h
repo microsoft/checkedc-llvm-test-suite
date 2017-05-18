@@ -17,6 +17,7 @@ void printstats(void);
 void srand48(long);
 long lrand48(void);
 
+#include <stddef_checked.h>
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 
@@ -30,8 +31,6 @@ extern int n_nodes; /* number of nodes (E and H) */
 extern int d_nodes; /* degree of nodes */
 extern int local_p; /* percentage of local edges */
 #define PROCS 1
-
-#define NULL 0
 
 #define assert(a) if (!a) unchecked { printf("Assertion failure\n"); exit(-1); }
 

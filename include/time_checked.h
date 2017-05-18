@@ -11,6 +11,8 @@
 
 #include <time.h>
 
+#pragma BOUNDS_CHECKED ON
+
 time_t mktime(struct tm *timeptr : itype(_Ptr<struct tm>));
 int timespec_get(struct timespec *ts : itype(_Ptr<struct timespec>),
                  int base);
@@ -26,4 +28,4 @@ size_t strftime(char * restrict output : count(maxsize),
                 const struct tm * restrict timeptr :
                    itype(restrict _Ptr<const struct tm>));
 
-
+#pragma BOUNDS_CHECKED OFF
