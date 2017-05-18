@@ -19,7 +19,7 @@ typedef struct demand {
 
 #include <math.h>
 
-#define NULL 0
+#pragma BOUNDS_CHECKED ON
 
 #ifdef SMALL_PROBLEM_SIZE   /* __llvm__ SCALED BACK SETTINGS */
 #define NUM_FEEDERS 8
@@ -102,3 +102,4 @@ Demand Compute_Branch(Branch b, double theta_R, double theta_I,
                        double pi_R, double pi_I);
 Demand Compute_Leaf(Leaf l, double pi_R, double pi_I);
 
+#pragma BOUNDS_CHECKED OFF

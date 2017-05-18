@@ -4,6 +4,8 @@
 
 #include <stdchecked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 struct node { 
   int value;
   ptr<struct node> left;
@@ -16,6 +18,6 @@ typedef struct future_cell_int{
   ptr<HANDLE> value;
 } future_cell_int;
 
-extern void *malloc(unsigned);
-
 #define NIL ((ptr<HANDLE>) 0)
+
+#pragma BOUNDS_CHECKED OFF

@@ -4,8 +4,9 @@
 /* UP - 0, DOWN - 1 */
 #include "node.h"   /* Node Definition */
 #include "proc.h"   /* Procedure Types/Nums */
-#include <stdchecked.h>
 #include <stdio_checked.h>
+
+#pragma BOUNDS_CHECKED ON
 
 #define CONST_m1 10000
 #define CONST_b 31415821
@@ -14,6 +15,7 @@
 int NumNodes, NDim;
 
 int random(int);
+void *calloc(size_t nmemb, size_t size) : byte_count(nmemb * size);
 
 int flag=0,foo=0;
 
@@ -35,7 +37,7 @@ void InOrder(ptr<HANDLE> h) {
     InOrder(l);
     static unsigned char counter = 0;
     if (counter++ == 0)   /* reduce IO */
-      printf("%d @ 0x%x\n",h->value, 0);
+      unchecked {printf("%d @ 0x%x\n",h->value, 0);}
     InOrder(r);
   }
 }
@@ -96,13 +98,8 @@ void SwapValue(ptr<HANDLE> l, ptr<HANDLE> r) {
 
 void
 /***********/
-SwapValLeft(l,r,ll,rl,lval,rval)
+SwapValLeft(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> ll, ptr<HANDLE> rl, int lval, int rval)
 /***********/
-ptr<HANDLE> l;
-ptr<HANDLE> r;
-ptr<HANDLE> ll;
-ptr<HANDLE> rl;
-int lval, rval;
 {
   r->value = lval;
   r->left = ll;
@@ -113,13 +110,8 @@ int lval, rval;
 
 void
 /************/
-SwapValRight(l,r,lr,rr,lval,rval)
+SwapValRight(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> lr, ptr<HANDLE> rr, int lval, int rval)
 /************/
-ptr<HANDLE> l;
-ptr<HANDLE> r;
-ptr<HANDLE> lr;
-ptr<HANDLE> rr;
-int lval, rval;
 {  
   r->value = lval;
   r->right = lr;
@@ -130,10 +122,8 @@ int lval, rval;
 
 int
 /********************/
-Bimerge(root,spr_val,dir)
+Bimerge(ptr<HANDLE> root, int spr_val, int dir)
 /********************/
-ptr<HANDLE> root;
-int spr_val,dir;
 
 { int rightexchange;
   int elementexchange;
@@ -205,10 +195,8 @@ int spr_val,dir;
 
 int
 /*******************/
-Bisort(root,spr_val,dir)
+Bisort(ptr<HANDLE> root, int spr_val, int dir)
 /*******************/
-ptr<HANDLE> root;
-int spr_val,dir;
 
 { ptr<HANDLE> l = NIL;
   ptr<HANDLE> r = NIL;
@@ -239,7 +227,7 @@ int spr_val,dir;
   return spr_val;
 } 
 
-int main(int argc, array_ptr<char*> argv : count(argc)) {
+unchecked int main(int argc, array_ptr<char*> argv : count(argc)) {
   ptr<HANDLE> h = NIL;
   int sval;
   int n;
@@ -251,18 +239,18 @@ int main(int argc, array_ptr<char*> argv : count(argc)) {
   h = RandTree(n,12345768,0,0);
   sval = random(245867) % RANGE;
   if (flag) {
-    InOrder(h);
+    checked {InOrder(h);}
     printf("%d\n",sval);
   }
   printf("**************************************\n");
   printf("BEGINNING BITONIC SORT ALGORITHM HERE\n");
   printf("**************************************\n");
 
-  sval=Bisort(h,sval,0);
+  checked {sval=Bisort(h,sval,0);}
 
   if (flag) {
     printf("Sorted Tree:\n"); 
-    InOrder(h);
+    checked {InOrder(h);}
     printf("%d\n",sval);
   }
 
@@ -270,7 +258,7 @@ int main(int argc, array_ptr<char*> argv : count(argc)) {
 
   if (flag) {
     printf("Sorted Tree:\n"); 
-    InOrder(h);
+    checked {InOrder(h);}
     printf("%d\n",sval);
   }
 

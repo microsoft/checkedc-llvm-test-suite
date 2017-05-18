@@ -4,6 +4,8 @@
 #include "perimeter.h"
 #include <stdlib_checked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 static int CheckOutside(int x, int y) 
 {
   int euclid = x*x+y*y;

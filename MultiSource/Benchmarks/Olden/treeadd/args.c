@@ -7,13 +7,15 @@
 
 #include "tree.h"
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
  int NumNodes;
 #else
 extern int __NumNodes;
 #endif
 
-extern int atoi(const char *);
+extern unchecked int atoi(const char *);
 
 #ifndef TORONTO
 void filestuff()
@@ -25,7 +27,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int level;
 

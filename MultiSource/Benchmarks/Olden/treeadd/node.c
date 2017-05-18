@@ -17,17 +17,19 @@
 #include <stdlib.h>
 #include "tree.h"
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 extern int NumNodes;
 #endif
 
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
 typedef struct {
     long 	level;
 } startmsg_t;
 
-int main (int argc, array_ptr<char*> argv : count(argc))
+unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 {
     ptr<tree_t> root = NULL;
     int level,result;
@@ -58,9 +60,9 @@ int main (int argc, array_ptr<char*> argv : count(argc))
 #endif
 
 #ifdef TORONTO
-    root = TreeAlloc (level, 0, NumNodes);
+    checked {root = TreeAlloc (level, 0, NumNodes);}
 #else
-    root = TreeAlloc (level, 0, __NumNodes);
+    checked {root = TreeAlloc (level, 0, __NumNodes);}
 #endif
 
 #ifndef TORONTO
@@ -75,7 +77,7 @@ int main (int argc, array_ptr<char*> argv : count(argc))
     CMMD_node_timer_start(1);
 #endif
 { int i; for (i = 0; i < 100; ++i)
-    result = TreeAdd (root);
+    checked {result = TreeAdd (root);}
 }
 #ifndef TORONTO
     CMMD_node_timer_stop(1);

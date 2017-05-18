@@ -2,6 +2,8 @@
 #include <stdchecked.h>
 #include <stdlib_checked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 extern int NumNodes,NDim;
 extern int flag;
 
@@ -12,7 +14,7 @@ int mylog(int num) {
   return j;
 } 
 
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
 {
   int size;
 

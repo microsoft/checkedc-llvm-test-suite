@@ -3,6 +3,8 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      calloc(1, sz)
@@ -12,8 +14,8 @@ extern int NumNodes, NDim;
 
 extern int flag;
 
-int atoi(const char *);
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int atoi(const char *);
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
@@ -65,3 +67,4 @@ Tree tsp(Tree t, int sz, int nproc);
 
 
 
+#pragma BOUNDS_CHECKED OFF

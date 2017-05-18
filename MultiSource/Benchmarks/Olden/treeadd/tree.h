@@ -8,6 +8,8 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
+#pragma BOUNDS_CHECKED ON
+
 #ifdef TORONTO
 #define chatting printf
 #define PLAIN
@@ -28,3 +30,4 @@ int TreeAdd (ptr<tree_t> t);
 
 
 
+#pragma BOUNDS_CHECKED OFF

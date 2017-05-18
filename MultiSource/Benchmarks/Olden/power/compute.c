@@ -11,7 +11,10 @@
  *
  */
 
+#include <stdlib_checked.h>
 #include "power.h"
+
+#pragma BOUNDS_CHECKED ON
 
 /*----------------------------------------------------------------------*/
 /* Leaf optimization 'global' variables               */
@@ -24,8 +27,8 @@ static double Q=1.0;
 /* Leaf optimization procedures                 */
 
 void optimize_node (double pi_R, double pi_I);
-double find_g ();
-double find_h ();
+double find_g (void);
+double find_h (void);
 double find_gradient_f (double pi_R, double pi_I, _Array_ptr<double> gradient : count(2));
 double find_gradient_g (_Array_ptr<double> gradient : count(2));
 double find_gradient_h (_Array_ptr<double> gradient : count(2));
@@ -234,12 +237,12 @@ void optimize_node (double pi_R, double pi_I)
 		fabs (grad_f[0]*grad_h[1]-grad_f[1]*grad_h[0])>F_EPSILON));
 }
 
-double find_g ()
+double find_g (void)
 {
     return (P*P+Q*Q-0.8);
 }
 
-double find_h ()
+double find_h (void)
 {
     return (P-5*Q);
 }

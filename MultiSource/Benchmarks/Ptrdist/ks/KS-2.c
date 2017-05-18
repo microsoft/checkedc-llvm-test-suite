@@ -15,6 +15,8 @@
 
 #include "KS.h"
 
+#pragma BOUNDS_CHECKED ON
+
 /* handle special cases where both nodes are switched */
 float
 CAiBj(ModuleRecPtr mrA, ModuleRecPtr mrB)
@@ -105,7 +107,7 @@ UpdateDs(ModuleRecPtr max, Groups group)
 
 /* find the best swap available and do it */
 float
-FindMaxGpAndSwap()
+FindMaxGpAndSwap(void)
 {
     ModuleRecPtr mrA = 0, mrPrevA = 0, mrB = 0, mrPrevB = 0;
     ModuleRecPtr maxA = 0, maxPrevA = 0, maxB = 0, maxPrevB = 0;
@@ -229,7 +231,7 @@ struct {
 long maxStat;
 
 /* print the current groups, and their edge and net cut counts */
-void
+_Unchecked void
 PrintResults(int verbose)
 {
     ModuleRecPtr mr = 0;
@@ -323,8 +325,8 @@ PrintResults(int verbose)
 		netStats[i].edgesCut, netStats[i].netsCut);
 }
 
-int
-main(int argc, char **argv)
+_Unchecked int
+main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc))
 {
     unsigned long p, iMax;
     float gMax, lastGMax;
@@ -339,16 +341,19 @@ main(int argc, char **argv)
     }
 
     /* prepare the data structures */
-    ReadNetList(argv[1]);
-    NetsToModules();
-    ComputeNetCosts();
+    _Checked {
+      ReadNetList(argv[1]);
+      NetsToModules();
+      ComputeNetCosts();
+    }
 
     assert((numModules % 2) == 0);
 
     /* initial partition */
-    InitLists();
+    _Checked {InitLists();}
     lastGMax = 0;
 
+    _Checked {
     /* do until we don't make any progress */
     do {
 
@@ -379,22 +384,25 @@ main(int argc, char **argv)
 
 	/* debug/statistics */
 	if (lastGMax == gMax)
-	    fprintf(stdout, "No progress: gMax = %f\n", gMax);
+	    _Unchecked {fprintf(stdout, "No progress: gMax = %f\n", gMax);}
 	lastGMax = gMax;
-	fprintf(stdout, "gMax = %f, iMax = %lu\n", gMax, iMax);
+	_Unchecked {fprintf(stdout, "gMax = %f, iMax = %lu\n", gMax, iMax);}
 
 	if (gMax > 0.0)
 	    SwapSubsetAndReset(iMax);
-	PrintResults(0);
+	_Unchecked {PrintResults(0);}
     } while (gMax > 0.0);	/* progress made? */
+    }
 
     /* all swaps rejected */
+    _Checked {
     groupA = swapToB;
     for (mr = groupA.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupA;
     groupB = swapToA;
     for (mr = groupB.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupB;
+    }
 
     ;
 

@@ -13,6 +13,8 @@
 #include <string.h>
 #include <assert.h>
 
+#pragma BOUNDS_CHECKED ON
+
 /*
  *      module configuration
  */
@@ -28,8 +30,8 @@
 #define G_SZ    1024    /* maximum group size */
 
 /* simple exception handler */
-#define TRY(exp, accpt_tst, fn, fail_fmt, arg1, arg2, arg3, fail_action) { \
-              (exp); \
+#define TRY(exp, accpt_tst, fn, fail_fmt, arg1, arg2, arg3, fail_action) _Unchecked { \
+              exp; \
               if (!(accpt_tst)) { \
                   fprintf(stderr, "(%s:%s():%d): ", __FILE__, fn, __LINE__); \
                   fprintf(stderr, fail_fmt, arg1, arg2, arg3); \
@@ -92,7 +94,9 @@ float CAiBj(ModuleRecPtr mrA, ModuleRecPtr mrB);
 void SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
 	      ModuleListPtr group, ModuleListPtr swapTo);
 void UpdateDs(ModuleRecPtr max, Groups group);
-float FindMaxGpAndSwap();
+float FindMaxGpAndSwap(void);
 void SwapSubsetAndReset(unsigned long iMax);
 void PrintResults(int verbose);
-int main(int argc, char **argv);
+int main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc));
+
+#pragma BOUNDS_CHECKED OFF

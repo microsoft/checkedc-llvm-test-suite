@@ -3,6 +3,8 @@
 #include <stdchecked.h>
 #include <stdio_checked.h>
 
+#define NULL 0
+
 struct hash_entry {
   unsigned int key;
   void *entry;
