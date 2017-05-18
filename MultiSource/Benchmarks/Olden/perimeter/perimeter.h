@@ -57,5 +57,4 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 
 
 
-
 #pragma BOUNDS_CHECKED OFF

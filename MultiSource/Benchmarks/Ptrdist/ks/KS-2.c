@@ -326,7 +326,7 @@ PrintResults(int verbose)
 }
 
 _Unchecked int
-main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc))
+main(int argc, _Array_ptr<char*> argv : count(argc))
 {
     unsigned long p, iMax;
     float gMax, lastGMax;
@@ -341,19 +341,17 @@ main(int argc, _Array_ptr<_Ptr<char>> argv : count(argc))
     }
 
     /* prepare the data structures */
+	ReadNetList(argv[1]);
     _Checked {
-      ReadNetList(argv[1]);
       NetsToModules();
       ComputeNetCosts();
-    }
 
     assert((numModules % 2) == 0);
 
     /* initial partition */
-    _Checked {InitLists();}
+    InitLists();
     lastGMax = 0;
 
-    _Checked {
     /* do until we don't make any progress */
     do {
 

@@ -33,8 +33,8 @@ float cost _Checked [G_SZ];			/* net costs */
 
 
 /* read the netlist into the nets[] structure */
-void
-ReadNetList(char *fname : itype(_Ptr<char>))
+_Unchecked void
+ReadNetList(char *fname )
 {
     _Ptr<FILE> inFile = 0;
     char line _Checked[BUF_LEN];
@@ -55,19 +55,18 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
-	_Unchecked {dest = atol(strtok((char*)line, " \t\n"))-1;}
+	dest = atol(strtok((char*)line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
-	TRY(_Checked {head = prev = calloc(1, sizeof(Module));},
+	TRY(head = prev = calloc(1, sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
-	_Unchecked {(*prev).module = atol(strtok(NULL, " \t\n"))-1;}
+	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
-  _Unchecked {
     char *tok;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
-	    TRY(_Checked {node = calloc(1, sizeof(Module));},
+	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
 		exit(1));
@@ -76,7 +75,6 @@ ReadNetList(char *fname : itype(_Ptr<char>))
 	    (*prev).next = node;
 	    prev = node;
 	}
-  }
 	nets[dest] = head;
     }
 }

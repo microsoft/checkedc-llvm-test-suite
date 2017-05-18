@@ -254,7 +254,7 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc)) {
     printf("%d\n",sval);
   }
 
-  sval=Bisort(h,sval,1);
+  checked { sval=Bisort(h,sval,1); }
 
   if (flag) {
     printf("Sorted Tree:\n"); 

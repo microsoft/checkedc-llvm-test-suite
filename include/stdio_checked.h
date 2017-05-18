@@ -61,6 +61,7 @@ int fscanf(FILE * restrict stream : itype(restrict _Ptr<FILE>),
 //            const char * restrict format, ...);
 // TODO: Apple System Headers Support
 #if !defined (__APPLE__) && _FORTIFY_SOURCE > 0
+_Unchecked
 int snprintf(char * restrict s : count(n), size_t n,
              const char * restrict format, ...);
 #endif
@@ -79,6 +80,7 @@ int vfscanf(FILE * restrict stream : itype(restrict _Ptr<FILE>),
 //            va_list arg);
 // TODO: Apple System Headers Support
 #if !defined (__APPLE__) && _FORTIFY_SOURCE > 0
+_Unchecked
 int vsnprintf(char * restrict s : count(n), size_t n,
               const char * restrict format,
               va_list arg);

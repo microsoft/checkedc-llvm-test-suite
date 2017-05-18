@@ -139,8 +139,6 @@
 
 jmp_buf jbAnagram;
 
-void *memset(void *s : byte_count(n), int c, size_t n) : bounds(s, (char *) s + n);
-
 #pragma BOUNDS_CHECKED ON
 
 /* Before compiling, make sure Quad and MASK_BITS are set properly.  For best
@@ -324,9 +322,11 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     int cbtNeed;                        /* bits needed for current letter */
     Quad qNeed;                         /* used to build the mask */
 
-    memset(alPhrase, 0, sizeof(Letter)*ALPHABET);
-    memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
-    memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
+    _Unchecked {
+    memset((void*)alPhrase, 0, sizeof(Letter)*ALPHABET);
+    memset((void*)aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
+    memset((void*)aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
+    }
 /*
     Zero(alPhrase);
     Zero(aqMainMask);
@@ -414,7 +414,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     PWord pw = 0;
     int cchLength = 0;
 
-    memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
+    _Unchecked { memset((void*)cchFrequency, 0, sizeof(unsigned char)*ALPHABET); }
     /* Zero(cchFrequency); */
 
     /* Build frequency table */
@@ -436,7 +436,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
      * bitfield of frequencies.
      */
     pw = NextWord();
-    memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
+    _Unchecked { memset((void*)pw->aqMask, 0, sizeof(Quad)*MAX_QUADS); }
     /* Zero(pw->aqMask); */
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;
@@ -628,8 +628,9 @@ int fInteractive;
 _Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+255), int size)
     : bounds(achPhrase, achPhrase+255) {
     if (fInteractive) _Unchecked {printf(">");}
-    _Unchecked {fflush(stdout);}
-    _Unchecked {if (fgets(pch, size, stdin) == NULL) {
+    _Unchecked {
+    fflush(stdout);
+    if (fgets(pch, size, stdin) == NULL) {
 #ifdef PLUS_STATS
 	PrintDerefStats(stderr);
         PrintHeapSize(stderr);
@@ -659,18 +660,18 @@ _Unchecked int Cdecl main(int cpchArgc, _Array_ptr<_Ptr<char>> ppchArgv : count(
         } else if (achPhrase[0] == '?') {
             DumpCandidates();
         } else {
-          _Checked {
+            _Checked {
             BuildMask(&achPhrase[0]);
             AddWords();
-          }
+
             if (cpwCand == 0 || cchPhraseLength == 0) continue;
 
             Stat(ulHighCount = ulLowCount = 0;)
             cpwLast = 0;
-            _Checked {SortCandidates();}
-            _Unchecked {if (setjmp(jbAnagram) == 0)
-                _Checked {FindAnagram(&aqMainMask[0], &apwCand[0], 0);}
+            SortCandidates();
             }
+            if (setjmp(jbAnagram) == 0)
+                _Checked {FindAnagram(&aqMainMask[0], &apwCand[0], 0);}
             Stat(printf("%lu:%lu probes\n", ulHighCount, ulLowCount);)
         }
     }

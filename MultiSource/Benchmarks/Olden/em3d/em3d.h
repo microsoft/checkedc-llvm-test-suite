@@ -31,8 +31,6 @@ extern int d_nodes; /* degree of nodes */
 extern int local_p; /* percentage of local edges */
 #define PROCS 1
 
-#define NULL 0
-
 #define assert(a) if (!a) unchecked { printf("Assertion failure\n"); exit(-1); }
 
 typedef struct node_t {
