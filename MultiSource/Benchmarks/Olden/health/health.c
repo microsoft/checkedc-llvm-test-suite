@@ -4,13 +4,12 @@
  *  Health.c : Model of the Columbian Health Care System           *
  *******************************************************************/ 
 
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
 #include <math.h>
 #include "health.h"
 #include <assert.h>
+#pragma BOUNDS_CHECKED ON
 
 int  max_level;
 long max_time;
@@ -217,7 +216,7 @@ ptr<struct Patient> generate_patient(ptr<struct Village> village)
   return NULL; 
 }
 
-int main(int argc, array_ptr<char*> argv : count(argc))
+unchecked int main(int argc, array_ptr<char*> argv : count(argc))
 { 
   struct Results         results;
   ptr<struct Village>    top = NULL;
@@ -232,14 +231,16 @@ int main(int argc, array_ptr<char*> argv : count(argc))
   
   for (i = 0; i < max_time; i++) {
     if ((i % 50) == 0) chatting("%d\n", i);
-    sim(top);
+    checked { sim(top); }
   }                          /* :) adt_pf detected */
   
   printf("Getting Results\n");
+  checked {
   results = get_results(top);              /* :) adt_pf detected */
   total_patients = results.total_patients;
   total_time = results.total_time;
   total_hosps = results.total_hosps;
+  }
 
   chatting("Done.\n\n");
   chatting("# of people treated:              %f people\n",

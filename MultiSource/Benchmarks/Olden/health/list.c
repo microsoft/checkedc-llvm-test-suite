@@ -6,11 +6,10 @@
  ********************************************************************/
 
 #include <stdchecked.h>
-#include <stdio.h>
 #include <stdio_checked.h>
-#include <stdlib.h>
 #include <stdlib_checked.h>
 #include "health.h"
+#pragma BOUNDS_CHECKED ON
 
 void addList(ptr<struct List> list, ptr<struct Patient> patient) {
   ptr<struct List> b = NULL;

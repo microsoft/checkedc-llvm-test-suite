@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "health.h"
+#pragma BOUNDS_CHECKED ON
 
 float my_rand(long long idum)
 {
