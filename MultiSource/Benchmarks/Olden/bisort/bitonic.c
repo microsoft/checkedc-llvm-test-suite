@@ -97,15 +97,12 @@ void SwapValue(ptr<HANDLE> l, ptr<HANDLE> r) {
   l->value = temp2;
 } 
 
+// CHECKED-C: KNR parameter function can be called in checked scope
+// since it is no-prototype function call
 void
 /***********/
-SwapValLeft(l,r,ll,rl,lval,rval)
+SwapValLeft(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> ll, ptr<HANDLE> rl, int lval, int rval)
 /***********/
-ptr<HANDLE> l;
-ptr<HANDLE> r;
-ptr<HANDLE> ll;
-ptr<HANDLE> rl;
-int lval, rval;
 {
   r->value = lval;
   r->left = ll;
@@ -116,13 +113,8 @@ int lval, rval;
 
 void
 /************/
-SwapValRight(l,r,lr,rr,lval,rval)
+SwapValRight(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> lr, ptr<HANDLE> rr, int lval, int rval)
 /************/
-ptr<HANDLE> l;
-ptr<HANDLE> r;
-ptr<HANDLE> lr;
-ptr<HANDLE> rr;
-int lval, rval;
 {  
   r->value = lval;
   r->right = lr;
@@ -133,10 +125,8 @@ int lval, rval;
 
 int
 /********************/
-Bimerge(root,spr_val,dir)
+Bimerge(ptr<HANDLE> root, int spr_val, int dir)
 /********************/
-ptr<HANDLE> root;
-int spr_val,dir;
 
 { int rightexchange;
   int elementexchange;
@@ -208,10 +198,8 @@ int spr_val,dir;
 
 int
 /*******************/
-Bisort(root,spr_val,dir)
+Bisort(ptr<HANDLE> root, int spr_val, int dir)
 /*******************/
-ptr<HANDLE> root;
-int spr_val,dir;
 
 { ptr<HANDLE> l = NIL;
   ptr<HANDLE> r = NIL;
