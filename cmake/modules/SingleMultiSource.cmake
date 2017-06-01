@@ -190,7 +190,7 @@ macro(llvm_multisource)
     set(_target ${_LMARG_PREFIX}${PROG})
     llvm_test_executable(${_target} ${sources})
     target_include_directories(${_target}
-      PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} "${LLVM_TEST_SUITE_DIR}/include")
+      PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     if(_LMARG_TARGET_VAR)
       set(${_LMARG_TARGET_VAR} ${_target})
     endif()

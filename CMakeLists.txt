@@ -41,7 +41,10 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules"
   )
 
-set(LLVM_TEST_SUITE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT CHECKEDC_SPEC_DIR)
+  message(FATAL_ERROR "Must define CHECKEDC_SPEC_DIR so we can find CheckedC's headers")
+endif()
+include_directories(BEFORE ${CHECKEDC_SPEC_DIR}/include)
 
 # Sanity check our source directory to make sure that we are not trying to
 # generate an in-tree build (unless on MSVC_IDE, where it is ok), and to make
@@ -187,8 +190,7 @@ if(NOT TEST_SUITE_SUBDIRS)
     get_filename_component(subdir ${entry} DIRECTORY)
     # Exclude tools and CTMark from default list
     if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools AND
-       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/CTMark AND
-       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/include)
+       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/CTMark)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
     endif()
   endforeach()
