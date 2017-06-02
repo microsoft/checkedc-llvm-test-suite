@@ -6,6 +6,8 @@
  * 	    It's free because it's yours.
  */
 
+#pragma BOUNDS_CHECKED ON
+
 #ifndef THREEDIM
 #  ifndef TWODIM
 #    ifndef NDIM
@@ -22,7 +24,7 @@
 #  define NDIM 3
 #endif
 
-typedef real vector[NDIM], matrix[NDIM][NDIM];
+typedef real vector _Checked[NDIM], matrix _Checked[NDIM][NDIM];
 #ifdef TORONTO
 extern double sqrt(double x);
 #endif
@@ -292,7 +294,7 @@ extern double sqrt(double x);
 
 
 
-
+#pragma BOUNDS_CHECKED OFF
 
 
 

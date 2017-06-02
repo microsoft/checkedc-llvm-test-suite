@@ -1,10 +1,13 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
-#include <stdlib.h>
+#include <stdlib_checked.h>
+
+#pragma BOUNDS_CHECKED ON
 
 extern int NumNodes;
 extern int nbody;
 
-int dealwithargs(int argc, char *argv[]) {
+_Unchecked
+int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc)) {
   int level;
 
   if (argc > 2) 

@@ -1,12 +1,15 @@
 #define global 
 #include "defs.h"
 
+#pragma BOUNDS_CHECKED ON
+
 typedef struct {
   bodyptr pskip;		/* body to skip in force evaluation */
   vector pos0;			/* point at which to evaluate field */
   real phi0;			/* computed potential at pos0       */
   vector acc0;			/* computed acceleration at pos0    */
-} hgstruct, *hgsptr;
+} hgstruct;
+typedef _Ptr<struct hgstruct> hgsptr;
 
 /*
  * WALKSUB: recursive routine to do hackwalk operation.
@@ -20,8 +23,8 @@ hgstruct gravsub(nodeptr p, hgstruct hg);
 hgstruct walksub(nodeptr p, real dsq, real tolsq, hgstruct hg, int level)
 {
   register int k, i;
-  register nodeptr r;
-  nodeptr tmp[NSUB];
+  register nodeptr r = NULL;
+  nodeptr tmp _Checked[NSUB];
 
 
   if (subdivp(p, dsq, tolsq, hg)) {           /* should p be opened?    */

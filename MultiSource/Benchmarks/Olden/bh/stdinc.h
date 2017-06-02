@@ -12,20 +12,22 @@
 
 #ifndef FILE
 #ifdef TORONTO
-#include <stdio.h>
+#include <stdio_checked.h>
 #else
 #  include "stdio.h"
 #endif
 #endif
 
-#include <math.h>
-#include <stdlib.h>
+#include <math_checked.h>
+#include <stdlib_checked.h>
+
+#pragma BOUNDS_CHECKED ON
 
 /*
  * STREAM: a replacement for FILE *.
  */
 
-typedef FILE *stream;
+typedef _Ptr<FILE> stream;
 
 /*
  * NULL: denotes a pointer to no object.
@@ -63,9 +65,11 @@ typedef char *string;
  */
 
 #ifndef  SINGLEPREC
-  typedef  double  real, *realptr;
+  typedef  double  real;
+  typedef  _Ptr<double> realptr;
 #else
-  typedef  float   real, *realptr;
+  typedef  float   real;
+  typedef  _Ptr<float> realptr;
 #endif
 
 /*
@@ -83,9 +87,9 @@ typedef char *string;
  * real-valued functions, respectively.
  */
 
-typedef void (*proc)();
-typedef int (*iproc)();
-typedef real (*rproc)();
+typedef _Ptr<void()> proc;
+typedef _Ptr<int()>  iproc;
+typedef _Ptr<real()> rproc;
 
 /*
  * PRIVATE: declare something to be local to a file.
@@ -120,3 +124,5 @@ typedef real (*rproc)();
 #define   ABS(x)       (((x) < 0) ? -(x) : (x))
 #define   MAX(x,y)     (((x) > (y)) ? (x) : (y))
 #define   MIN(x,y)     (((x) < (y)) ? (x) : (y))
+
+#pragma BOUNDS_CHECKED OFF

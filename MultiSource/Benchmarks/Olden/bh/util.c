@@ -9,6 +9,8 @@
 #include "stdinc.h"
 #include <errno.h>
 
+#pragma BOUNDS_CHECKED ON
+
 #define A	16807.0
 #define M	2147483647.0
 
@@ -20,7 +22,7 @@ void exit(int);
 double my_rand(double seed)
 {
     double	t = A*seed  + 1; 
-    double floor();
+    double floor(double);
 
 
     seed = t - (M * floor(t / M));
@@ -46,6 +48,7 @@ double xrand(double xl, double xh, double r)
  * ERROR: scream and die quickly.
  */
 
+_Unchecked
 error(char *msg)
 {
     fprintf(stderr, msg);
