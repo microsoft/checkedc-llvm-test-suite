@@ -366,6 +366,10 @@ endif
 # LEVEL/include          : config.h files for the project
 # LLVM_SRC_ROOT/include  : Files global to LLVM.
 #
+ifndef CHECKEDC_SPEC_DIR
+$(error "Must define CHECKEDC_SPEC_DIR so we can find CheckedC's headers")
+endif
+
 CPPFLAGS += -I$(PROJ_OBJ_DIR) -I$(PROJ_SRC_DIR) \
             -I$(PROJ_SRC_ROOT)/include -I$(CHECKEDC_SPEC_DIR)/include
 ifeq ($(HAS_LLVM),1)
