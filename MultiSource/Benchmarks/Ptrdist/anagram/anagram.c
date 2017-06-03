@@ -269,14 +269,15 @@ _Unchecked void Fatal(char *pchMsg, unsigned u) {
  * byte streams are concatenated, and terminated with a 0.
  */
 
-void ReadDict(char *pchFile : itype(_Ptr<char>)) {
+_Unchecked
+void ReadDict(char *pchFile) {
     _Ptr<FILE> fp = 0;
     unsigned cWords = 0;
     unsigned cLetters;
     int ch;
     struct stat statBuf;
 
-    _Unchecked {if (stat((const char*)pchFile, &statBuf)) Fatal("Cannot stat dictionary\n", 0);}
+    if (stat(pchFile, &statBuf)) Fatal("Cannot stat dictionary\n", 0);
 
     unsigned long ulLen;
     pchDictionarySize = ulLen = statBuf.st_size + 2 * (unsigned long)MAXWORDS;
@@ -286,16 +287,17 @@ void ReadDict(char *pchFile : itype(_Ptr<char>)) {
     pchBase = buffer = pchDictionary = calloc(pchDictionarySize, sizeof(char));
 
     if(pchDictionary == NULL)
-	_Unchecked {Fatal("Unable to allocate memory for dictionary\n", 0);}
+	Fatal("Unable to allocate memory for dictionary\n", 0);
 
     if ((fp = fopen(pchFile, "r")) == NULL)
-	_Unchecked {Fatal("Cannot open dictionary\n", 0);}
+	Fatal("Cannot open dictionary\n", 0);
 
+    _Checked {
     while (!feof(fp)) {
         pch = pchBase+2;                /* reserve for length */
         cLetters = 0;
         while ((ch = fgetc(fp)) != '\n' && ch != EOF) {
-            _Unchecked {if (isalpha(ch)) cLetters++;}
+            if (isalpha(ch)) cLetters++;
             *pch++ = ch;
         }
         *pch++ = '\0';
@@ -307,11 +309,12 @@ void ReadDict(char *pchFile : itype(_Ptr<char>)) {
     fclose(fp);
 
     *pchBase++ = 0;
+    }
 
-    _Unchecked {fprintf(stderr, "main dictionary has %u entries\n", cWords);}
+    fprintf(stderr, "main dictionary has %u entries\n", cWords);
     if (cWords >= MAXWORDS)
-	_Unchecked {Fatal("Dictionary too large; increase MAXWORDS\n", 0);}
-    _Unchecked {fprintf(stderr, "%lu bytes wasted\n", ulLen - (pchBase - pchDictionary));}
+	Fatal("Dictionary too large; increase MAXWORDS\n", 0);
+    fprintf(stderr, "%lu bytes wasted\n", ulLen - (pchBase - pchDictionary));
 }
 
 void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
@@ -322,11 +325,9 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     int cbtNeed;                        /* bits needed for current letter */
     Quad qNeed;                         /* used to build the mask */
 
-    _Unchecked {
-    memset((void*)alPhrase, 0, sizeof(Letter)*ALPHABET);
-    memset((void*)aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
-    memset((void*)aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
-    }
+    memset(alPhrase, 0, sizeof(Letter)*ALPHABET);
+    memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
+    memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
 /*
     Zero(alPhrase);
     Zero(aqMainMask);
@@ -336,11 +337,10 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     /* Tabulate letter frequencies in the phrase */
     cchPhraseLength = 0;
     while ((ch = *pchPhrase++) != '\0') {
-        _Unchecked {if (isalpha(ch)) {
+        if (isalpha(ch)) {
             ch = tolower(ch);
-            _Checked { lPhrase(ch).uFrequency++; }
+            lPhrase(ch).uFrequency++;
             cchPhraseLength++;
-        }
         }
     }
 
@@ -385,8 +385,9 @@ PWord NewWord(void) {
  * We would normally just use printf, but the string being printed is
  * is a huge pointer (on an IBM PC), so special care must be taken.
  */
-_Unchecked void wprint(_Array_ptr<char> pch) {
-    printf("%s ", (const char*)pch);
+_Unchecked
+void wprint(char* pch) {
+    printf("%s ", pch);
 }
 
 PWord NextWord(void);
@@ -414,13 +415,13 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     PWord pw = 0;
     int cchLength = 0;
 
-    _Unchecked { memset((void*)cchFrequency, 0, sizeof(unsigned char)*ALPHABET); }
+    memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
     /* Zero(cchFrequency); */
 
     /* Build frequency table */
     while ((i = *pch++) != '\0') {
-        _Unchecked {if (!isalpha(i)) continue; }
-        _Unchecked {i = ch2i(tolower(i));}
+        if (!isalpha(i)) continue;
+        i = ch2i(tolower(i));
         if (++cchFrequency[i] > alPhrase[i].uFrequency)
 	    return;
         ++cchLength;
@@ -436,7 +437,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
      * bitfield of frequencies.
      */
     pw = NextWord();
-    _Unchecked { memset((void*)pw->aqMask, 0, sizeof(Quad)*MAX_QUADS); }
+    memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
     /* Zero(pw->aqMask); */
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;
@@ -471,7 +472,8 @@ AddWords(void) {
     _Unchecked {fprintf(stderr, "%d candidates\n", cpwCand);}
 }
 
-_Unchecked void DumpCandidates(void) {
+_Unchecked
+void DumpCandidates(void) {
     unsigned u;
 
     for (u = 0; u < cpwCand; u++)
@@ -497,12 +499,13 @@ void DumpWord(Quad * pq) {
 }
 )                                       /* End of debug code */
 
-_Unchecked void DumpWords(void) {
+_Unchecked
+void DumpWords(void) {
 static int X;
   int i;
   X = (X+1) & 1023;
   if (X != 0) return;
-    for (i = 0; i < cpwLast; i++) wprint(apwSol[i]->pchWord);
+    for (i = 0; i < cpwLast; i++) _Unchecked{ wprint((char*)apwSol[i]->pchWord); }
     printf("\n");
 }
 
@@ -526,7 +529,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
     ;
 
-    _Unchecked {if (HaltProcessing()) longjmp(jbAnagram, 1);}
+    if (HaltProcessing()) _Unchecked { longjmp(jbAnagram, 1); }
 
     _Unchecked {Debug(printf("Trying :"); DumpWord(pqMask); printf(":\n");)}
 
@@ -618,44 +621,44 @@ void SortCandidates(void) {
     _Unchecked {fprintf(stderr, "Order of search will be ");}
     for (i = 0; i < ALPHABET; i++) {
       char val = i2ch(achByFrequency[i]);
-	_Unchecked {fputc(val, stderr);}
+      fputc(val, stderr);
     }
-    _Unchecked {fputc('\n', stderr);}
+    fputc('\n', stderr);
 }
 
 int fInteractive;
 
-_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+255), int size)
-    : bounds(achPhrase, achPhrase+255) {
+_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+size), int size)
+    : bounds(achPhrase, achPhrase+size) {
     if (fInteractive) _Unchecked {printf(">");}
-    _Unchecked {
     fflush(stdout);
     if (fgets(pch, size, stdin) == NULL) {
 #ifdef PLUS_STATS
+    _Unchecked {
 	PrintDerefStats(stderr);
         PrintHeapSize(stderr);
+    }
 #endif /* PLUS_STATS */
 	exit(0);
-    }
     }
     return(pch);
 }
 
-_Unchecked int Cdecl main(int cpchArgc, _Array_ptr<_Ptr<char>> ppchArgv : count(cpchArgc)) {
+_Unchecked int Cdecl main(int cpchArgc, _Array_ptr<char*> ppchArgv : count(cpchArgc)) {
 
     if (cpchArgc != 2 && cpchArgc != 3)
         Fatal("Usage: anagram dictionary [length]\n", 0);
 
     if (cpchArgc == 3)
-	cchMinLength = atoi((const char*)ppchArgv[2]);
+	cchMinLength = atoi(ppchArgv[2]);
 
     fInteractive = isatty(1);
 
-    _Checked {ReadDict(ppchArgv[1]);}
+    ReadDict(ppchArgv[1]);
 
     while (GetPhrase(&achPhrase[0], sizeof(achPhrase)) != NULL) {
         if (isdigit(achPhrase[0])) {
-            cchMinLength = atoi((const char*)achPhrase);
+            cchMinLength = atoi((char*)achPhrase);
             printf("New length: %d\n", cchMinLength);
         } else if (achPhrase[0] == '?') {
             DumpCandidates();
@@ -671,7 +674,7 @@ _Unchecked int Cdecl main(int cpchArgc, _Array_ptr<_Ptr<char>> ppchArgv : count(
             SortCandidates();
             }
             if (setjmp(jbAnagram) == 0)
-                _Checked {FindAnagram(&aqMainMask[0], &apwCand[0], 0);}
+                _Checked { FindAnagram(&aqMainMask[0], &apwCand[0], 0); }
             Stat(printf("%lu:%lu probes\n", ulHighCount, ulLowCount);)
         }
     }
