@@ -1,28 +1,30 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-#include <math.h>
+#include <math_checked.h>
+
+#pragma BOUNDS_CHECKED ON
 
 typedef int BOOLEAN;
 typedef unsigned long      uptrint;
 
 struct edge_rec {
-  struct VERTEX *v;
-  struct edge_rec *next;
+  _Ptr<struct VERTEX> v;
+  _Ptr<struct edge_rec> next;
   long wasseen;
-  void *Buffer;
+  _Array_ptr<void> Buffer;
 };
 
 
 struct get_point {
-  struct VERTEX *v;
+  _Ptr<struct VERTEX> v;
   double curmax;
   int seed;
 };
 
 
-typedef struct edge_rec *EDGE_PTR;
-typedef struct VERTEX *VERTEX_PTR;
-typedef struct edge_rec *QUAD_EDGE;
+typedef _Ptr<struct edge_rec> EDGE_PTR;
+typedef _Ptr<struct VERTEX> VERTEX_PTR;
+typedef _Array_ptr<struct edge_rec> QUAD_EDGE;
   
 struct VEC2 {
   double x,y;
@@ -32,18 +34,18 @@ struct VEC2 {
 
 struct VERTEX {
   struct VEC2 v;
-  struct VERTEX *left, *right;
+  _Ptr<struct VERTEX> left, right;
 };
 
 
 typedef struct {
-  QUAD_EDGE left, right;
+  QUAD_EDGE left : count(4), right : count(4);
 } EDGE_PAIR;
 
 
 struct EDGE_STACK {
     int ptr;
-    QUAD_EDGE *elts ;
+    _Array_ptr<QUAD_EDGE> elts : count(stack_size * 2);
     int stack_size;
 };
 
@@ -76,42 +78,43 @@ struct EDGE_STACK {
 #define rotinv(a) ((QUAD_EDGE) ( (((uptrint) (a) + 3*SIZE) & ANDF) | ((uptrint) (a) & ~ANDF) ))
 #define base(a) ((QUAD_EDGE) ((uptrint a) & ~ANDF))
 
-QUAD_EDGE alloc_edge();
-void free_edge(QUAD_EDGE e);
-QUAD_EDGE makeedge();
-void splice();
-void swapedge();
-void deleteedge();
-QUAD_EDGE build_delaunay_triangulation();
+QUAD_EDGE alloc_edge(void) : count(4);
+void free_edge(QUAD_EDGE e : count(4));
+QUAD_EDGE makeedge(VERTEX_PTR origin, VERTEX_PTR destination) : count(4);
+void splice(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4));
+void swapedge(QUAD_EDGE e : count(4));
+void deleteedge(QUAD_EDGE e : count(4));
+QUAD_EDGE build_delaunay_triangulation(VERTEX_PTR tree, VERTEX_PTR extra) : count(4);
 EDGE_PAIR build_delaunay(VERTEX_PTR tree, VERTEX_PTR extra);
-EDGE_PAIR do_merge(QUAD_EDGE ldo, QUAD_EDGE ldi, QUAD_EDGE rdi, QUAD_EDGE rdo);
-QUAD_EDGE connect_left();
-QUAD_EDGE connect_right();
+EDGE_PAIR do_merge(QUAD_EDGE ldo : count(4), QUAD_EDGE ldi : count(4), QUAD_EDGE rdi : count(4), QUAD_EDGE rdo : count(4));
+QUAD_EDGE connect_left(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4);
+QUAD_EDGE connect_right(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4);
 
 int myrandom(int seed);
-void zero_seen();
-QUAD_EDGE pop_edge();
+void zero_seen(_Ptr<struct EDGE_STACK> my_stack, QUAD_EDGE edge : count(4));
+QUAD_EDGE pop_edge(_Ptr<struct EDGE_STACK> x) : count(4);
 
 #define drand(seed) (((double) (seed=myrandom(seed))) / (double) 2147483647)
 
-extern VERTEX_PTR *vp ;
-extern struct VERTEX *va ;
-extern EDGE_PTR *next ;
-extern VERTEX_PTR *org ;
+extern _Ptr<VERTEX_PTR> vp ;
+extern _Array_ptr<struct VERTEX> va ;
+extern _Ptr<EDGE_PTR> next ;
+extern _Ptr<VERTEX_PTR> org ;
 extern int num_vertices, num_edgeparts, stack_size ;
 extern int to_lincoln , to_off, to_3d_out, to_color , voronoi , delaunay , interactive , ahost ;
-extern char *see;
+extern _Array_ptr<char> see;
 extern int NumNodes, NDim;
 
 
-void push_ring(struct EDGE_STACK *stack, QUAD_EDGE edge);
-void push_edge(struct EDGE_STACK *stack, QUAD_EDGE edge);
+void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4));
+void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4));
 BOOLEAN ccw(VERTEX_PTR a, VERTEX_PTR b, VERTEX_PTR c);
-int dealwithargs(int argc, char *argv[]);
-void output_voronoi_diagram(QUAD_EDGE edge, int nv, struct EDGE_STACK *stack);
+_Unchecked
+int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc));
+void output_voronoi_diagram(QUAD_EDGE edge : count(4), int nv, _Ptr<struct EDGE_STACK> stack);
 struct get_point get_points(int n, double curmax,int i, int seed,
                             int processor, int numnodes);
-struct EDGE_STACK *allocate_stack(int num_vertices);
+_Ptr<struct EDGE_STACK> allocate_stack(int num_vertices);
 
 
 double V2_cprod(struct VEC2 u,struct VEC2 v);
@@ -121,3 +124,5 @@ struct VEC2 V2_sum(struct VEC2 u, struct VEC2 v);
 struct VEC2 V2_sub(struct VEC2 u, struct VEC2 v);
 double V2_magn(struct VEC2 u);
 struct VEC2 V2_cross(struct VEC2 v);
+
+#pragma BOUNDS_CHECKED OFF
