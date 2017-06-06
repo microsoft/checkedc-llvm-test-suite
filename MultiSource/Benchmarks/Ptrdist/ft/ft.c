@@ -69,7 +69,7 @@ int debug = 1;
 
 _Unchecked int
 main(int argc, _Array_ptr<const char*> argv : count(argc) )
-{
+_Checked {
   int            nVertex;
   int            nEdge;
   _Ptr<Vertices>   graph = 0;
@@ -78,7 +78,7 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
   nEdge = DEFAULT_N_EDGE;
 
   if(argc > 1)
-  {
+  _Unchecked {
     nVertex = atoi(argv[1]);
     if(argc > 2)
     {
