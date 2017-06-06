@@ -9,7 +9,7 @@ typedef unsigned long      uptrint;
 
 struct edge_rec {
   _Ptr<struct VERTEX> v;
-  _Array_ptr<struct edge_rec> next : count(4);
+  _Array_ptr<struct edge_rec> next : quad_bounds(next);
   long wasseen;
   _Array_ptr<void> Buffer;
 };
@@ -39,7 +39,7 @@ struct VERTEX {
 
 
 typedef struct {
-  QUAD_EDGE left : count(4), right : count(4);
+  QUAD_EDGE left : quad_bounds(left), right : quad_bounds(right);
 } EDGE_PAIR;
 
 
@@ -76,22 +76,24 @@ struct EDGE_STACK {
 #define sym(a) ((QUAD_EDGE) (((uptrint) (a)) ^ 2*SIZE))
 #define rot(a) ((QUAD_EDGE) ( (((uptrint) (a) + 1*SIZE) & ANDF) | ((uptrint) (a) & ~ANDF) ))
 #define rotinv(a) ((QUAD_EDGE) ( (((uptrint) (a) + 3*SIZE) & ANDF) | ((uptrint) (a) & ~ANDF) ))
-#define base(a) ((QUAD_EDGE) ((uptrint a) & ~ANDF))
+#define base(a) ((QUAD_EDGE) (((uptrint) (a)) & ~ANDF))
+
+#define quad_bounds(a) bounds(base(a), base(a) + 4)
 
 QUAD_EDGE alloc_edge(void) : count(4);
-void free_edge(QUAD_EDGE e : count(4));
+void free_edge(QUAD_EDGE e : quad_bounds(e));
 QUAD_EDGE makeedge(VERTEX_PTR origin, VERTEX_PTR destination) : count(4);
-void splice(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4));
-void swapedge(QUAD_EDGE e : count(4));
-void deleteedge(QUAD_EDGE e : count(4));
+void splice(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b));
+void swapedge(QUAD_EDGE e : quad_bounds(e));
+void deleteedge(QUAD_EDGE e : quad_bounds(e));
 QUAD_EDGE build_delaunay_triangulation(VERTEX_PTR tree, VERTEX_PTR extra) : count(4);
 EDGE_PAIR build_delaunay(VERTEX_PTR tree, VERTEX_PTR extra);
-EDGE_PAIR do_merge(QUAD_EDGE ldo : count(4), QUAD_EDGE ldi : count(4), QUAD_EDGE rdi : count(4), QUAD_EDGE rdo : count(4));
-QUAD_EDGE connect_left(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4);
-QUAD_EDGE connect_right(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4);
+EDGE_PAIR do_merge(QUAD_EDGE ldo : quad_bounds(ldo), QUAD_EDGE ldi : quad_bounds(ldi), QUAD_EDGE rdi : quad_bounds(rdi), QUAD_EDGE rdo : quad_bounds(rdo));
+QUAD_EDGE connect_left(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b)) : count(4);
+QUAD_EDGE connect_right(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b)) : count(4);
 
 int myrandom(int seed);
-void zero_seen(_Ptr<struct EDGE_STACK> my_stack, QUAD_EDGE edge : count(4));
+void zero_seen(_Ptr<struct EDGE_STACK> my_stack, QUAD_EDGE edge : quad_bounds(edge));
 QUAD_EDGE pop_edge(_Ptr<struct EDGE_STACK> x) : count(4);
 
 #define drand(seed) (((double) (seed=myrandom(seed))) / (double) 2147483647)
@@ -106,12 +108,12 @@ extern _Array_ptr<char> see;
 extern int NumNodes, NDim;
 
 
-void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4));
-void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4));
+void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : quad_bounds(edge));
+void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : quad_bounds(edge));
 BOOLEAN ccw(VERTEX_PTR a, VERTEX_PTR b, VERTEX_PTR c);
 _Unchecked
 int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc));
-void output_voronoi_diagram(QUAD_EDGE edge : count(4), int nv, _Ptr<struct EDGE_STACK> stack);
+void output_voronoi_diagram(QUAD_EDGE edge : quad_bounds(edge), int nv, _Ptr<struct EDGE_STACK> stack);
 struct get_point get_points(int n, double curmax,int i, int seed,
                             int processor, int numnodes);
 _Ptr<struct EDGE_STACK> allocate_stack(int num_vertices);

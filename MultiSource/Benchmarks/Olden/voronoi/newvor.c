@@ -21,10 +21,10 @@ int NumNodes, NDim;
 
 int flag;
 
-QUAD_EDGE connect_left(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4)
+QUAD_EDGE connect_left(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b)) : count(4)
 {
   VERTEX_PTR t1 = NULL, t2 = NULL;
-  register QUAD_EDGE ans : count(4) = NULL, lnexta : count(4) = NULL;
+  register QUAD_EDGE ans : quad_bounds(ans) = NULL, lnexta : quad_bounds(lnexta) = NULL;
 
 /*printf("begin connect_left\n");*/
   t1=dest(a);
@@ -37,10 +37,10 @@ QUAD_EDGE connect_left(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4
   return(ans);
 }
 
-QUAD_EDGE connect_right(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(4)
+QUAD_EDGE connect_right(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b)) : count(4)
 {
   VERTEX_PTR t1 = NULL, t2 = NULL;
-  register QUAD_EDGE ans : count(4) = NULL, oprevb : count(4) = NULL;
+  register QUAD_EDGE ans : quad_bounds(ans) = NULL, oprevb : quad_bounds(oprevb) = NULL;
 
 /*printf("begin connect_right\n");*/
   t1=dest(a);
@@ -53,7 +53,7 @@ QUAD_EDGE connect_right(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4)) : count(
   return(ans);
 }
 
-void deleteedge(QUAD_EDGE e : count(4))
+void deleteedge(QUAD_EDGE e : quad_bounds(e))
      /*disconnects e from the rest of the structure and destroys it. */
 {
   QUAD_EDGE f = NULL;
@@ -96,9 +96,9 @@ VERTEX_PTR get_low(register VERTEX_PTR tree)
 
 EDGE_PAIR build_delaunay(VERTEX_PTR tree, VERTEX_PTR extra)
 {
-    QUAD_EDGE a : count(4) = NULL, b : count(4) = NULL, c : count(4) = NULL;
-    QUAD_EDGE ldo : count(4) = NULL, rdi : count(4) = NULL;
-    QUAD_EDGE ldi : count(4) = NULL, rdo : count(4) = NULL;
+    QUAD_EDGE a : quad_bounds(a) = NULL, b : quad_bounds(b) = NULL, c : quad_bounds(c) = NULL;
+    QUAD_EDGE ldo : quad_bounds(ldo) = NULL, rdi : quad_bounds(rdi) = NULL;
+    QUAD_EDGE ldi : quad_bounds(ldi) = NULL, rdo : quad_bounds(rdo) = NULL;
     EDGE_PAIR retval;
     register VERTEX_PTR maxx = NULL, minx = NULL;
     VERTEX_PTR s1 = NULL, s2 = NULL, s3 = NULL;
@@ -156,7 +156,7 @@ return retval;
 /****************************************************************/
 /*	Quad-edge storage allocation                            */
 /****************************************************************/
-QUAD_EDGE next_edge : count(4) = NULL, avail_edge : count(4) = NULL;
+QUAD_EDGE next_edge : quad_bounds(next_edge) = NULL, avail_edge : quad_bounds(avail_edge) = NULL;
 
 #define NYL NULL
 
@@ -189,7 +189,7 @@ _Array_ptr<void> myalign(int align_size, int alloc_size) : byte_count(alloc_size
 
 
 QUAD_EDGE alloc_edge(void) : count(4) {
-  QUAD_EDGE ans : count(4) = NULL;
+  QUAD_EDGE ans : quad_bounds(ans) = NULL;
 
   if (avail_edge == NYL) {
     ans = (QUAD_EDGE)myalign(4*(sizeof(struct edge_rec)),
@@ -208,7 +208,7 @@ QUAD_EDGE alloc_edge(void) : count(4) {
   return ans;
 }
 
-void free_edge(QUAD_EDGE e : count(4)) {
+void free_edge(QUAD_EDGE e : quad_bounds(e)) {
   e = (QUAD_EDGE) ((uptrint) e ^ ((uptrint) e & ANDF));
   onext(e) = avail_edge;
   avail_edge = e;
@@ -267,7 +267,7 @@ BOOLEAN ccw(VERTEX_PTR a, VERTEX_PTR b, VERTEX_PTR c) {
 /****************************************************************/
 QUAD_EDGE makeedge(VERTEX_PTR origin, VERTEX_PTR destination) : count(4)
 {
-    register QUAD_EDGE temp : count(4) = NULL, ans : count(4) = NULL;
+    register QUAD_EDGE temp : quad_bounds(temp) = NULL, ans : quad_bounds(ans) = NULL;
     temp =  alloc_edge();
     ans = temp;
 
@@ -286,10 +286,10 @@ QUAD_EDGE makeedge(VERTEX_PTR origin, VERTEX_PTR destination) : count(4)
     return(ans);
 }
 
-void splice(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4))
+void splice(QUAD_EDGE a : quad_bounds(a), QUAD_EDGE b : quad_bounds(b))
 {
-    QUAD_EDGE alpha : count(4) = NULL, beta : count(4) = NULL, temp : count(4) = NULL;
-    QUAD_EDGE t1 : count(4) = NULL;
+    QUAD_EDGE alpha : quad_bounds(alpha) = NULL, beta : quad_bounds(beta) = NULL, temp : quad_bounds(temp) = NULL;
+    QUAD_EDGE t1 : quad_bounds(t1) = NULL;
 
     /*printf("begin splice 0x%x,0x%x\n",a,b);*/
     /*dump_quad(a); dump_quad(b);*/
@@ -312,9 +312,9 @@ void splice(QUAD_EDGE a : count(4), QUAD_EDGE b : count(4))
     /*printf("End splice\n");*/
 }
 
-void swapedge(QUAD_EDGE e : count(4))
+void swapedge(QUAD_EDGE e : quad_bounds(e))
 {
-    QUAD_EDGE a : count(4) = NULL, b : count(4) = NULL, syme : count(4) = NULL, lnexttmp : count(4) = NULL;
+    QUAD_EDGE a : quad_bounds(a) = NULL, b : quad_bounds(b) = NULL, syme : quad_bounds(syme) = NULL, lnexttmp : quad_bounds(lnexttmp) = NULL;
     VERTEX_PTR a1 = NULL, b1 = NULL;
     
     /*printf("begin swapedge\n");*/
@@ -339,7 +339,7 @@ void swapedge(QUAD_EDGE e : count(4))
 /****************************************************************/
 /*#define valid(l) ccw(orig(basel), dest(l), dest(basel))*/
 
-int valid(QUAD_EDGE l : count(4), QUAD_EDGE basel : count(4))
+int valid(QUAD_EDGE l : quad_bounds(l), QUAD_EDGE basel : quad_bounds(basel))
 {
   register VERTEX_PTR t1 = NULL, t2 = NULL, t3 = NULL;
 
@@ -352,10 +352,10 @@ int valid(QUAD_EDGE l : count(4), QUAD_EDGE basel : count(4))
   return ccw(t1,t2,t3);
 }
 
-void dump_quad(QUAD_EDGE ptr : count(4))
+void dump_quad(QUAD_EDGE ptr : quad_bounds(ptr))
 {
   int i;
-  QUAD_EDGE j : count(4) = NULL;
+  QUAD_EDGE j : quad_bounds(j) = NULL;
   VERTEX_PTR v = NULL;
 
   ptr = (QUAD_EDGE) ((uptrint) ptr & ~ANDF);
@@ -373,10 +373,10 @@ void dump_quad(QUAD_EDGE ptr : count(4))
 
 
 
-EDGE_PAIR do_merge(QUAD_EDGE ldo : count(4), QUAD_EDGE ldi : count(4), QUAD_EDGE rdi : count(4), QUAD_EDGE rdo : count(4))
+EDGE_PAIR do_merge(QUAD_EDGE ldo : quad_bounds(ldo), QUAD_EDGE ldi : quad_bounds(ldi), QUAD_EDGE rdi : quad_bounds(rdi), QUAD_EDGE rdo : quad_bounds(rdo))
 {
   int rvalid, lvalid;
-  register QUAD_EDGE basel : count(4) = NULL, lcand : count(4) = NULL, rcand : count(4) = NULL, t : count(4) = NULL;
+  register QUAD_EDGE basel : quad_bounds(basel) = NULL, lcand : quad_bounds(lcand) = NULL, rcand : quad_bounds(rcand) = NULL, t : quad_bounds(t) = NULL;
   VERTEX_PTR t1 = NULL, t2 = NULL;
 
 /*printf("merge\n");*/
@@ -576,7 +576,7 @@ _Unchecked
 int main(int argc, _Array_ptr<char *> argv : count(argc)) {
   _Ptr<struct EDGE_STACK> my_stack = NULL;
   struct get_point point, extra;
-  QUAD_EDGE edge : count(4) = NULL;
+  QUAD_EDGE edge : quad_bounds(edge) = NULL;
   int n, retained;
   to_lincoln = to_off = to_3d_out = to_color = 0;
   voronoi = delaunay = 1; interactive = ahost = 0 ;
@@ -678,7 +678,7 @@ QUAD_EDGE pop_edge(_Ptr<struct EDGE_STACK> x) : count(4) {
   return (x)->elts[a];
 }
 
-void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4)) {
+void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : quad_bounds(edge)) {
   register int a;
   /*printf("pushing edge \n");*/
   if (stack->ptr == stack->stack_size) _Unchecked {
@@ -692,8 +692,8 @@ void push_edge(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4)) {
   }
 }
 
-void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4)) {
-    QUAD_EDGE nex : count(4) = NULL;
+void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : quad_bounds(edge)) {
+    QUAD_EDGE nex : quad_bounds(nex) = NULL;
     nex = onext(edge);
     while (nex != edge) {
 	if (seen(nex) == 0) {
@@ -704,9 +704,9 @@ void push_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4)) {
     }
 }
 
-void push_nonzero_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4))
+void push_nonzero_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : quad_bounds(edge))
 {
-  QUAD_EDGE nex : count(4) = NULL;
+  QUAD_EDGE nex : quad_bounds(nex) = NULL;
   nex = onext(edge);
   while (nex != edge) {
     if (seen(nex) != 0) {
@@ -717,7 +717,7 @@ void push_nonzero_ring(_Ptr<struct EDGE_STACK> stack, QUAD_EDGE edge : count(4))
   }
 }
 
-void zero_seen(_Ptr<struct EDGE_STACK> my_stack, QUAD_EDGE edge : count(4))
+void zero_seen(_Ptr<struct EDGE_STACK> my_stack, QUAD_EDGE edge : quad_bounds(edge))
 {
   my_stack->ptr = 0;
   push_nonzero_ring(my_stack, edge);

@@ -88,9 +88,9 @@ struct VEC2 circle_center(struct VEC2 a, struct VEC2 b, struct VEC2 c)
 
 _Array_ptr<int> earray;
 
-void output_voronoi_diagram(QUAD_EDGE edge : count(4), int nv, _Ptr<struct EDGE_STACK> my_stack)
+void output_voronoi_diagram(QUAD_EDGE edge : quad_bounds(edge), int nv, _Ptr<struct EDGE_STACK> my_stack)
 {
-  QUAD_EDGE nex : count(4) = NULL, prev : count(4) = NULL, snex : count(4) = NULL, sprev : count(4) = NULL;
+  QUAD_EDGE nex : quad_bounds(nex) = NULL, prev : quad_bounds(prev) = NULL, snex : quad_bounds(snex) = NULL, sprev : quad_bounds(sprev) = NULL;
   struct VEC2 cvxvec, center;
   double ln;
   
@@ -103,7 +103,7 @@ void output_voronoi_diagram(QUAD_EDGE edge : count(4), int nv, _Ptr<struct EDGE_
     /*  Plot VD edges with one endpoint at infinity. */
     do {
       struct VEC2 v21,v22,v23;
-      QUAD_EDGE tmp : count(4) = NULL;
+      QUAD_EDGE tmp : quad_bounds(tmp) = NULL;
 
       v21=destv(nex);
       v22=origv(nex);
