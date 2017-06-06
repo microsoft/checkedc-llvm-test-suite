@@ -34,6 +34,8 @@
 
 #include "item.h"
 
+#pragma BOUNDS_CHECKED ON
+
 int LessThan(_Ptr<Item>  item1, _Ptr<Item>  item2)
 {
   return(KEY(item1) < KEY(item2));

@@ -31,6 +31,8 @@
 #ifndef _fsanity_h
 #define _fsanity_h
 
+#pragma BOUNDS_CHECKED ON
+
 /*
  * Check the entry ordering in the structure.
  *
@@ -97,5 +99,7 @@ int  SanityCheck3(_Ptr<Heap> h, int rank);
  *   none
  */
 void PrettyPrint(_Ptr<Heap> h);
+
+#pragma BOUNDS_CHECKED OFF
 
 #endif

@@ -31,6 +31,8 @@
 #ifndef _graph_h
 #define _graph_h
 
+#pragma BOUNDS_CHECKED ON
+
 struct _Vertices;
 
 typedef struct _Edges
@@ -74,5 +76,7 @@ typedef struct _Vertices
 
 _Ptr<Vertices>  GenGraph(int nVertex, int nEdge);
 void      PrintGraph(_Ptr<Vertices>  graph);
+
+#pragma BOUNDS_CHECKED OFF
 
 #endif

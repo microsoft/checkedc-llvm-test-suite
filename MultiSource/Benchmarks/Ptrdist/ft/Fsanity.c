@@ -32,6 +32,8 @@
 #include "Fheap.h"
 #include "Fstruct.h"
 
+#pragma BOUNDS_CHECKED ON
+
 int
 SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
 {
@@ -149,22 +151,23 @@ PrettyPrint(_Ptr<HeapP>  h)
 
   if(h == NULL_HEAP)
   {
-    printf(" nil ");
+    _Unchecked { printf(" nil "); }
     return;
   }
 
-  printf("(");
+  _Unchecked { printf("("); }
 
   h1 = h;
   do
   {
     //PrintItem(ITEM(h1));
-    printf("[%u] ", RANK(h1));
+    _Unchecked { printf("[%u] ", RANK(h1)); }
     PrettyPrint(CHILD(h1));
     h1 = FORWARD(h1);
   }
   while(h1 != h);
 
-  printf(")");
+  _Unchecked { printf(")"); }
 }
 
+#pragma BOUNDS_CHECKED OFF

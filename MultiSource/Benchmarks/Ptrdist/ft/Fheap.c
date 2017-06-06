@@ -37,11 +37,12 @@
  */
 
 #include <assert.h>
-// CHECKED
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include "Fheap.h"
 #include "Fstruct.h"
+
+#pragma BOUNDS_CHECKED ON
 
 #ifdef DO_INLINE
 #define INLINE inline
@@ -59,7 +60,7 @@ void  RemoveChild(_Ptr<HeapP> );
 void  FixRank(_Ptr<HeapP> , int);
 
 INLINE void
-InitFHeap()
+InitFHeap(void)
 {
   int j;
 
@@ -143,7 +144,7 @@ DeleteMin(_Ptr<HeapP>  h)
 
   if(h1 == NULL)
   {
-    free((void*)h);
+    free(h);
     return(NULL);
   }
 
@@ -265,7 +266,7 @@ DeleteMin(_Ptr<HeapP>  h)
     }
   }
 
-  free((void*)h);
+  free(h);
 
   return(min);
 }
@@ -387,7 +388,7 @@ Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i)
     while(h1 != CHILD(i));
   }
 
-  free((void*)i);
+  free(i);
   return(h);
 }
 
@@ -498,11 +499,11 @@ NewHeap(_Ptr<Item>  i)
 {
   _Ptr<HeapP>  h = 0;
 
-  h = (HeapP *)calloc(1, sizeof(HeapP));
+  h = calloc(1, sizeof(HeapP));
 
   if(h == NULL)
   {
-    fprintf(stderr, "Oops, could not malloc\n");
+    _Unchecked { fprintf(stderr, "Oops, could not malloc\n"); }
     exit(1);
   }
   ITEM(h) = i;

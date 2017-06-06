@@ -33,6 +33,8 @@
 #include <stdlib_checked.h>
 #include "graph.h"
 
+#pragma BOUNDS_CHECKED ON
+
 #define TRUE 1
 #define FALSE 0
 
@@ -228,7 +230,7 @@ NewVertex(void)
 
   if(vertex == NULL)
   {
-    fprintf(stderr, "Could not malloc\n");
+    _Unchecked { fprintf(stderr, "Could not malloc\n"); }
     exit(1);
   }
 
@@ -248,7 +250,7 @@ NewEdge(void)
 
   if(edge == NULL)
   {
-    fprintf(stderr, "Could not malloc\n");
+    _Unchecked { fprintf(stderr, "Could not malloc\n"); }
     exit(1);
   }
 
@@ -269,9 +271,9 @@ PrintGraph(_Ptr<Vertices>  graph)
   vertex = graph;
   do
   {
-    printf("Vertex %d is connected to:", ID(vertex));
+    _Unchecked { printf("Vertex %d is connected to:", ID(vertex)); }
     PrintNeighbors(vertex);
-    printf("\n");
+    _Unchecked { printf("\n"); }
     vertex = NEXT_VERTEX(vertex);
   }
   while(vertex != graph);
@@ -285,7 +287,7 @@ PrintNeighbors(_Ptr<Vertices>  vertex)
   edge = EDGES(vertex);
   while(edge != NULL)
   {
-    printf(" %d(%d)[%d]", ID(VERTEX(edge)), WEIGHT(edge), ID(SOURCE(edge)));
+    _Unchecked { printf(" %d(%d)[%d]", ID(VERTEX(edge)), WEIGHT(edge), ID(SOURCE(edge))); }
     edge = NEXT_EDGE(edge);
   }
 }
