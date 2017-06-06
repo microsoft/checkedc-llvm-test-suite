@@ -54,8 +54,7 @@ double map_Q _Checked[36] =
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
 
-_Unchecked 
-int main(int argc, _Array_ptr<char*> argv : count(argc))
+_Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc))
 {
   Root r = 0;
   int i,finished=0;
@@ -104,9 +103,8 @@ int main(int argc, _Array_ptr<char*> argv : count(argc))
       r->theta_R = r->theta_R + d_theta_R;
       r->theta_I = r->theta_I + d_theta_I;
     }
-  } /* while */  
+  } /* while */
 
   return 0;
-
   } /* _Checked */
 }

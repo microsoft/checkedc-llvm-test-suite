@@ -23,15 +23,13 @@
 extern int NumNodes;
 #endif
 
-unchecked
-int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
 
 typedef struct {
     long 	level;
 } startmsg_t;
 
-unchecked
-int main (int argc, array_ptr<char*> argv : count(argc))
+unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 {
     ptr<tree_t> root = NULL;
     int level,result;
@@ -96,6 +94,7 @@ int main (int argc, array_ptr<char*> argv : count(argc))
     __ShutDown();
 #endif
     exit(0);
+
     }
 }
 
