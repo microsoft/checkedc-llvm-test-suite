@@ -9,7 +9,7 @@ typedef unsigned long      uptrint;
 
 struct edge_rec {
   _Ptr<struct VERTEX> v;
-  _Ptr<struct edge_rec> next;
+  _Array_ptr<struct edge_rec> next : count(4);
   long wasseen;
   _Array_ptr<void> Buffer;
 };

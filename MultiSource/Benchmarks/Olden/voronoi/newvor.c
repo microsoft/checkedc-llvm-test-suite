@@ -96,7 +96,9 @@ VERTEX_PTR get_low(register VERTEX_PTR tree)
 
 EDGE_PAIR build_delaunay(VERTEX_PTR tree, VERTEX_PTR extra)
 {
-    QUAD_EDGE a = NULL, b = NULL, c = NULL, ldo = NULL, rdi = NULL, ldi = NULL, rdo = NULL;
+    QUAD_EDGE a : count(4) = NULL, b : count(4) = NULL, c : count(4) = NULL;
+    QUAD_EDGE ldo : count(4) = NULL, rdi : count(4) = NULL;
+    QUAD_EDGE ldi : count(4) = NULL, rdo : count(4) = NULL;
     EDGE_PAIR retval;
     register VERTEX_PTR maxx = NULL, minx = NULL;
     VERTEX_PTR s1 = NULL, s2 = NULL, s3 = NULL;
@@ -154,7 +156,7 @@ return retval;
 /****************************************************************/
 /*	Quad-edge storage allocation                            */
 /****************************************************************/
-QUAD_EDGE next_edge, avail_edge;
+QUAD_EDGE next_edge : count(4) = NULL, avail_edge : count(4) = NULL;
 
 #define NYL NULL
 
@@ -337,7 +339,7 @@ void swapedge(QUAD_EDGE e : count(4))
 /****************************************************************/
 /*#define valid(l) ccw(orig(basel), dest(l), dest(basel))*/
 
-int valid(QUAD_EDGE l, QUAD_EDGE basel)
+int valid(QUAD_EDGE l : count(4), QUAD_EDGE basel : count(4))
 {
   register VERTEX_PTR t1 = NULL, t2 = NULL, t3 = NULL;
 
