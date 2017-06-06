@@ -42,33 +42,34 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #endif
     level = dealwithargs(argc, argv);
 #endif
+    checked {
 #ifndef TORONTO
     CMMD_node_timer_clear(0);
     CMMD_node_timer_clear(1);
 #endif
 #ifdef TORONTO
-    chatting("Treeadd with %d levels on %d processors \n",
-	     level, NumNodes);
+    unchecked { chatting("Treeadd with %d levels on %d processors \n",
+	     level, NumNodes); }
 #else
-    chatting("Treeadd with %d levels on %d processors \n",
-	     level, __NumNodes);
+    unchecked { chatting("Treeadd with %d levels on %d processors \n",
+	     level, __NumNodes); }
 #endif
     /* only processor 0 will continue here. */
-    chatting("About to enter TreeAlloc\n"); 
+    unchecked { chatting("About to enter TreeAlloc\n"); }
 #ifndef TORONTO
     CMMD_node_timer_start(0);
 #endif
 
 #ifdef TORONTO
-    checked {root = TreeAlloc (level, 0, NumNodes);}
+    root = TreeAlloc (level, 0, NumNodes);
 #else
-    checked {root = TreeAlloc (level, 0, __NumNodes);}
+    root = TreeAlloc (level, 0, __NumNodes);
 #endif
 
 #ifndef TORONTO
     CMMD_node_timer_stop(0);
 #endif
-    chatting("About to enter TreeAdd\n"); 
+    unchecked { chatting("About to enter TreeAdd\n"); }
     
 #ifndef PLAIN
     ClearAllStats();
@@ -77,16 +78,16 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
     CMMD_node_timer_start(1);
 #endif
 { int i; for (i = 0; i < 100; ++i)
-    checked {result = TreeAdd (root);}
+    result = TreeAdd (root);
 }
 #ifndef TORONTO
     CMMD_node_timer_stop(1);
 #endif
-    chatting("Received result of %d\n",result);
+    unchecked { chatting("Received result of %d\n",result); }
 
 #ifndef TORONTO
-    chatting("Alloc Time = %f seconds\n", CMMD_node_timer_elapsed(0));
-    chatting("Add Time = %f seconds\n", CMMD_node_timer_elapsed(1));
+    unchecked { chatting("Alloc Time = %f seconds\n", CMMD_node_timer_elapsed(0)); }
+    unchecked { chatting("Add Time = %f seconds\n", CMMD_node_timer_elapsed(1)); }
 #endif
 
 #ifdef FUTURES
@@ -94,7 +95,7 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #endif
     exit(0);
 
-
+    }
 }
 
 /* TreeAdd:
