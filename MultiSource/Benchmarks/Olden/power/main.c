@@ -55,13 +55,12 @@ double map_Q _Checked[36] =
 #define      MAX_THETA_I       0.199
 
 _Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc))
-{
+_Checked {
   Root r = 0;
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
-  printf("Past initialization\n");
-  _Checked {
+  _Unchecked { printf("Past initialization\n"); }
 
   /* initial pass */
   r = build_tree();
@@ -106,5 +105,4 @@ _Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc))
   } /* while */
 
   return 0;
-  } /* _Checked */
 }
