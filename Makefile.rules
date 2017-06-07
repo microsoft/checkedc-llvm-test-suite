@@ -366,8 +366,12 @@ endif
 # LEVEL/include          : config.h files for the project
 # LLVM_SRC_ROOT/include  : Files global to LLVM.
 #
+ifndef CHECKEDC_SPEC_DIR
+$(error "Must define CHECKEDC_SPEC_DIR so we can find CheckedC's headers")
+endif
+
 CPPFLAGS += -I$(PROJ_OBJ_DIR) -I$(PROJ_SRC_DIR) \
-            -I$(PROJ_SRC_ROOT)/include -I$(LEVEL)/include
+            -I$(PROJ_SRC_ROOT)/include -I$(CHECKEDC_SPEC_DIR)/include
 ifeq ($(HAS_LLVM),1)
 CPPFLAGS += -I$(LLVM_OBJ_ROOT)/include -I$(LLVM_SRC_ROOT)/include
 endif
@@ -500,8 +504,8 @@ Link += -rpath $(DESTTOOLCURRENT)
 endif
 
 # Create dependency file from CPP file, send to stdout.
-Depend   := $(CXX) -MM -I$(LEVEL)/include $(CPPFLAGS) 
-DependC  := $(CC)  -MM -I$(LEVEL)/include $(CPPFLAGS) 
+Depend   := $(CXX) -MM $(CPPFLAGS)
+DependC  := $(CC)  -MM $(CPPFLAGS)
 
 # Archive a bunch of .o files into a .a file...
 AR       = $(AR_PATH) cr
