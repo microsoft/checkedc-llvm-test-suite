@@ -257,6 +257,9 @@ _Unchecked void Fatal(char *pchMsg, unsigned u) {
     exit(1);
 }
 
+int isalpha_checked(int ch) _Unchecked { return isalpha(ch); }
+#define isalpha(ch) isalpha_checked(ch)
+
 /* ReadDict -- read the dictionary file into memory and preprocess it
  *
  * A word of length cch in the dictionary is encoded as follows:
