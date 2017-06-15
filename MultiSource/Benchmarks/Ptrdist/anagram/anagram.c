@@ -259,6 +259,8 @@ _Unchecked void Fatal(char *pchMsg, unsigned u) {
 
 int isalpha_checked(int ch) _Unchecked { return isalpha(ch); }
 #define isalpha(ch) isalpha_checked(ch)
+int tolower_checked(int ch) _Unchecked { return tolower(ch); }
+#define tolower(ch) tolower_checked(ch)
 
 /* ReadDict -- read the dictionary file into memory and preprocess it
  *
