@@ -328,9 +328,9 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     int cbtNeed;                        /* bits needed for current letter */
     Quad qNeed;                         /* used to build the mask */
 
-    memset(alPhrase, 0, sizeof(Letter)*ALPHABET);
-    memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
-    memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
+    _Unchecked { memset(alPhrase, 0, sizeof(Letter)*ALPHABET); }
+    _Unchecked { memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS); }
+    _Unchecked { memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
 /*
     Zero(alPhrase);
     Zero(aqMainMask);
@@ -418,7 +418,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     PWord pw = 0;
     int cchLength = 0;
 
-    memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
+    _Unchecked { memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET); }
     /* Zero(cchFrequency); */
 
     /* Build frequency table */
@@ -440,7 +440,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
      * bitfield of frequencies.
      */
     pw = NextWord();
-    memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
+    _Unchecked { memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS); }
     /* Zero(pw->aqMask); */
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;
