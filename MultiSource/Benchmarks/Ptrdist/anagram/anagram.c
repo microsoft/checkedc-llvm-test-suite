@@ -257,12 +257,8 @@ _Unchecked void Fatal(char *pchMsg, unsigned u) {
     exit(1);
 }
 
-#ifdef isalpha
-# undef isalpha
-#endif
-#ifdef tolower
-# undef tolower
-#endif
+#undef isalpha
+#undef tolower
 
 /* ReadDict -- read the dictionary file into memory and preprocess it
  *
