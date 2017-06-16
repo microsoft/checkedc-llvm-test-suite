@@ -257,6 +257,9 @@ _Unchecked void Fatal(char *pchMsg, unsigned u) {
     exit(1);
 }
 
+#undef isalpha
+#undef tolower
+
 /* ReadDict -- read the dictionary file into memory and preprocess it
  *
  * A word of length cch in the dictionary is encoded as follows:
