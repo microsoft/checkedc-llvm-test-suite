@@ -44,6 +44,8 @@
 #include "Fheap.h"
 #include "graph.h"
 
+#pragma BOUNDS_CHECKED ON
+
 #define MINUS_INFINITY		INT_MIN
 #define PLUS_INFINITY		INT_MAX
 
@@ -65,9 +67,9 @@ _Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
  */
 int debug = 1;
 
-int
+_Unchecked int
 main(int argc, _Array_ptr<const char*> argv : count(argc) )
-{
+_Checked {
   int            nVertex;
   int            nEdge;
   _Ptr<Vertices>   graph = 0;
@@ -76,7 +78,7 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
   nEdge = DEFAULT_N_EDGE;
 
   if(argc > 1)
-  {
+  _Unchecked {
     nVertex = atoi(argv[1]);
     if(argc > 2)
     {
@@ -89,14 +91,14 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
   }
 
   if(debug)
-  {
+  _Unchecked {
     printf("Generating a connected graph ... ");
   }
 
   graph = GenGraph(nVertex, nEdge);
 
   if(debug)
-  {
+  _Unchecked {
     printf("done\nFinding the mininmum spanning tree ... ");
   }
 
@@ -104,15 +106,15 @@ main(int argc, _Array_ptr<const char*> argv : count(argc) )
 
   if(debug)
   {
-    printf("done\nThe graph:\n");
+    _Unchecked { printf("done\nThe graph:\n"); }
     PrintGraph(graph);
-    printf("The minimum spanning tree:\n");
+    _Unchecked { printf("The minimum spanning tree:\n"); }
     PrintMST(graph);
   }
 
   if(debug)
   {
-    printf("Time spent in finding the mininum spanning tree:\n");
+    _Unchecked { printf("Time spent in finding the mininum spanning tree:\n"); }
   }
 #ifdef PLUS_STATS
   PrintDerefStats(stderr);
@@ -142,7 +144,7 @@ MST(_Ptr<Vertices>  graph)
   vertex = graph;
   KEY(vertex) = 0;
   heap = MakeHeap();
-  (void)Insert(&heap, (Item *)vertex);
+  (void)Insert(&heap, vertex);
 
   vertex = NEXT_VERTEX(vertex);
   while(vertex != graph)
@@ -185,7 +187,7 @@ PrintMST(_Ptr<Vertices>  graph)
 
   while(vertex != graph)
   {
-    printf("vertex %d to %d\n", ID(vertex), ID(SOURCE(CHOSEN_EDGE(vertex))));
+    _Unchecked { printf("vertex %d to %d\n", ID(vertex), ID(SOURCE(CHOSEN_EDGE(vertex)))); }
     vertex = NEXT_VERTEX(vertex);
   }
 

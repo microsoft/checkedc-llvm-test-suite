@@ -51,6 +51,8 @@
  */
 #include "item.h"
 
+#pragma BOUNDS_CHECKED ON
+
 typedef struct _Heap
 {
   _Ptr<Item>      item;
@@ -78,7 +80,7 @@ typedef struct _Heap
  * Return values:
  *   none
  */
-void  InitFHeap();
+void  InitFHeap(void);
 
 /*
  * Create a heap structure.
@@ -217,5 +219,7 @@ _Ptr<HeapP>  Find(_Ptr<HeapP>  h, _Ptr<Item>  item);
  *   an pointer to the item
  */
 _Ptr<Item>  ItemOf(_Ptr<HeapP>  h);
+
+#pragma BOUNDS_CHECKED OFF
 
 #endif
