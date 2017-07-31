@@ -66,10 +66,11 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
     int j,k;
     int dest_proc;
 
-    array_ptr<ptr<node_t>> tmp : count(degree) = calloc(degree, (sizeof(ptr<node_t>)));
-    dynamic_check(tmp != NULL);
-
-    cur_node->to_nodes = tmp;
+    cur_node->to_nodes = calloc(degree, (sizeof(ptr<node_t>)));
+    if (!cur_node->to_nodes) {
+      unchecked { chatting("Uncaught calloc error\n"); }
+      exit(0);
+    }
     cur_node->degree = degree;
 
     for (j=0; j<degree; j++) {
@@ -91,15 +92,9 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
           exit(1);
         }
 
-        array_ptr<ptr<node_t>> ub = tmp + j;
-        array_ptr<ptr<node_t>> tmp2 : bounds(tmp2, ub) = tmp;
-        for ( ; tmp2 < ub; tmp2++)
-          if (other_node == *tmp2) break;
-        k = tmp2 - tmp;
-        /* Original code:
         for (k=0; k<j; k++)
           if (other_node == cur_node->to_nodes[k]) break;
-        */
+
 #if 0
         if ((((unsigned long long) other_node) >> 7) < 2048)
           chatting("pre other_node = 0x%x,number = %d,dest = %d\n",
