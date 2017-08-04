@@ -3,8 +3,7 @@
 #include "em3d.h"
 #pragma BOUNDS_CHECKED ON
 int nonlocals=0;
-void compute_nodes(nodelist)
-register ptr<node_t> nodelist;
+void compute_nodes(register ptr<node_t> nodelist)
 {
   register int i;
   register ptr<node_t> localnode = NULL;
