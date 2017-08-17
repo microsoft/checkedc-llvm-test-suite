@@ -548,12 +548,15 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
     PPWord ppwStartTmp : bounds(ppwStartTmp, ppwEnd) = ppwStart;
 
-    _Dynamic_check(ppwStart != NULL); // Manually Hoisted Check
+    // Manually Hoisted Check, including path condition for first iteration of the loop.
+    _Dynamic_check(ppwStartTmp < ppwEnd && ppwStartTmp != NULL);
 
     while (ppwStartTmp < ppwEnd) {          /* Half of the program execution */
         pw = *ppwStartTmp;                  /* time is spent in these three */
 
-        __builtin_assume(pw != NULL); // This has the effect of saying *ppwStart is non-null.
+        // This invariant is preserved in the code, but cannot be explained
+        // to the compiler any other way at the moment.
+        __builtin_assume(pw != NULL);
 
         Stat(if (++ulLowCount == 0) ++ulHighCount;)
 
