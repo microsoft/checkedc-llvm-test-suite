@@ -15,6 +15,7 @@
 #ifndef OPTION_H
 #define OPTION_H
 
+#pragma BOUNDS_CHECKED ON
 
 /*
  *
@@ -51,16 +52,17 @@
 
 #ifdef OPTION_CODE
 
-void
-Option(int,
-       char (*[]));
+_Unchecked void
+Option(int argc,
+       _Array_ptr<char*> : count(argc));
 
 #else	/* OPTION_CODE */
 
-extern void
-Option(int,
-       char (*[]));
+_Unchecked extern void
+Option(int argc,
+       _Array_ptr<char*> : count(argc));
 
 #endif	/* OPTION_CODE */
 
+#pragma BOUNDS_CHECKED OFF
 #endif	/* OPTION_H */

@@ -14,11 +14,12 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include "types.h"
 #include "channel.h"
 
+#pragma BOUNDS_CHECKED ON
 
 /*
  *
@@ -52,7 +53,7 @@ BuildChannel(void)
 void
 DimensionChannel(void)
 {
-    FILE	*channelFP;
+    _Ptr<FILE>	channelFP = NULL;
     ulong	line;
     ulong	dim;
     ulong	net;
@@ -64,8 +65,8 @@ DimensionChannel(void)
     /*
      * Open channel description file.
      */
-    channelFP = fopen(channelFile, "r");
-    if (channelFP == NULL) {
+    _Unchecked { channelFP = fopen(channelFile, "r"); }
+    if (channelFP == NULL) _Unchecked {
 	/*
 	 * Error in channel file description.
 	 */
@@ -88,7 +89,7 @@ DimensionChannel(void)
     do {
 	line++;
 	unsigned int c1, b1, t1;
-	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
+	_Unchecked { stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1); }
 	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
@@ -109,7 +110,7 @@ DimensionChannel(void)
 		    net = top;
 		}
 	    }
-	    else {
+	    else _Unchecked {
 		/*
 		 * Error in channel file description.
 		 */
@@ -123,8 +124,8 @@ DimensionChannel(void)
 
     /*
      * Close channel description file.
-     */
-    if (fclose(channelFP) == EOF) {
+	 */
+    if (fclose(channelFP) == EOF) _Unchecked {
 	/*
 	 * Error in channel file description.
 	 */
@@ -136,7 +137,7 @@ DimensionChannel(void)
     /*
      * Check channel dimension.
      */
-    if (dim == 0) {
+    if (dim == 0) _Unchecked {
 	/*
 	 * Error in channel file description.
 	 */
@@ -156,7 +157,7 @@ DimensionChannel(void)
 void
 DescribeChannel(void)
 {
-    FILE	*channelFP;
+    _Ptr<FILE> channelFP = NULL;
     ulong	line;
     ulong	col;
     ulong	bot;
@@ -166,12 +167,12 @@ DescribeChannel(void)
     /*
      * Top terminals of channel.
      */
-    TOP = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
+    TOP = malloc((channelColumns+1) * sizeof(ulong));
 
     /*
      * Bottom terminals of channel.
      */
-    BOT = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
+    BOT = malloc((channelColumns+1) * sizeof(ulong));
 
     /*
      * Initialize terminals of channel.
@@ -184,8 +185,8 @@ DescribeChannel(void)
     /*
      * Open channel description file.
      */
-    channelFP = fopen(channelFile, "r");
-    if (channelFP == NULL) {
+    _Unchecked { channelFP = fopen(channelFile, "r"); }
+    if (channelFP == NULL) _Unchecked {
 	/*
 	 * Error in channel file description.
 	 */
@@ -206,14 +207,14 @@ DescribeChannel(void)
     do {
 	line++;
 	unsigned int c1, b1, t1;
-	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
+	_Unchecked { stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1); }
 	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
 		/*
 		 * Build column.
 		 */
-		if (col > channelColumns) {
+		if (col > channelColumns) _Unchecked {
 		    /*
 		     * Error in channel file description.
 		     */
@@ -230,7 +231,7 @@ DescribeChannel(void)
 		    TOP[col] = top;
 		}
 	    }
-	    else {
+	    else _Unchecked {
 		/*
 		 * Error in channel file description.
 		 */
@@ -245,7 +246,7 @@ DescribeChannel(void)
     /*
      * Close channel description file.
      */
-    if (fclose(channelFP) == EOF) {
+    if (fclose(channelFP) == EOF) _Unchecked {
 	/*
 	 * Error in channel file description.
 	 */
@@ -267,10 +268,10 @@ DensityChannel(void)
     /*
      * Allocate track dimension structures.
      */
-    FIRST = (ulong *)malloc((channelNets+1) * sizeof(ulong));
-    LAST = (ulong *)malloc((channelNets+1) * sizeof(ulong));
-    DENSITY = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
-    CROSSING = (ulong *)malloc((channelNets+1) * sizeof(ulong));
+    FIRST = malloc((channelNets+1) * sizeof(ulong));
+    LAST = malloc((channelNets+1) * sizeof(ulong));
+    DENSITY = malloc((channelColumns+1) * sizeof(ulong));
+    CROSSING = malloc((channelNets+1) * sizeof(ulong));
 
     /*
      * Initialize track dimension structures.

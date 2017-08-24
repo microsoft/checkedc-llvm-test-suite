@@ -15,8 +15,8 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include <assert.h>
 #include "option.h"
 #include "channel.h"
@@ -26,15 +26,16 @@
 #include "maze.h"
 
 
+#pragma BOUNDS_CHECKED ON
 /*
  *
  * Code.
  *
  */
 
-int
+_Unchecked int
 main(int argc,
-     char *argv[])
+     _Array_ptr<char*> argv : count(argc))
 {
     ulong      	done;
     ulong	fail;
@@ -74,17 +75,17 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	do {
 	    done = TRUE;
 	    if ((netsLeft = DrawNets()) != 0) {
-		printf("Assignment could not route %d columns, trying maze1...\n",
-		       netsLeft);
+		_Unchecked { printf("Assignment could not route %d columns, trying maze1...\n",
+		       netsLeft); }
 		if ((netsLeft = Maze1()) != 0) {
-		    printf("Maze1 could not route %d columns, trying maze2...\n",
-			   netsLeft);
+		    _Unchecked { printf("Maze1 could not route %d columns, trying maze2...\n",
+			   netsLeft); }
 		    if ((netsLeft = Maze2()) != 0) {
-			printf("Maze2 could not route %d columns, trying maze3...\n",
-			       netsLeft);
+			_Unchecked { printf("Maze2 could not route %d columns, trying maze3...\n",
+			       netsLeft); }
 			if ((netsLeft = Maze3()) != 0) {
-			    printf("Maze3 could not route %d columns, adding a track...\n",
-				   netsLeft);
+			    _Unchecked { printf("Maze3 could not route %d columns, adding a track...\n",
+				   netsLeft); }
 			    /* PrintChannel(); */
 			    if (! fail) {
 				channelTracks++;
@@ -113,7 +114,7 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	     */
 	    if ((! done) && fail) {
 #ifdef VERBOSE
-		printf("\n*** fail (insert track at %d) ***\n", fail);
+		_Unchecked { printf("\n*** fail (insert track at %d) ***\n", fail); }
 #endif
 		for (insert = 1; insert <= channelNets; insert++) {
 		    if (netsAssign[insert] >= fail) {
@@ -134,7 +135,7 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	}
     } while (! done);
 
-    printf("\n");
+    _Unchecked { printf("\n"); }
     PrintChannel();
 #ifdef PLUS_STATS
     PrintDerefStats(stderr);

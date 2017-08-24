@@ -17,6 +17,7 @@
 #ifndef HCG_H
 #define HCG_H
 
+#pragma BOUNDS_CHECKED ON
 /*
  *
  * Defines.
@@ -31,7 +32,7 @@
  */
 
 typedef struct _nodeHCGType {
-    ulong *	netsHook;
+    _Array_ptr<ulong>	netsHook : count(nets + 1);
     ulong	nets;
     ulong	netsReached;
 } nodeHCGType;
@@ -43,18 +44,21 @@ typedef struct _nodeHCGType {
  *
  */
 
+extern ulong channelNets;
+extern ulong channelTracks;
+
 #ifdef HCG_CODE
 
-nodeHCGType *			HCG;
-ulong *				storageRootHCG;
-ulong *				storageHCG;
+_Array_ptr<nodeHCGType>			HCG : count(channelNets + 1);
+_Array_ptr<ulong>				storageRootHCG : count(channelNets + 1);
+_Array_ptr<ulong>				storageHCG : bounds(storageRootHCG, storageRootHCG + channelNets + 1);
 ulong					storageLimitHCG;
 
 #else	/* HCG_CODE */
 
-extern nodeHCGType *			HCG;
-extern ulong *			storageRootHCG;
-extern ulong *			storageHCG;
+extern _Array_ptr<nodeHCGType>			HCG : count(channelNets + 1);
+extern _Array_ptr<ulong>			storageRootHCG : count(channelNets + 1);
+extern _Array_ptr<ulong>			storageHCG : bounds(storageRootHCG, storageRootHCG + channelNets + 1);
 extern ulong				storageLimitHCG;
 
 #endif	/* HCG_CODE */
@@ -78,16 +82,16 @@ void
 BuildHCG(void);
 
 void
-DFSClearHCG(nodeHCGType *);
+DFSClearHCG(_Array_ptr<nodeHCGType> : count(channelNets + 1));
 
 void
-DumpHCG(nodeHCGType *);
+DumpHCG(_Array_ptr<nodeHCGType> : count(channelNets + 1));
 
 void
-NoHCV(nodeHCGType *,
+NoHCV(_Array_ptr<nodeHCGType> : count(channelNets + 1),
       ulong,
-      ulong *,
-      ulong *);
+      _Array_ptr<ulong> : count(channelNets + 1),
+      _Array_ptr<ulong> : count(channelTracks + 2));
 
 #else	/* HCG_CODE */
 
@@ -101,17 +105,18 @@ extern void
 BuildHCG(void);
 
 extern void
-DFSClearHCG(nodeHCGType *);
+DFSClearHCG(_Array_ptr<nodeHCGType> : count(channelNets + 1));
 
 extern void
-DumpHCG(nodeHCGType *);
+DumpHCG(_Array_ptr<nodeHCGType> : count(channelNets + 1));
 
 extern void
-NoHCV(nodeHCGType *,
+NoHCV(_Array_ptr<nodeHCGType> : count(channelNets + 1),
       ulong,
-      ulong *,
-      ulong *);
+      _Array_ptr<ulong> : count(channelNets + 1),
+      _Array_ptr<ulong> : count(channelTracks + 2));
 
 #endif	/* HCG_CODE */
 
+#pragma BOUNDS_CHECKED OFF
 #endif	/* HCG_H */
