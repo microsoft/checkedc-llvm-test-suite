@@ -521,7 +521,7 @@ Stat(unsigned long ulHighCount; unsigned long ulLowCount;)
     }
 
 void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
-        PPWord ppwStart : bounds(ppwStart, apwCand+cpwCand), int iLetter)
+        PPWord ppwStart : bounds(ppwStart, apwCand+MAXCAND), int iLetter)
 {
     Quad aqNext _Checked [MAX_QUADS];
     register PWord pw = 0;
@@ -548,8 +548,9 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
     PPWord ppwStartTmp : bounds(ppwStartTmp, ppwEnd) = ppwStart;
 
-    // Manually Hoisted Check, including path condition for first iteration of the loop.
-    _Dynamic_check(ppwStartTmp < ppwEnd && ppwStartTmp != NULL);
+    // Manually Hoisted Check, (including path condition) from first iteration of the loop.
+    _Dynamic_check(ppwStartTmp != NULL);
+    _Dynamic_check(ppwStartTmp < ppwEnd && ppwEnd <= (apwCand+MAXCAND));
 
     while (ppwStartTmp < ppwEnd) {          /* Half of the program execution */
         pw = *ppwStartTmp;                  /* time is spent in these three */
