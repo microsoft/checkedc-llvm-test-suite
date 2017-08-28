@@ -1,11 +1,15 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <strings.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
+#include <string_checked.h>
 #include <assert.h>
 
 #include "channel.h"
 #include "assign.h"
+
+void bzero(void* : byte_count(n), size_t n);
+
+#pragma BOUNDS_CHECKED ON
 
 #define min(a,b)	((a<b) ? a : b)
 #define max(a,b)	((a<b) ? b : a)
@@ -23,23 +27,22 @@
 /* generic r/lvalue allocation map access macro */
 #define ACCESS_MAP(a, x, y)	a[(y)*channelColumns + (x)]
 
-static char * horzPlane;	/* horizontal plane allocation map */
+static _Array_ptr<char> horzPlane : count((channelColumns+1)*(channelTracks+3));	/* horizontal plane allocation map */
 
 /* r/lvalue for accessing horizontal plane allocation map */
 #define HORZ(x,y)	ACCESS_MAP(horzPlane, x, y)
 
-static char * vertPlane;	/* vertical plane allocation map */
+static _Array_ptr<char> vertPlane : count((channelColumns+1)*(channelTracks+3));	/* vertical plane allocation map */
 
 /* r/lvalue for accessing vertical plane allocation map */
 #define VERT(x,y)	ACCESS_MAP(vertPlane, x, y)
 
-static char * viaPlane;		/* via plane allocation map */
+static _Array_ptr<char> viaPlane : count((channelColumns+1)*(channelTracks+3));		/* via plane allocation map */
 
 /* r/lvalue for accessing via plane allocation map */
 #define VIA(x,y)	ACCESS_MAP(viaPlane, x, y)
 
-static char * mazeRoute;	/* true if the col needs to be maze routed */
-
+static _Array_ptr<char> mazeRoute : count(channelColumns+1);	/* true if the col needs to be maze routed */
 
 /*
  *	set up the plane allocation maps, note: the channel
@@ -50,15 +53,15 @@ void
 InitAllocMaps(void)
 {
     /* allocate maps */
-    horzPlane = (char *)malloc((channelColumns+1)*(channelTracks+3));
-    vertPlane = (char *)malloc((channelColumns+1)*(channelTracks+3));
-    viaPlane = (char *)malloc((channelColumns+1)*(channelTracks+3));
-    mazeRoute = (char *)malloc((channelColumns+1));
+    horzPlane = malloc((channelColumns+1)*(channelTracks+3));
+    vertPlane = malloc((channelColumns+1)*(channelTracks+3));
+    viaPlane = malloc((channelColumns+1)*(channelTracks+3));
+    mazeRoute = malloc((channelColumns+1));
 
 
     /* if (!horzPlane || !vertPlane || !viaPlane || !mazeRoute) { */
     if (horzPlane==NULL || vertPlane==NULL ||
-	viaPlane==NULL || mazeRoute==NULL) {
+	viaPlane==NULL || mazeRoute==NULL) _Unchecked {
 	fprintf(stderr, "unable to allocate plane allocation maps\n");
 	exit(1);
     }
@@ -84,7 +87,7 @@ FreeAllocMaps(void)
  *	they are sorted as needed by the line drawer
  */
 void
-DrawSegment(char * plane,
+DrawSegment(_Array_ptr<char> plane : count((channelColumns+1)*(channelTracks+2)),
 	    unsigned long x1, unsigned long y1,
 	    unsigned long x2, unsigned long y2)
 {
@@ -158,7 +161,7 @@ HasVia(unsigned long x, unsigned long y)
  *	they are sorted as needed by the line drawer
  */
 int
-SegmentFree(char * plane,
+SegmentFree(_Array_ptr<char> plane : count((channelColumns+1)*(channelTracks+2)),
 	    unsigned long x1, unsigned long y1,
 	    unsigned long x2, unsigned long y2)
 {
@@ -192,7 +195,7 @@ SegmentFree(char * plane,
  */
 void
 PrintChannel(void)
-{
+_Unchecked {
     unsigned long x, y;
 
     /* ms digit */
@@ -329,7 +332,7 @@ DrawNets(void)
 			FIRST[i], netsAssign[i],
 			LAST[i], netsAssign[i]);
 #ifdef VERBOSE
-	printf("Just routed net %d...\n", i);
+	_Unchecked { printf("Just routed net %d...\n", i); }
 	PrintChannel();
 #endif
     }
@@ -388,9 +391,9 @@ DrawNets(void)
 	}
 #ifdef VERBOSE
 	if (!mazeRoute[i])
-	    printf("Just routed vertical column %d...\n", i);
+	    _Unchecked { printf("Just routed vertical column %d...\n", i); }
 	else
-	    printf("VCV in vertical column %d... will maze later.\n", i);
+	    _Unchecked { printf("VCV in vertical column %d... will maze later.\n", i); }
 
 	PrintChannel();
 #endif
@@ -620,13 +623,13 @@ Maze1(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) {
+	    if (!mazeRoute[i]) _Unchecked {
 		/* got one */
 		printf("Maze1 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		printf("Maze1 could not route vertical column %d...\n", i);
+		_Unchecked { printf("Maze1 could not route vertical column %d...\n", i); }
 #endif
 	}
     }
@@ -645,7 +648,7 @@ Maze1(void)
  * can this track be extended to the range specified, return result
  */
 int
-ExtendOK(unsigned long net, char * plane,
+ExtendOK(unsigned long net, _Array_ptr<char> plane,
 	 unsigned long _x1, unsigned long _y1,	/* start seg */
 	 unsigned long _x2, unsigned long _y2)	/* end seg */
 {
@@ -863,13 +866,13 @@ Maze2(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) {
+	    if (!mazeRoute[i]) _Unchecked {
 		/* got one */
 		printf("Maze2 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		printf("Maze2 could not route vertical column %d...\n", i);
+		_Unchecked { printf("Maze2 could not route vertical column %d...\n", i); }
 #endif
 	}
     }
@@ -879,7 +882,7 @@ Maze2(void)
 
 void
 FindFreeHorzSeg(unsigned long startCol, unsigned long row,
-		unsigned long * rowStart, unsigned long * rowEnd)
+		_Ptr<unsigned long> rowStart, _Ptr<unsigned long> rowEnd)
 {
     unsigned long i;
 
@@ -1016,13 +1019,13 @@ int Maze3(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) {
+	    if (!mazeRoute[i]) _Unchecked {
 		/* got one */
 		printf("Maze3 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		printf("Maze3 could not route vertical column %d...\n", i);
+		_Unchecked { printf("Maze3 could not route vertical column %d...\n", i); }
 #endif
 	}
     }

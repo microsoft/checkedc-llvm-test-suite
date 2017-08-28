@@ -5,7 +5,7 @@
  *
  */
 
-#include <string.h>
+#include <string_checked.h>
 
 #define OPTION_CODE
 
@@ -16,10 +16,11 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio_checked.h>
+#include <stdlib_checked.h>
 #include "channel.h"
 
+#pragma BOUNDS_CHECKED ON
 
 /*
  *
@@ -27,9 +28,9 @@
  *
  */
 
-void
+_Unchecked void
 Option(int argc,
-       char *argv[])
+       _Array_ptr<char*> argv : count(argc))
 {
     /*
      * Check arguments.
