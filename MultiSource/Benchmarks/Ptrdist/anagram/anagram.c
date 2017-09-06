@@ -581,8 +581,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
         /* If the pivot letter isn't present, defer this word until later */
         if ((pw->aqMask[iq] & qMask) == 0) {
-            *ppwStart = *(ppwEnd - 1);
-            --ppwEnd;
+            *ppwStart = *--ppwEnd;
             *ppwEnd = pw;
             continue;
         }
