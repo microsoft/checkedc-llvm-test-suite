@@ -516,7 +516,7 @@ Stat(unsigned long ulHighCount; unsigned long ulLowCount;)
 
 #define OneStep(i) \
     if ((aqNext[i] = pqMask[i] - pw->aqMask[i]) & aqMainSign[i]) { \
-        ppwStartTmp++; \
+        ppwStart++; \
         continue; \
     }
 
@@ -546,14 +546,12 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
     _Unchecked {Debug(printf("Pivoting on %c\n", i2ch(achByFrequency[iLetter]));)}
 
-    PPWord ppwStartTmp : bounds(ppwStartTmp, ppwEnd) = ppwStart;
-
     // Manually Hoisted Check, (including path condition) from first iteration of the loop.
-    _Dynamic_check(ppwStartTmp != NULL);
-    _Dynamic_check(ppwStartTmp < ppwEnd && ppwEnd <= (apwCand+MAXCAND));
+    _Dynamic_check(ppwStart != NULL);
+    _Dynamic_check(ppwStart < ppwEnd && ppwEnd <= (apwCand+MAXCAND));
 
-    while (ppwStartTmp < ppwEnd) {          /* Half of the program execution */
-        pw = *ppwStartTmp;                  /* time is spent in these three */
+    while (ppwStart < ppwEnd) {          /* Half of the program execution */
+        pw = *ppwStart;                  /* time is spent in these three */
 
         // This invariant is preserved in the code, but cannot be explained
         // to the compiler any other way at the moment.
@@ -583,7 +581,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 
         /* If the pivot letter isn't present, defer this word until later */
         if ((pw->aqMask[iq] & qMask) == 0) {
-            *ppwStartTmp = *(ppwEnd - 1);
+            *ppwStart = *(ppwEnd - 1);
             --ppwEnd;
             *ppwEnd = pw;
             continue;
@@ -599,11 +597,11 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
 	    ppwEnd = &apwCand[0];
 	    ppwEnd += cpwCand;
             FindAnagram(&aqNext[0],
-			ppwStartTmp, iLetter);
+			ppwStart, iLetter);
         } else DumpWords();             /* found one */
         cchPhraseLength += pw->cchLength;
         --cpwLast;
-        ppwStartTmp++;
+        ppwStart++;
         continue;
     }
 
