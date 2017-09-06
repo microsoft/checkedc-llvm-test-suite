@@ -553,10 +553,6 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
     while (ppwStart < ppwEnd) {          /* Half of the program execution */
         pw = *ppwStart;                  /* time is spent in these three */
 
-        // This invariant is preserved in the code, but cannot be explained
-        // to the compiler any other way at the moment.
-        __builtin_assume(pw != NULL);
-
         Stat(if (++ulLowCount == 0) ++ulHighCount;)
 
 #if MAX_QUADS > 0
