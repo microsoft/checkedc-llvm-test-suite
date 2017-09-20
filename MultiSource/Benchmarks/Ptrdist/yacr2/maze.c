@@ -648,7 +648,7 @@ Maze1(void)
  * can this track be extended to the range specified, return result
  */
 int
-ExtendOK(unsigned long net, _Array_ptr<char> plane,
+ExtendOK(unsigned long net, _Array_ptr<char> plane : count((channelColumns + 1)*(channelTracks + 3)),
 	 unsigned long _x1, unsigned long _y1,	/* start seg */
 	 unsigned long _x2, unsigned long _y2)	/* end seg */
 {
