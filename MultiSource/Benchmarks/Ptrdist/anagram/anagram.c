@@ -252,7 +252,7 @@ _Array_ptr<char> pchDictionary : count(pchDictionarySize);               /* the 
 #define Zero(t) memset(t, 0, sizeof(t)) /* quickly zero out an integer array */
 
 /* Fatal -- print a message before expiring */
-_Unchecked void Fatal(char *pchMsg, unsigned u) {
+void Fatal(char *pchMsg : itype(_Nt_array_ptr<char>), unsigned u) _Unchecked {
     fprintf(stderr, pchMsg, u);
     exit(1);
 }

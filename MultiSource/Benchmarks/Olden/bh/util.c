@@ -48,8 +48,7 @@ double xrand(double xl, double xh, double r)
  * ERROR: scream and die quickly.
  */
 
-_Unchecked
-error(char *msg)
+error(char *msg : itype(_Nt_array_ptr<char>)) _Unchecked
 {
     fprintf(stderr, msg);
     if (errno != 0)
