@@ -48,8 +48,7 @@ int old_subindex(icstruct ic, int l);
 
 _Unchecked
 int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc));
-_Unchecked
-int error(char *msg);
+int error(char *msg : itype(_Nt_array_ptr<char>));
 
 int arg1;
 
