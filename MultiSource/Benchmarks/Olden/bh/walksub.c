@@ -29,7 +29,7 @@ hgstruct walksub(nodeptr p, real dsq, real tolsq, hgstruct hg, int level)
 
   if (subdivp(p, dsq, tolsq, hg)) {           /* should p be opened?    */
     for (k = 0; k < NSUB; k++) {              /* loop over the subcells */
-      r = Subp((cellptr) p)[k]; /* <-- 6.7% load penalty */
+      _Unchecked { r = Subp(_Assume_bounds_cast<cellptr>(p))[k];} /* <-- 6.7% load penalty */
       if (r != NULL)                  /* does this one exist?   */
 	hg = walksub(r, dsq / 4.0, tolsq, hg, level+1);
     }

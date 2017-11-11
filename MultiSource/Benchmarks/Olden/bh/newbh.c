@@ -333,7 +333,7 @@ void freetree(nodeptr n)
 
   /* Type(n) == CELL */
   for (i=NSUB-1; i >= 0; i--) {
-    r = Subp((cellptr) n)[i];
+    _Unchecked { r = Subp(_Assume_bounds_cast<cellptr>(n))[i]; }
     if (r != NULL) {
       freetree(r);
     }
@@ -343,7 +343,6 @@ void freetree(nodeptr n)
   RETEST();
 }
 
-
 nodeptr cp_free_list = NULL;
 bodyptr bp_free_list = NULL;
 
@@ -351,12 +350,12 @@ bodyptr bp_free_list = NULL;
 /* should never be called with NULL */
 void my_free(nodeptr n)
 {
-  if (Type(n) == BODY) {
-    Next((bodyptr) n) = bp_free_list;
-    bp_free_list = (bodyptr) n;
+  if (Type(n) == BODY) _Unchecked {
+    Next(_Assume_bounds_cast<bodyptr>(n)) = bp_free_list;
+    bp_free_list = _Assume_bounds_cast<bodyptr>(n);
   }
-  else /* CELL */ {
-    FL_Next((cellptr) n) = (cellptr) cp_free_list;
+  else /* CELL */ _Unchecked {
+    FL_Next(_Assume_bounds_cast<cellptr>(n)) = _Assume_bounds_cast<cellptr>(cp_free_list);
     cp_free_list = n;
   }
 }
@@ -380,9 +379,9 @@ cellptr cell_alloc(int p)
 { register cellptr tmp = NULL;
   register int i;
 
-  if (cp_free_list != NULL) {
-    tmp = (cellptr) cp_free_list;
-    cp_free_list = (nodeptr) FL_Next((cellptr) cp_free_list);
+  if (cp_free_list != NULL) _Unchecked {
+    tmp = _Assume_bounds_cast<cellptr>(cp_free_list);
+    cp_free_list = (nodeptr) FL_Next(_Assume_bounds_cast<cellptr>(cp_free_list));
   }
   else 
     {
@@ -919,15 +918,15 @@ nodeptr loadtree(bodyptr p, icstruct xpic, nodeptr t, int l, treeptr tr)
       /*printtree(t); printtree(p);*/
       i = PID(t);
       c = (cellptr) cell_alloc(i);
-      si = subindex((bodyptr) t, tr, l); 
+      _Unchecked { si = subindex(_Assume_bounds_cast<bodyptr>(t), tr, l);  }
      
       Subp(c)[si] = (nodeptr) t;        	/*     put body in cell     */
       t = (nodeptr) c;	        	/*     link cell in tree    */
     }
 
     si = old_subindex(xpic, l);     /* move down one level      */
-    rt = Subp((cellptr) t)[si];
-    Subp((cellptr) t)[si] = loadtree(p, xpic, rt, l >> 1, tr);
+    _Unchecked { rt = Subp(_Assume_bounds_cast<cellptr>(t))[si]; }
+    _Unchecked { Subp(_Assume_bounds_cast<cellptr>(t))[si] = loadtree(p, xpic, rt, l >> 1, tr); }
   }
   return (t);
 }
@@ -1149,7 +1148,7 @@ real hackcofm(nodeptr q)
       mq = 0.0;
       CLRV(tmp_pos);				/*   and c. of m.           */
       for (i=0; i < NSUB; i++) {
-	     r = Subp((cellptr) q)[i];
+	     _Unchecked { r = Subp(_Assume_bounds_cast<cellptr>(q))[i]; }
 	     if (r != NULL) {
 	       mr = hackcofm(r);
 	       mq = mr + mq;
@@ -1200,7 +1199,7 @@ void ptree(nodeptr n, int level)
 
       chatting("%2d CELL@%x %f, %f, %f\n", level, n,Pos(n)[0], Pos(n)[1], Pos(n)[2]);
       for (i = 0; i < NSUB; i++) {
-	r = Subp((cellptr) n)[i];
+	_Unchecked { r = Subp(_Assume_bounds_cast<cellptr>(n))[i]; }
 	ptree(r, level+1);
       }
     }
@@ -1243,7 +1242,7 @@ int dis2_number(nodeptr n, int prev_bodies, int tnperproc)
 
     /*NOTEST();*/
     for (i=0; i < NSUB; i++) {
-      r = Subp((cellptr) n)[i];
+      _Unchecked { r = Subp(_Assume_bounds_cast<cellptr>(n))[i]; }
       prev_bodies = dis2_number(r, prev_bodies, tnperproc);
     }
 
