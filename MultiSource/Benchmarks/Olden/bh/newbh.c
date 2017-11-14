@@ -343,20 +343,24 @@ void freetree(nodeptr n)
   RETEST();
 }
 
-nodeptr cp_free_list = NULL;
+cellptr cp_free_list = NULL;
 bodyptr bp_free_list = NULL;
 
 
 /* should never be called with NULL */
 void my_free(nodeptr n)
 {
-  if (Type(n) == BODY) _Unchecked {
-    Next(_Assume_bounds_cast<bodyptr>(n)) = bp_free_list;
-    bp_free_list = _Assume_bounds_cast<bodyptr>(n);
+  if (Type(n) == BODY) {
+    bodyptr p = 0;
+    _Unchecked { p = _Assume_bounds_cast<bodyptr>(n); }
+    Next(p) = bp_free_list;
+    bp_free_list = p;
   }
   else /* CELL */ _Unchecked {
-    FL_Next(_Assume_bounds_cast<cellptr>(n)) = _Assume_bounds_cast<cellptr>(cp_free_list);
-    cp_free_list = n;
+    cellptr p = 0;
+    _Unchecked { p = _Assume_bounds_cast<cellptr>(n); }
+    FL_Next(p) = cp_free_list;
+    cp_free_list = p;
   }
 }
     
@@ -379,9 +383,9 @@ cellptr cell_alloc(int p)
 { register cellptr tmp = NULL;
   register int i;
 
-  if (cp_free_list != NULL) _Unchecked {
-    tmp = _Assume_bounds_cast<cellptr>(cp_free_list);
-    cp_free_list = (nodeptr) FL_Next(_Assume_bounds_cast<cellptr>(cp_free_list));
+  if (cp_free_list != NULL) {
+    tmp = cp_free_list;
+    cp_free_list = FL_Next(cp_free_list);
   }
   else 
     {
