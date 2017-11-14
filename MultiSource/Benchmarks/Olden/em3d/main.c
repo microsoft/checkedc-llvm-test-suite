@@ -9,7 +9,7 @@ extern int NumNodes;
 
 int DebugFlag;
 
-unchecked void print_graph(ptr<graph_t> graph, int id)
+void print_graph(ptr<graph_t> graph, int id)
 {
   ptr<node_t> cur_node = graph->e_nodes[id];
 
@@ -28,7 +28,7 @@ unchecked void print_graph(ptr<graph_t> graph, int id)
 
 extern int nonlocals;
 
-unchecked int main(int argc, array_ptr<char*> argv : count(argc))
+int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   int i;
   ptr<graph_t> graph = NULL;
@@ -42,10 +42,8 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc))
     for(i=0; i<NumNodes;i++)
       print_graph(graph,i);
 
-  checked {
   compute_nodes(graph->e_nodes[0]);
   compute_nodes(graph->h_nodes[0]);
-  }
   chatting("nonlocals = %d\n",nonlocals);
 
   printstats();

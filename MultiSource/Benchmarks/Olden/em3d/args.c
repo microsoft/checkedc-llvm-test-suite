@@ -30,7 +30,7 @@ unchecked void filestuff()
 }
 #endif
 
-unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
 #ifdef TORONTO
   if (argc > 4)

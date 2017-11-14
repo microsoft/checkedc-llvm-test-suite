@@ -87,7 +87,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
         local_table = table[dest_proc].table;
         other_node = local_table[number];   /* <------ 4% load miss penalty */
         if (!other_node) {
-          unchecked { chatting("Error! on dest %d @ %d\n",number,dest_proc); }
+          chatting("Error! on dest %d @ %d\n",number,dest_proc);
           exit(1);
         }
 
@@ -110,7 +110,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
       while (k<j);
 
       if (!cur_node || !cur_node->to_nodes) {
-        unchecked { chatting("Error! no to_nodes filed!\n"); }
+        chatting("Error! no to_nodes filed!\n");
         exit(1);
       }
 
@@ -132,7 +132,7 @@ void update_from_coeffs(ptr<node_t> nodelist) {
     int from_count = cur_node->from_count;
     
     if (from_count < 1) {
-      unchecked { chatting("Help! no from count (from_count=%d) \n", from_count); }
+      chatting("Help! no from count (from_count=%d) \n", from_count);
       cur_node->from_values = (array_ptr<ptr<double>>)calloc(20, sizeof(ptr<double>));
       cur_node->coeffs = (array_ptr<double>)calloc(20, sizeof(double));
       cur_node->from_length = 0;
@@ -155,7 +155,7 @@ void fill_from_fields(ptr<node_t> nodelist, int degree) {
       array_ptr<ptr<double>> otherlist : count(other_node->from_count) = NULL;
       ptr<double> value = cur_node->value;
 
-      if (!other_node) unchecked { chatting("Help!!\n"); }
+      if (!other_node) { chatting("Help!!\n"); }
       count=(other_node->from_length)++;  /* <----- 30% load miss penalty */
       otherlist=other_node->from_values;  /* <----- 10% load miss penalty */
       thecount=other_node->from_count;
@@ -314,29 +314,29 @@ ptr<graph_t> initialize_graph(void) {
 
   groupsize = PROCS/NumNodes;
 
-  unchecked { chatting("making tables \n"); }
+  chatting("making tables \n");
   do_all(table,0,PROCS,make_tables,groupsize);
 
   /* At this point, for each h node, we give it the appropriate number
      of neighbors as defined by the degree */
-  unchecked { chatting("making neighbors\n"); }
+  chatting("making neighbors\n");
 
   do_all(table,0,PROCS,make_all_neighbors,groupsize);
 
   /* We now create from count and initialize coefficients */
-  unchecked { chatting("updating from and coeffs\n"); }
+  chatting("updating from and coeffs\n");
   do_all(table,0,PROCS,update_all_from_coeffs,groupsize);
 
   /* Fill the from fields in the nodes */
-  unchecked { chatting("filling from fields\n"); }
+  chatting("filling from fields\n");
   do_all(table,0,PROCS,fill_all_from_fields,groupsize);
 
-  unchecked { chatting("localizing coeffs, from_nodes\n"); }
+  chatting("localizing coeffs, from_nodes\n");
   do_all(table,0,PROCS,localize,groupsize);
 
   blocksize = PROCS/NumNodes;
 
-  unchecked { chatting("cleanup for return now\n"); }
+  chatting("cleanup for return now\n");
   for (i=0; i<NumNodes; i++) {
     int local_table_size = table->e_table[i*blocksize].size;
     array_ptr<ptr<node_t>> local_table : count(local_table_size) = table->e_table[i*blocksize].table;
@@ -369,9 +369,9 @@ ptr<graph_t> initialize_graph(void) {
     }
   }
   
-  unchecked { chatting("Clearing NumMisses\n"); }
+  chatting("Clearing NumMisses\n");
   do_all(table,0,PROCS,clear_nummiss,groupsize);
-  unchecked { chatting("Returning\n"); }
+  chatting("Returning\n");
 
   return retval;
 }
