@@ -5,7 +5,7 @@
 #pragma BOUNDS_CHECKED ON
 
 #ifdef TORONTO
-#define chatting printf
+#define chatting(...) _Unchecked { printf(__VA_ARGS__); }
 #endif
 
 #ifdef __MINGW32__
@@ -56,7 +56,7 @@ int check_percent(int percent)
   return retval;
 }
 
-unchecked void printstats()
+void printstats()
 {
   chatting("percentcheck=%d,numlocal=%d\n",percentcheck,numlocal);
 }
