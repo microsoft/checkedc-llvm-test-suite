@@ -7,6 +7,7 @@
 #define MAXPROC 1
 
 #define chatting printf
+#define printf(...) unchecked { printf(__VA_ARGS__); }
 extern int NumNodes;
 
 struct vert_st {
@@ -32,8 +33,8 @@ struct graph_st {
 typedef ptr<struct graph_st> Graph;
 
 Graph MakeGraph(int numvert, int numproc);
-unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
-unchecked int atoi(const char *);
+int atoi(const char * : itype(nt_array_ptr<const char>));
 
 #pragma BOUNDS_CHECKED OFF

@@ -41,7 +41,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
           retval.dist = dist;
         }
     }
-  else unchecked{ printf("Not found\n"); }
+  else printf("Not found\n");
   
   count = 0;
   /* We are guaranteed that inserted is not first in list */
@@ -67,7 +67,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
                   dist2 = dist;
                 }
             }
-          else unchecked { printf("Not found\n"); }
+          else printf("Not found\n");
           if (dist2<retval.dist) 
             {
               retval.vert = tmp;
@@ -109,10 +109,8 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   Vertex inserted = NULL, tmp = NULL;
   int cost=0,dist;
 
-  dynamic_check(numproc <= MAXPROC);
-
   /* make copy of graph */
-  unchecked { printf("Compute phase 1\n"); }
+  printf("Compute phase 1\n");
 
   /* Insert first node */
   inserted = (Vertex)graph->vlist[0].starting_vertex;
@@ -121,7 +119,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */
-  unchecked { printf("Compute phase 2\n"); }
+  printf("Compute phase 2\n");
   while (numvert) 
     {
       BlueReturn br;
@@ -135,7 +133,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   return cost;
 }
 
-unchecked int main(int argc, array_ptr<char*> argv : count(argc))
+int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   Graph graph = NULL;
   int dist;
@@ -144,12 +142,12 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc))
   size = dealwithargs(argc,argv);
   printf("Making graph of size %d\n",size);
 
-  checked { graph = MakeGraph(size,NumNodes); }
+  graph = MakeGraph(size,NumNodes);
   printf("Graph completed\n");
 
   printf("About to compute mst \n");
 
-  checked { dist = ComputeMst(graph,NumNodes,size); }
+  dist = ComputeMst(graph,NumNodes,size);
 
   printf("MST has cost %d\n",dist);
   exit(0);
