@@ -24,6 +24,7 @@
 #include "channel.h"
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -166,24 +167,24 @@ DumpVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1))
     ulong	which;
 
     for (net = 1; net <= channelNets; net++) {
-	_Unchecked { printf("[%d]\n", net); }
-	_Unchecked { printf("above: "); }
+	printf("[%d]\n", net);
+	printf("above: ");
 	for (which = 0; which < VCG[net].netsAbove; which++) {
 	    if (! VCG[net].netsAboveHook[which].removed) {
 		assert(VCG[net].netsAboveHook[which].top == net);
-		_Unchecked { printf("%d ", VCG[net].netsAboveHook[which].bot); }
+		printf("%d ", VCG[net].netsAboveHook[which].bot);
 	    }
 	}
 
-	_Unchecked { printf("\n"); }
-    _Unchecked { printf("below: "); }
+	printf("\n");
+    printf("below: ");
 	for (which = 0; which < VCG[net].netsBelow; which++) {
 	    if (! VCG[net].netsBelowHook[which].removed) {
 		assert(VCG[net].netsBelowHook[which].bot == net);
-		_Unchecked { printf("%d ", VCG[net].netsBelowHook[which].top); }
+		printf("%d ", VCG[net].netsBelowHook[which].top);
 	    }
 	}
-	_Unchecked { printf("\n\n"); }
+	printf("\n\n");
     }	
 }
 
@@ -356,16 +357,16 @@ DumpSCC(_Array_ptr<ulong> SCC : count(channelNets + 1),
     ulong	scc;
 
     for (scc = 1; scc <= totalSCC; scc++) {
-	_Unchecked { printf("[%d]\t", scc); }
+	printf("[%d]\t", scc);
 	for (net = 1; net <= channelNets; net++) {
 	    if (SCC[net] == scc) {
-		_Unchecked { printf("%d ", net); }
+		printf("%d ", net);
 	    }
 	}
-	_Unchecked { printf("<%d>", perSCC[scc]); }
-	_Unchecked { printf("\n"); }
+	printf("<%d>", perSCC[scc]);
+	printf("\n");
     }
-    _Unchecked { printf("\n"); }
+    printf("\n");
 }
 
 void
@@ -491,10 +492,10 @@ AcyclicVCG(void)
 	}
     }
 
-    if (acyclic) _Unchecked {
+    if (acyclic) {
 	printf("\n*** Input is acyclic! ***\n");
     }
-    else _Unchecked {
+    else {
 	printf("\n*** Input is cyclic! ***\n");
 	printf("*** VC's removed (%d) ***\n", total);
     }

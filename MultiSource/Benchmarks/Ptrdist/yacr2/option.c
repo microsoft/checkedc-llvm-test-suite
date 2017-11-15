@@ -21,6 +21,7 @@
 #include "channel.h"
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -28,9 +29,9 @@
  *
  */
 
-_Unchecked void
+void
 Option(int argc,
-       _Array_ptr<char*> argv : count(argc))
+       _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
 {
     /*
      * Check arguments.

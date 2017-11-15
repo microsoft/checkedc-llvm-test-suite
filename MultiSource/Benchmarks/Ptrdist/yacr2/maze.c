@@ -7,9 +7,9 @@
 #include "channel.h"
 #include "assign.h"
 
-void bzero(void* : byte_count(n), size_t n);
-
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
+#define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
 
 #define min(a,b)	((a<b) ? a : b)
 #define max(a,b)	((a<b) ? b : a)
@@ -61,7 +61,7 @@ InitAllocMaps(void)
 
     /* if (!horzPlane || !vertPlane || !viaPlane || !mazeRoute) { */
     if (horzPlane==NULL || vertPlane==NULL ||
-	viaPlane==NULL || mazeRoute==NULL) _Unchecked {
+	viaPlane==NULL || mazeRoute==NULL) {
 	fprintf(stderr, "unable to allocate plane allocation maps\n");
 	exit(1);
     }
@@ -195,7 +195,7 @@ SegmentFree(_Array_ptr<char> plane : count((channelColumns+1)*(channelTracks+2))
  */
 void
 PrintChannel(void)
-_Unchecked {
+{
     unsigned long x, y;
 
     /* ms digit */
@@ -226,52 +226,52 @@ _Unchecked {
 	printf("           ");
 	for (x=1; x<=channelColumns; x++) {
 	    if (VERT(x,y)&FROM_TOP)
-		printf(" | ");
+		printf(" | ")
 	    else
-		printf("   ");
+		printf("   ")
 	}
 	printf("\n");
 
 	printf("Track %3d: ", y);
 	for (x=1; x<=channelColumns; x++) {
 	    if ((HORZ(x,y)&FROM_LEFT) && (VERT(x,y)&FROM_LEFT))
-		printf("=");
+		printf("=")
 	    else if (HORZ(x,y)&FROM_LEFT)
-		printf("-");
+		printf("-")
 	    else if (VERT(x,y)&FROM_LEFT)
-		printf("^");
+		printf("^")
 	    else
-		printf(" ");
+		printf(" ")
 
 	    if (VIA(x,y))
-		printf("X");
+		printf("X")
 	    else if (HORZ(x,y) && VERT(x,y))
-		printf("+");
+		printf("+")
 	    else if (HORZ(x,y))
-		printf("-");
+		printf("-")
 	    else if (VERT(x,y))
-		printf("|");
+		printf("|")
 	    else
-		printf(" ");
+		printf(" ")
 
 
 	    if ((HORZ(x,y)&FROM_RIGHT) && (VERT(x,y)&FROM_RIGHT))
-		printf("=");
+		printf("=")
 	    else if (HORZ(x,y)&FROM_RIGHT)
-		printf("-");
+		printf("-")
 	    else if (VERT(x,y)&FROM_RIGHT)
-		printf("^");
+		printf("^")
 	    else
-		printf(" ");
+		printf(" ")
 	}
 	printf("\n");
 
 	printf("           ");
 	for (x=1; x<=channelColumns; x++) {
 	    if (VERT(x,y)&FROM_BOT)
-		printf(" | ");
+		printf(" | ")
 	    else
-		printf("   ");
+		printf("   ")
 	}
 	printf("\n");
     }
@@ -332,7 +332,7 @@ DrawNets(void)
 			FIRST[i], netsAssign[i],
 			LAST[i], netsAssign[i]);
 #ifdef VERBOSE
-	_Unchecked { printf("Just routed net %d...\n", i); }
+	printf("Just routed net %d...\n", i);
 	PrintChannel();
 #endif
     }
@@ -391,9 +391,9 @@ DrawNets(void)
 	}
 #ifdef VERBOSE
 	if (!mazeRoute[i])
-	    _Unchecked { printf("Just routed vertical column %d...\n", i); }
+	    printf("Just routed vertical column %d...\n", i);
 	else
-	    _Unchecked { printf("VCV in vertical column %d... will maze later.\n", i); }
+	    printf("VCV in vertical column %d... will maze later.\n", i);
 
 	PrintChannel();
 #endif
@@ -623,13 +623,13 @@ Maze1(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) _Unchecked {
+	    if (!mazeRoute[i]) {
 		/* got one */
 		printf("Maze1 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		_Unchecked { printf("Maze1 could not route vertical column %d...\n", i); }
+		printf("Maze1 could not route vertical column %d...\n", i);
 #endif
 	}
     }
@@ -866,13 +866,13 @@ Maze2(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) _Unchecked {
+	    if (!mazeRoute[i]) {
 		/* got one */
 		printf("Maze2 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		_Unchecked { printf("Maze2 could not route vertical column %d...\n", i); }
+		printf("Maze2 could not route vertical column %d...\n", i);
 #endif
 	}
     }
@@ -1019,13 +1019,13 @@ int Maze3(void)
 		numLeft++;
 	    }
 #ifdef VERBOSE
-	    if (!mazeRoute[i]) _Unchecked {
+	    if (!mazeRoute[i]) {
 		/* got one */
 		printf("Maze3 routed vertical column %d...\n", i);
 		PrintChannel();
 	    }
 	    else
-		_Unchecked { printf("Maze3 could not route vertical column %d...\n", i); }
+		printf("Maze3 could not route vertical column %d...\n", i);
 #endif
 	}
     }
