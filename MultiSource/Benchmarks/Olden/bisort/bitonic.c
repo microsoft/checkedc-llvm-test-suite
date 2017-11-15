@@ -8,6 +8,8 @@
 
 #pragma BOUNDS_CHECKED ON
 
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
+
 #define CONST_m1 10000
 #define CONST_b 31415821
 #define RANGE 100
@@ -37,7 +39,7 @@ void InOrder(ptr<HANDLE> h) {
     InOrder(l);
     static unsigned char counter = 0;
     if (counter++ == 0)   /* reduce IO */
-      unchecked {printf("%d @ 0x%x\n",h->value, 0);}
+      printf("%d @ 0x%x\n",h->value, 0);
     InOrder(r);
   }
 }
@@ -227,7 +229,7 @@ Bisort(ptr<HANDLE> root, int spr_val, int dir)
   return spr_val;
 } 
 
-unchecked int main(int argc, array_ptr<char*> argv : count(argc)) {
+int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc)) {
   ptr<HANDLE> h = NIL;
   int sval;
   int n;
@@ -239,26 +241,26 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc)) {
   h = RandTree(n,12345768,0,0);
   sval = random(245867) % RANGE;
   if (flag) {
-    checked {InOrder(h);}
+    InOrder(h);
     printf("%d\n",sval);
   }
   printf("**************************************\n");
   printf("BEGINNING BITONIC SORT ALGORITHM HERE\n");
   printf("**************************************\n");
 
-  checked {sval=Bisort(h,sval,0);}
+  sval=Bisort(h,sval,0);
 
   if (flag) {
     printf("Sorted Tree:\n"); 
-    checked {InOrder(h);}
+    InOrder(h);
     printf("%d\n",sval);
   }
 
-  checked { sval=Bisort(h,sval,1); }
+  sval=Bisort(h,sval,1);
 
   if (flag) {
     printf("Sorted Tree:\n"); 
-    checked {InOrder(h);}
+    InOrder(h);
     printf("%d\n",sval);
   }
 
