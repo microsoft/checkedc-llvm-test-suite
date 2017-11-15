@@ -5,6 +5,8 @@
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 
+#define printf(...) unchecked { printf(__VA_ARGS__); }
+
 #pragma BOUNDS_CHECKED ON
 
 static int adj(Direction d, ChildType ct)
@@ -184,9 +186,9 @@ int perimeter(QuadTree tree, int size)
   return retval;
 }
 
-extern unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+extern int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
-unchecked int main(int argc, array_ptr<char*> argv : count(argc))
+int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   QuadTree tree = NULL;
   int count;
@@ -208,17 +210,17 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc))
 
 #ifndef TORONTO
   chatting("Perimeter with %d levels on %d processors\n",level,__NumNodes);
-  checked {tree=MakeTree(2048,0,0,0,__NumNodes-1,NULL,southeast,level);}
+  tree=MakeTree(2048,0,0,0,__NumNodes-1,NULL,southeast,level);
 #else
   chatting("Perimeter with %d levels on %d processors\n",level,NumNodes);
-  checked {tree=MakeTree(2048*1024,0,0,0,NumNodes-1,NULL,southeast,level);}
+  tree=MakeTree(2048*1024,0,0,0,NumNodes-1,NULL,southeast,level);
 #endif
 
 #ifdef DEBUG
   printf("After MakeTree(2048...), tree=%p *tree is: color=%d  childtype=%d nw=%p ne=%p sw=%p se=%p parent=%p\n", tree, tree->color, tree->childtype, tree->nw, tree->ne, tree->sw, tree->se, tree->parent);
 #endif
 
-  checked {count=CountTree(tree);}
+  count=CountTree(tree);
   chatting("# of leaves is %d\n",count);
 
 #ifndef TORONTO
@@ -229,9 +231,9 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc))
 #endif
 
 #ifndef TORONTO
-  checked {count=perimeter(tree,4096);}
+  count=perimeter(tree,4096);
 #else
-  checked {count=perimeter(tree,4096);}
+  count=perimeter(tree,4096);
 #endif
 
 #ifndef TORONTO

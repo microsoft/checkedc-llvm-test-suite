@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #endif
 
-extern unchecked int atoi(const char *);
+extern int atoi(const char * : itype(nt_array_ptr<const char>));
 
 #ifndef TORONTO
 extern int __NumNodes;
@@ -27,7 +27,7 @@ void filestuff()
 }
 #endif
 
-unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc))
+int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   int level;
 
