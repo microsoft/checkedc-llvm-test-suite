@@ -216,7 +216,7 @@ ptr<struct Patient> generate_patient(ptr<struct Village> village)
   return NULL; 
 }
 
-unchecked int main(int argc, array_ptr<char*> argv : count(argc))
+int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 { 
   struct Results         results;
   ptr<struct Village>    top = NULL;
@@ -231,16 +231,14 @@ unchecked int main(int argc, array_ptr<char*> argv : count(argc))
   
   for (i = 0; i < max_time; i++) {
     if ((i % 50) == 0) chatting("%d\n", i);
-    checked { sim(top); }
+    sim(top);
   }                          /* :) adt_pf detected */
   
-  printf("Getting Results\n");
-  checked {
+  chatting("Getting Results\n");
   results = get_results(top);              /* :) adt_pf detected */
   total_patients = results.total_patients;
   total_time = results.total_time;
   total_hosps = results.total_hosps;
-  }
 
   chatting("Done.\n\n");
   chatting("# of people treated:              %f people\n",
