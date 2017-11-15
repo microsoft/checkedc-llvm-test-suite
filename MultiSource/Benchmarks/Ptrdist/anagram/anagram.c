@@ -209,7 +209,7 @@ typedef struct {
     unsigned cchLength;                 /* letters in the word */
 } Word;
 typedef _Ptr<Word> PWord;
-typedef _Array_ptr<_Ptr<Word>> PPWord;
+typedef _Array_ptr<PWord> PPWord;
 
 PWord apwCand _Checked [MAXCAND];    /* candidates we've found so far */
 unsigned cpwCand;                       /* how many of them? */
@@ -521,13 +521,13 @@ Stat(unsigned long ulHighCount; unsigned long ulLowCount;)
     }
 
 void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
-        PPWord ppwStart : bounds(apwCand, apwCand+MAXCAND), int iLetter)
+        PPWord ppwStart : bounds(ppwStart, apwCand+MAXCAND), int iLetter)
 {
     Quad aqNext _Checked [MAX_QUADS];
     register PWord pw = 0;
     Quad qMask;
     unsigned iq;
-    PPWord ppwEnd : bounds(apwCand, apwCand+MAXCAND) = &apwCand[0];
+    PPWord ppwEnd : bounds(ppwStart, apwCand+cpwCand) = &apwCand[0];
     ppwEnd += cpwCand;
 
     ;
@@ -545,6 +545,10 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
     }
 
     _Unchecked {Debug(printf("Pivoting on %c\n", i2ch(achByFrequency[iLetter]));)}
+
+    // Manually Hoisted Check, (including path condition) from first iteration of the loop.
+    _Dynamic_check(ppwStart != NULL);
+    _Dynamic_check(ppwStart < ppwEnd && ppwEnd <= (apwCand+MAXCAND));
 
     while (ppwStart < ppwEnd) {          /* Half of the program execution */
         pw = *ppwStart;                  /* time is spent in these three */
