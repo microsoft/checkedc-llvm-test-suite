@@ -136,7 +136,6 @@
 #include <sys/stat.h>
 #include <setjmp.h>
 #include <unistd.h>
-#include <stdio_checked.h>
 
 jmp_buf jbAnagram;
 
@@ -262,6 +261,8 @@ void Fatal(_Nt_array_ptr<const char> pchMsg, unsigned u) {
 
 #undef isalpha
 #undef tolower
+#undef bzero
+void bzero(void *s : byte_count(n), size_t n);
 
 /* ReadDict -- read the dictionary file into memory and preprocess it
  *
@@ -331,9 +332,9 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
     int cbtNeed;                        /* bits needed for current letter */
     Quad qNeed;                         /* used to build the mask */
 
-    memset(alPhrase, 0, sizeof(Letter)*ALPHABET);
-    memset(aqMainMask, 0, sizeof(Quad)*MAX_QUADS);
-    memset(aqMainSign, 0, sizeof(Quad)*MAX_QUADS);
+    bzero(alPhrase, sizeof(Letter)*ALPHABET);
+    bzero(aqMainMask, sizeof(Quad)*MAX_QUADS);
+    bzero(aqMainSign, sizeof(Quad)*MAX_QUADS);
 /*
     Zero(alPhrase);
     Zero(aqMainMask);
@@ -420,7 +421,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     PWord pw = 0;
     int cchLength = 0;
 
-    memset(cchFrequency, 0, sizeof(unsigned char)*ALPHABET);
+    bzero(cchFrequency, sizeof(unsigned char)*ALPHABET);
     /* Zero(cchFrequency); */
 
     /* Build frequency table */
@@ -442,7 +443,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
      * bitfield of frequencies.
      */
     pw = NextWord();
-    memset(pw->aqMask, 0, sizeof(Quad)*MAX_QUADS);
+    bzero(pw->aqMask, sizeof(Quad)*MAX_QUADS);
     /* Zero(pw->aqMask); */
     pw->pchWord = pchWord;
     pw->cchLength = cchLength;
@@ -508,7 +509,7 @@ static int X;
   int i;
   X = (X+1) & 1023;
   if (X != 0) return;
-    for (i = 0; i < cpwLast; i++) wprint(_Dynamic_bounds_cast<_Nt_array_ptr<char>>(apwSol[i]->pchWord, apwSol[i]->cchLength));
+    for (i = 0; i < cpwLast; i++) wprint((_Nt_array_ptr<char>)apwSol[i]->pchWord);
     printf("\n");
 }
 
@@ -659,7 +660,7 @@ int Cdecl main(int cpchArgc, _Array_ptr<_Nt_array_ptr<char>> ppchArgv : count(cp
 
     while (GetPhrase(&achPhrase[0], sizeof(achPhrase)) != NULL) {
         if (isdigit(achPhrase[0])) {
-            cchMinLength = atoi(_Dynamic_bounds_cast<_Nt_array_ptr<char>>(achPhrase, 255));
+            cchMinLength = atoi((_Nt_array_ptr<char>)achPhrase);
             printf("New length: %d\n", cchMinLength);
         } else if (achPhrase[0] == '?') {
             DumpCandidates();
