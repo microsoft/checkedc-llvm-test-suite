@@ -151,23 +151,23 @@ PrettyPrint(_Ptr<HeapP>  h)
 
   if(h == NULL_HEAP)
   {
-    _Unchecked { printf(" nil "); }
+    printf(" nil ");
     return;
   }
 
-  _Unchecked { printf("("); }
+  printf("(");
 
   h1 = h;
   do
   {
     //PrintItem(ITEM(h1));
-    _Unchecked { printf("[%u] ", RANK(h1)); }
+    printf("[%u] ", RANK(h1));
     PrettyPrint(CHILD(h1));
     h1 = FORWARD(h1);
   }
   while(h1 != h);
 
-  _Unchecked { printf(")"); }
+  printf(")");
 }
 
 #pragma BOUNDS_CHECKED OFF

@@ -230,7 +230,7 @@ NewVertex(void)
 
   if(vertex == NULL)
   {
-    _Unchecked { fprintf(stderr, "Could not malloc\n"); }
+    fprintf(stderr, "Could not malloc\n");
     exit(1);
   }
 
@@ -250,7 +250,7 @@ NewEdge(void)
 
   if(edge == NULL)
   {
-    _Unchecked { fprintf(stderr, "Could not malloc\n"); }
+    fprintf(stderr, "Could not malloc\n");
     exit(1);
   }
 
@@ -271,9 +271,9 @@ PrintGraph(_Ptr<Vertices>  graph)
   vertex = graph;
   do
   {
-    _Unchecked { printf("Vertex %d is connected to:", ID(vertex)); }
+    printf("Vertex %d is connected to:", ID(vertex));
     PrintNeighbors(vertex);
-    _Unchecked { printf("\n"); }
+    printf("\n");
     vertex = NEXT_VERTEX(vertex);
   }
   while(vertex != graph);
@@ -287,7 +287,7 @@ PrintNeighbors(_Ptr<Vertices>  vertex)
   edge = EDGES(vertex);
   while(edge != NULL)
   {
-    _Unchecked { printf(" %d(%d)[%d]", ID(VERTEX(edge)), WEIGHT(edge), ID(SOURCE(edge))); }
+    printf(" %d(%d)[%d]", ID(VERTEX(edge)), WEIGHT(edge), ID(SOURCE(edge)));
     edge = NEXT_EDGE(edge);
   }
 }

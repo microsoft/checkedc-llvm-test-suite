@@ -53,6 +53,9 @@
 
 #pragma BOUNDS_CHECKED ON
 
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
+#define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
+
 typedef struct _Heap
 {
   _Ptr<Item>      item;

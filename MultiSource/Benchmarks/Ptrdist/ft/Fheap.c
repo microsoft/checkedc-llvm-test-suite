@@ -503,7 +503,7 @@ NewHeap(_Ptr<Item>  i)
 
   if(h == NULL)
   {
-    _Unchecked { fprintf(stderr, "Oops, could not malloc\n"); }
+    fprintf(stderr, "Oops, could not malloc\n");
     exit(1);
   }
   ITEM(h) = i;
