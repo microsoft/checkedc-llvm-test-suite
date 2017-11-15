@@ -6,7 +6,7 @@
 #define conquer_thresold 150  /* tsp() will use conquer for problems <= conquer_thresold */
 extern int flag;
 
-unchecked void print_tree(Tree t)
+void print_tree(Tree t)
 {
   Tree left = NULL, right = NULL;
 
@@ -20,7 +20,7 @@ unchecked void print_tree(Tree t)
   print_tree(right);
 }
 
-unchecked void print_list(Tree t)
+void print_list(Tree t)
 {
   Tree tmp = NULL;
   double x,y;
@@ -35,7 +35,7 @@ unchecked void print_list(Tree t)
     }
 }
 
-unchecked int main(int argc,array_ptr<char*> argv : count(argc))
+int main(int argc,array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   Tree t = NULL;
   int num;
@@ -43,13 +43,13 @@ unchecked int main(int argc,array_ptr<char*> argv : count(argc))
   num=dealwithargs(argc,argv);
 
   chatting("Building tree of size %d\n",num);
-  checked {t=build_tree(num,0,0,NumNodes,0.0,1.0,0.0,1.0);}
+  t=build_tree(num,0,0,NumNodes,0.0,1.0,0.0,1.0);
   if (!flag) chatting("Past build\n");
   if (flag) chatting("newgraph\n");
   if (flag) chatting("newcurve pts\n");
 
-  printf("Call tsp(t, %d, %d)\n", conquer_thresold, NumNodes); 
-  checked {tsp(t,conquer_thresold, NumNodes);}
+  chatting("Call tsp(t, %d, %d)\n", conquer_thresold, NumNodes); 
+  tsp(t,conquer_thresold, NumNodes);
 
   if (flag) print_list(t);
   if (flag) chatting("linetype solid\n");

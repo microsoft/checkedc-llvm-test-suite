@@ -16,7 +16,7 @@ int mylog(int num)
   return j;
 }
 
-unchecked int dealwithargs(int argc, array_ptr<char *> argv : count(argc))
+int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
   int num;
 
