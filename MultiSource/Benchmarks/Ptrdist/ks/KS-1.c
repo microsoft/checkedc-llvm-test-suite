@@ -33,8 +33,8 @@ float cost _Checked [G_SZ];			/* net costs */
 
 
 /* read the netlist into the nets[] structure */
-_Unchecked void
-ReadNetList(char *fname )
+void
+ReadNetList(_Nt_array_ptr<char> fname)
 {
     _Ptr<FILE> inFile = 0;
     char line _Checked[BUF_LEN];
@@ -46,16 +46,16 @@ ReadNetList(char *fname )
 	"unable to open input file [%s]", inFile, 0, 0,
 	exit(1));
 
-    TRY(fgets(line, BUF_LEN, inFile),
+    _Unchecked { TRY(fgets(line, BUF_LEN, inFile),
 	sscanf((const char*)line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
 	"unable to parse header in file [%s]", inFile, 0, 0,
-	exit(1));
+	exit(1)); }
 
     for (net = 0; net < numNets; net++) {
 	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
-	dest = atol(strtok((char*)line, " \t\n"))-1;
+	dest = atol(strtok(line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
 	TRY(head = prev = calloc(1, sizeof(Module)),
@@ -64,7 +64,7 @@ ReadNetList(char *fname )
 	    exit(1));
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
-    char *tok;
+    _Nt_array_ptr<char> tok = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
 	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
@@ -92,7 +92,7 @@ NetsToModules(void)
 
     for (net=0; net<numNets; net++) {
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(_Checked {netNode = calloc(1, sizeof(Net));},
+	    TRY(netNode = calloc(1, sizeof(Net)),
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
@@ -141,7 +141,7 @@ InitLists(void)
     for (p = 0; p<numModules/2; p++) {
 
 	/* build the group A module list */
-	TRY(_Checked {mr = calloc(1, sizeof(ModuleRec));},
+	TRY(mr = calloc(1, sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -160,7 +160,7 @@ InitLists(void)
 	moduleToGroup[p] = GroupA;
 
 	/* build the group B module list */
-	TRY(_Checked {mr = calloc(1, sizeof(ModuleRec));},
+	TRY(mr = calloc(1, sizeof(ModuleRec));,
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
