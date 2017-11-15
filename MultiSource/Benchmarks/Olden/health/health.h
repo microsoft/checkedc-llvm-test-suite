@@ -13,7 +13,7 @@
 #include <stdlib_checked.h>
 #pragma BOUNDS_CHECKED ON
 
-#define chatting printf
+#define chatting(...) unchecked { printf(__VA_ARGS__); }
 
 #define IA 16807
 #define IM 2147483647
@@ -84,7 +84,7 @@ struct Village {
 };
 
 ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back);
-unchecked void dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 float my_rand(long long idum);
 ptr<struct Patient> generate_patient(ptr<struct Village> village);
 void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient>patient);
