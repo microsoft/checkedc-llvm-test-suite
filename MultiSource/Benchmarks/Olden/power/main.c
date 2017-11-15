@@ -53,20 +53,21 @@ double map_Q _Checked[36] =
 #define      MIN_THETA_I       0.13
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
-_Unchecked int main(int argc, _Array_ptr<char*> argv : count(argc))
-_Checked {
+int main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
+{
   Root r = 0;
   int i,finished=0;
   double d_theta_R,d_theta_I;
 
-  _Unchecked { printf("Past initialization\n"); }
+  printf("Past initialization\n");
 
   /* initial pass */
   r = build_tree();
-  _Unchecked { printf("Built tree\n"); }
+  printf("Built tree\n");
   Compute_Tree(r);
-  _Unchecked { printf("COMPUTED TREE\n"); }
+  printf("COMPUTED TREE\n");
   r->last.P = r->D.P;
   r->last.Q = r->D.Q;
   r->last_theta_R = r->theta_R;
@@ -76,8 +77,8 @@ _Checked {
   
   while (!finished) {
     Compute_Tree(r);
-    _Unchecked { printf("TR=%4.2f, TI=%4.2f, P0=%4.2f, Q0=%4.2f\n",
-           r->theta_R,r->theta_I,r->D.P,r->D.Q); }
+    printf("TR=%4.2f, TI=%4.2f, P0=%4.2f, Q0=%4.2f\n",
+           r->theta_R,r->theta_I,r->D.P,r->D.Q);
     if (fabs(r->D.P/10000.0 - r->theta_R) < ROOT_EPSILON &&
         fabs(r->D.Q/10000.0 - r->theta_I) < ROOT_EPSILON) {
       finished = 1;
@@ -94,7 +95,7 @@ _Checked {
       d_theta_I = -(r->theta_I - r->D.Q/10000.0) /
         (1 - (map_Q[i+1] - map_Q[i]) / (PER_INDEX_I * 10000.0));
  
-      _Unchecked { printf("D TR-%4.2f, TI=%4.2f\n", d_theta_R,d_theta_I); }
+      printf("D TR-%4.2f, TI=%4.2f\n", d_theta_R,d_theta_I);
       r->last.P = r->D.P;
       r->last.Q = r->D.Q;
       r->last_theta_R = r->theta_R;
