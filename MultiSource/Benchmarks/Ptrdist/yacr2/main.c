@@ -27,15 +27,16 @@
 
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 /*
  *
  * Code.
  *
  */
 
-_Unchecked int
+int
 main(int argc,
-     _Array_ptr<char*> argv : count(argc))
+     _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
 {
     ulong      	done;
     ulong	fail;
@@ -75,17 +76,17 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	do {
 	    done = TRUE;
 	    if ((netsLeft = DrawNets()) != 0) {
-		_Unchecked { printf("Assignment could not route %d columns, trying maze1...\n",
-		       netsLeft); }
+		printf("Assignment could not route %d columns, trying maze1...\n",
+		       netsLeft);
 		if ((netsLeft = Maze1()) != 0) {
-		    _Unchecked { printf("Maze1 could not route %d columns, trying maze2...\n",
-			   netsLeft); }
+		    printf("Maze1 could not route %d columns, trying maze2...\n",
+			   netsLeft);
 		    if ((netsLeft = Maze2()) != 0) {
-			_Unchecked { printf("Maze2 could not route %d columns, trying maze3...\n",
-			       netsLeft); }
+			printf("Maze2 could not route %d columns, trying maze3...\n",
+			       netsLeft);
 			if ((netsLeft = Maze3()) != 0) {
-			    _Unchecked { printf("Maze3 could not route %d columns, adding a track...\n",
-				   netsLeft); }
+			    printf("Maze3 could not route %d columns, adding a track...\n",
+				   netsLeft);
 			    /* PrintChannel(); */
 			    if (! fail) {
 				channelTracks++;
@@ -114,7 +115,7 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	     */
 	    if ((! done) && fail) {
 #ifdef VERBOSE
-		_Unchecked { printf("\n*** fail (insert track at %d) ***\n", fail); }
+		printf("\n*** fail (insert track at %d) ***\n", fail);
 #endif
 		for (insert = 1; insert <= channelNets; insert++) {
 		    if (netsAssign[insert] >= fail) {
@@ -135,7 +136,7 @@ for (TIMELOOP = 0; TIMELOOP < 20; ++TIMELOOP) {
 	}
     } while (! done);
 
-    _Unchecked { printf("\n"); }
+    printf("\n");
     PrintChannel();
 #ifdef PLUS_STATS
     PrintDerefStats(stderr);

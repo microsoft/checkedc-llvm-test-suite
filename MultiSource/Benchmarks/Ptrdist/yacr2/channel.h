@@ -18,7 +18,6 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
-char *		channelFile;
 
 #pragma BOUNDS_CHECKED ON
 /*
@@ -55,7 +54,7 @@ ulong			channelTracks;
 ulong			channelTracksCopy;
 ulong			channelDensity;
 ulong			channelDensityColumn;
-
+_Nt_array_ptr<char>		channelFile;
 
 #else	/* CHANNEL_CODE */
 
@@ -71,6 +70,7 @@ extern ulong		channelTracks;
 extern ulong		channelTracksCopy;
 extern ulong		channelDensity;
 extern ulong		channelDensityColumn;
+extern _Nt_array_ptr<char>		channelFile;
 
 #endif	/* CHANNEL_CODE */
 

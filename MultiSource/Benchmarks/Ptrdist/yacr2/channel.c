@@ -20,6 +20,7 @@
 #include "channel.h"
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -65,8 +66,8 @@ DimensionChannel(void)
     /*
      * Open channel description file.
      */
-    _Unchecked { channelFP = fopen(channelFile, "r"); }
-    if (channelFP == NULL) _Unchecked {
+    channelFP = fopen(channelFile, "r");
+    if (channelFP == NULL) {
 	/*
 	 * Error in channel file description.
 	 */
@@ -110,7 +111,7 @@ DimensionChannel(void)
 		    net = top;
 		}
 	    }
-	    else _Unchecked {
+	    else {
 		/*
 		 * Error in channel file description.
 		 */
@@ -125,7 +126,7 @@ DimensionChannel(void)
     /*
      * Close channel description file.
 	 */
-    if (fclose(channelFP) == EOF) _Unchecked {
+    if (fclose(channelFP) == EOF) {
 	/*
 	 * Error in channel file description.
 	 */
@@ -137,7 +138,7 @@ DimensionChannel(void)
     /*
      * Check channel dimension.
      */
-    if (dim == 0) _Unchecked {
+    if (dim == 0) {
 	/*
 	 * Error in channel file description.
 	 */
@@ -185,8 +186,8 @@ DescribeChannel(void)
     /*
      * Open channel description file.
      */
-    _Unchecked { channelFP = fopen(channelFile, "r"); }
-    if (channelFP == NULL) _Unchecked {
+    channelFP = fopen(channelFile, "r");
+    if (channelFP == NULL) {
 	/*
 	 * Error in channel file description.
 	 */
@@ -214,7 +215,7 @@ DescribeChannel(void)
 		/*
 		 * Build column.
 		 */
-		if (col > channelColumns) _Unchecked {
+		if (col > channelColumns) {
 		    /*
 		     * Error in channel file description.
 		     */
@@ -231,7 +232,7 @@ DescribeChannel(void)
 		    TOP[col] = top;
 		}
 	    }
-	    else _Unchecked {
+	    else {
 		/*
 		 * Error in channel file description.
 		 */
@@ -246,7 +247,7 @@ DescribeChannel(void)
     /*
      * Close channel description file.
      */
-    if (fclose(channelFP) == EOF) _Unchecked {
+    if (fclose(channelFP) == EOF) {
 	/*
 	 * Error in channel file description.
 	 */

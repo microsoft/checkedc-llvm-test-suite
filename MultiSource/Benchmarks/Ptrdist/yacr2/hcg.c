@@ -22,6 +22,7 @@
 #include "channel.h"
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 /*
  *
  * Code.
@@ -123,7 +124,7 @@ DumpHCG(_Array_ptr<nodeHCGType> HCG : count(channelNets + 1))
     ulong	net;
     ulong	which;
 
-    for (net = 1; net <= channelNets; net++) _Unchecked {
+    for (net = 1; net <= channelNets; net++) {
 	printf("[%d]\n", net);
 	for (which = 0; which < HCG[net].nets; which++) {
 	    printf("%d ", HCG[net].netsHook[which]);

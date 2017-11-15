@@ -24,6 +24,7 @@
 #include "hcg.h"
 
 #pragma BOUNDS_CHECKED ON
+#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -131,10 +132,8 @@ MaxNetsAssign(void)
     ;
 
 #ifdef VERBOSE
-	_Unchecked {
     printf("density = %d\n", channelDensity);
 	printf("pivot = %d\n\n", channelDensityColumn);
-	}
 #endif
 
     /*
@@ -332,7 +331,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     ;
 
 #ifdef VERBOSE
-    _Unchecked { printf("\n*** Assign %d ***\n", select); }
+    printf("\n*** Assign %d ***\n", select);
 #endif
     
     /*
@@ -352,7 +351,6 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     IdealTrack(channelTracks, cardTopNotPref, cardBotNotPref, &ideal);
 
 #ifdef VERBOSE
-    _Unchecked {
 	printf("HCV's:\n");
     for (track = 1; track <= channelTracks; track++) {
 	if (tracksNoHCV[track]) {
@@ -363,7 +361,6 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	}
     }
 	printf("\n");
-	}
 #endif
 
     /*
@@ -386,7 +383,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	}
     }
 #ifdef VERBOSE
-    if (tracks != 0) _Unchecked {
+    if (tracks != 0) {
 	printf("using choice 1...\n");
     }
 #endif
@@ -401,7 +398,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	    }
 	}
 #ifdef VERBOSE
-	if (tracks != 0) _Unchecked {
+	if (tracks != 0) {
 	    printf("using choice 2...\n");
 	}
 #endif
@@ -417,7 +414,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	    }
 	}
 #ifdef VERBOSE
-	if (tracks != 0) _Unchecked {
+	if (tracks != 0) {
 	    printf("using choice 3...\n");
 	}
 #endif
@@ -435,7 +432,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	    tracks++;
 	}
 #ifdef VERBOSE
-	_Unchecked { printf("using choice 4...\n"); }
+	printf("using choice 4...\n");
 #endif
     }
     assert(tracks != 0);
@@ -507,7 +504,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     assert(trackAssign);
     assign[select] = trackAssign;
 #ifdef VERBOSE
-    _Unchecked { printf("\n*** Assign %d -> %d ***\n", select, trackAssign); }
+    printf("\n*** Assign %d -> %d ***\n", select, trackAssign);
 #endif
     ;
 }

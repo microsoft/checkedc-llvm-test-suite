@@ -52,15 +52,15 @@
 
 #ifdef OPTION_CODE
 
-_Unchecked void
+void
 Option(int argc,
-       _Array_ptr<char*> : count(argc));
+       _Array_ptr<_Nt_array_ptr<char>> : count(argc));
 
 #else	/* OPTION_CODE */
 
-_Unchecked extern void
+extern void
 Option(int argc,
-       _Array_ptr<char*> : count(argc));
+       _Array_ptr<_Nt_array_ptr<char>> : count(argc));
 
 #endif	/* OPTION_CODE */
 
