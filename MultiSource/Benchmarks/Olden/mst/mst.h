@@ -6,7 +6,6 @@
 #pragma BOUNDS_CHECKED ON
 #define MAXPROC 1
 
-#define chatting printf
 #define printf(...) unchecked { printf(__VA_ARGS__); }
 extern int NumNodes;
 
@@ -36,5 +35,6 @@ Graph MakeGraph(int numvert, int numproc);
 int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
 int atoi(const char * : itype(nt_array_ptr<const char>));
+void chatting(nt_array_ptr<char> str);
 
 #pragma BOUNDS_CHECKED OFF

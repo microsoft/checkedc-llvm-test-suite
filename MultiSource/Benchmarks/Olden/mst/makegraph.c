@@ -118,7 +118,9 @@ Graph MakeGraph(int numvert, int numproc)
   return retval;
 }
 
-  
+void chatting(nt_array_ptr<char> str) {
+  printf(str);
+}
 
 
 
