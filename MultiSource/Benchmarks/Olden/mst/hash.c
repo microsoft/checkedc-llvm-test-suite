@@ -5,7 +5,8 @@
 #include "hash.h"
 #pragma BOUNDS_CHECKED ON
 
-#define assert(num,a) if (!(a)) unchecked {printf("Assertion failure:%d in hash\n",num); exit(-1);}
+#define printf(...) unchecked { printf(__VA_ARGS__); }
+#define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
 
 static int remaining = 0;
 static array_ptr<char> temp : count(remaining);
@@ -17,8 +18,7 @@ static array_ptr<void> localmalloc(int size) : byte_count(size)
   if (size>remaining) 
     {
       temp = calloc(32768, sizeof(char));
-      dynamic_check(temp != NULL);
-      // if (!temp) printf("Error! malloc returns null\n");
+      if (!temp) printf("Error! malloc returns null\n");
       remaining = 32768;
     }
   blah = temp;
@@ -37,9 +37,8 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
   retval = (Hash) localmalloc(sizeof(*retval));
   retval->array = (array_ptr<HashEntry>)localmalloc(size*sizeof(HashEntry));
   retval->size = size;
-  // CHECKEC C: Not required, as localmalloc now uses calloc internally
-  // for (i=0; i<size; i++)
-  //   retval->array[i] = NULL;
+  for (i=0; i<size; i++)
+    retval->array[i] = NULL;
   retval->mapfunc = map;
   return retval;
 }

@@ -82,14 +82,12 @@ Graph MakeGraph(int numvert, int numproc)
   array_ptr<struct vert_st> block : count(perproc) = NULL;
   Graph retval = NULL;
 
-  dynamic_check(numproc <= MAXPROC);
-
   retval = (Graph)calloc(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
       retval->vlist[i].starting_vertex = NULL;
     }
-  unchecked { chatting("Make phase 2\n"); }
+  chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
       block = calloc(perproc, sizeof(*tmp));
@@ -108,19 +106,21 @@ Graph MakeGraph(int numvert, int numproc)
       retval->vlist[j].starting_vertex = v;
     }
 
-  unchecked { chatting("Make phase 3\n"); }
+  chatting("Make phase 3\n");
   for (j=numproc-1; j>=0; j--) 
     {
       count1 = j*perproc;
       AddEdges(count1, retval, numproc, perproc, numvert, j);
     } /* for j... */
-  unchecked { chatting("Make phase 4\n"); }
+  chatting("Make phase 4\n");
 
-  unchecked { chatting("Make returning\n"); }
+  chatting("Make returning\n");
   return retval;
 }
 
-  
+void chatting(nt_array_ptr<char> str) {
+  printf(str);
+}
 
 
 
