@@ -67,9 +67,9 @@ _Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
  */
 int debug = 1;
 
-_Unchecked int
-main(int argc, _Array_ptr<const char*> argv : count(argc) )
-_Checked {
+int
+main(int argc, _Array_ptr<_Nt_array_ptr<const char>> argv : count(argc) )
+{
   int            nVertex;
   int            nEdge;
   _Ptr<Vertices>   graph = 0;
@@ -78,7 +78,7 @@ _Checked {
   nEdge = DEFAULT_N_EDGE;
 
   if(argc > 1)
-  _Unchecked {
+  {
     nVertex = atoi(argv[1]);
     if(argc > 2)
     {
@@ -91,14 +91,14 @@ _Checked {
   }
 
   if(debug)
-  _Unchecked {
+  {
     printf("Generating a connected graph ... ");
   }
 
   graph = GenGraph(nVertex, nEdge);
 
   if(debug)
-  _Unchecked {
+  {
     printf("done\nFinding the mininmum spanning tree ... ");
   }
 
@@ -106,15 +106,15 @@ _Checked {
 
   if(debug)
   {
-    _Unchecked { printf("done\nThe graph:\n"); }
+    printf("done\nThe graph:\n");
     PrintGraph(graph);
-    _Unchecked { printf("The minimum spanning tree:\n"); }
+    printf("The minimum spanning tree:\n");
     PrintMST(graph);
   }
 
   if(debug)
   {
-    _Unchecked { printf("Time spent in finding the mininum spanning tree:\n"); }
+    printf("Time spent in finding the mininum spanning tree:\n");
   }
 #ifdef PLUS_STATS
   PrintDerefStats(stderr);
@@ -187,7 +187,7 @@ PrintMST(_Ptr<Vertices>  graph)
 
   while(vertex != graph)
   {
-    _Unchecked { printf("vertex %d to %d\n", ID(vertex), ID(SOURCE(CHOSEN_EDGE(vertex)))); }
+    printf("vertex %d to %d\n", ID(vertex), ID(SOURCE(CHOSEN_EDGE(vertex))));
     vertex = NEXT_VERTEX(vertex);
   }
 
