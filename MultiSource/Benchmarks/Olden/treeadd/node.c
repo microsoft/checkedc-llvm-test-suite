@@ -23,13 +23,13 @@
 extern int NumNodes;
 #endif
 
-unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
 typedef struct {
     long 	level;
 } startmsg_t;
 
-unchecked int main (int argc, array_ptr<char*> argv : count(argc))
+int main (int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 {
     ptr<tree_t> root = NULL;
     int level,result;
@@ -42,20 +42,19 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #endif
     level = dealwithargs(argc, argv);
 #endif
-    checked {
 #ifndef TORONTO
     CMMD_node_timer_clear(0);
     CMMD_node_timer_clear(1);
 #endif
 #ifdef TORONTO
-    unchecked { chatting("Treeadd with %d levels on %d processors \n",
-	     level, NumNodes); }
+    chatting("Treeadd with %d levels on %d processors \n",
+	     level, NumNodes);
 #else
-    unchecked { chatting("Treeadd with %d levels on %d processors \n",
-	     level, __NumNodes); }
+    chatting("Treeadd with %d levels on %d processors \n",
+	     level, __NumNodes);
 #endif
     /* only processor 0 will continue here. */
-    unchecked { chatting("About to enter TreeAlloc\n"); }
+    chatting("About to enter TreeAlloc\n");
 #ifndef TORONTO
     CMMD_node_timer_start(0);
 #endif
@@ -69,7 +68,7 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #ifndef TORONTO
     CMMD_node_timer_stop(0);
 #endif
-    unchecked { chatting("About to enter TreeAdd\n"); }
+    chatting("About to enter TreeAdd\n");
     
 #ifndef PLAIN
     ClearAllStats();
@@ -83,11 +82,11 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #ifndef TORONTO
     CMMD_node_timer_stop(1);
 #endif
-    unchecked { chatting("Received result of %d\n",result); }
+    chatting("Received result of %d\n",result);
 
 #ifndef TORONTO
-    unchecked { chatting("Alloc Time = %f seconds\n", CMMD_node_timer_elapsed(0)); }
-    unchecked { chatting("Add Time = %f seconds\n", CMMD_node_timer_elapsed(1)); }
+    chatting("Alloc Time = %f seconds\n", CMMD_node_timer_elapsed(0));
+    chatting("Add Time = %f seconds\n", CMMD_node_timer_elapsed(1));
 #endif
 
 #ifdef FUTURES
@@ -95,7 +94,6 @@ unchecked int main (int argc, array_ptr<char*> argv : count(argc))
 #endif
     exit(0);
 
-    }
 }
 
 /* TreeAdd:

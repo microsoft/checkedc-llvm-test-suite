@@ -11,7 +11,7 @@
 #pragma BOUNDS_CHECKED ON
 
 #ifdef TORONTO
-#define chatting printf
+#define chatting(...) _Unchecked { printf(__VA_ARGS__); }
 #define PLAIN
 #endif
 
