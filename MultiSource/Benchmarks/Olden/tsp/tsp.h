@@ -8,14 +8,14 @@
 #ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      calloc(1, sz)
-#define chatting          printf  
+#define chatting(...) _Unchecked { printf(__VA_ARGS__); } 
 extern int NumNodes, NDim;
 #endif
 
 extern int flag;
 
-unchecked int atoi(const char *);
-unchecked int dealwithargs(int argc, array_ptr<char*> argv : count(argc));
+int atoi(const char * : itype(nt_array_ptr<const char>));
+int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
