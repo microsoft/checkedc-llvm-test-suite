@@ -231,7 +231,7 @@ struct {
 long maxStat;
 
 /* print the current groups, and their edge and net cut counts */
-_Unchecked void
+void
 PrintResults(int verbose)
 {
     ModuleRecPtr mr = 0;
@@ -325,8 +325,8 @@ PrintResults(int verbose)
 		netStats[i].edgesCut, netStats[i].netsCut);
 }
 
-_Unchecked int
-main(int argc, _Array_ptr<char*> argv : count(argc))
+int
+main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
 {
     unsigned long p, iMax;
     float gMax, lastGMax;
@@ -342,7 +342,6 @@ main(int argc, _Array_ptr<char*> argv : count(argc))
 
     /* prepare the data structures */
 	ReadNetList(argv[1]);
-    _Checked {
       NetsToModules();
       ComputeNetCosts();
 
@@ -382,25 +381,22 @@ main(int argc, _Array_ptr<char*> argv : count(argc))
 
 	/* debug/statistics */
 	if (lastGMax == gMax)
-	    _Unchecked {fprintf(stdout, "No progress: gMax = %f\n", gMax);}
+	    fprintf(stdout, "No progress: gMax = %f\n", gMax);
 	lastGMax = gMax;
-	_Unchecked {fprintf(stdout, "gMax = %f, iMax = %lu\n", gMax, iMax);}
+	fprintf(stdout, "gMax = %f, iMax = %lu\n", gMax, iMax);
 
 	if (gMax > 0.0)
 	    SwapSubsetAndReset(iMax);
-	_Unchecked {PrintResults(0);}
+	PrintResults(0);
     } while (gMax > 0.0);	/* progress made? */
-    }
 
     /* all swaps rejected */
-    _Checked {
     groupA = swapToB;
     for (mr = groupA.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupA;
     groupB = swapToA;
     for (mr = groupB.head; mr != NULL; mr = (*mr).next)
 	moduleToGroup[(*mr).module] = GroupB;
-    }
 
     ;
 
