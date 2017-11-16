@@ -64,6 +64,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	    exit(1));
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
+	// TODO: Review after https://github.com/Microsoft/checkedc-clang/issues/424 is addressed
     _Nt_array_ptr<char> tok : bounds(unknown) = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
 	    TRY(node = calloc(1, sizeof(Module)),
