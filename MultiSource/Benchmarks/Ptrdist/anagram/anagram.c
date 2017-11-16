@@ -661,7 +661,7 @@ int Cdecl main(int cpchArgc, _Array_ptr<_Nt_array_ptr<char>> ppchArgv : count(cp
 
     while (GetPhrase(&achPhrase[0], sizeof(achPhrase)) != NULL) {
         if (isdigit(achPhrase[0])) {
-            cchMinLength = atoi((_Nt_array_ptr<char>)achPhrase);
+            _Unchecked { cchMinLength = atoi((_Nt_array_ptr<char>)achPhrase); }
             printf("New length: %d\n", cchMinLength);
         } else if (achPhrase[0] == '?') {
             DumpCandidates();
