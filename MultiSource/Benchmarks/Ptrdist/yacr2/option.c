@@ -44,5 +44,5 @@ Option(int argc,
     /*
      * Specified options.
      */
-    channelFile = argv[1];
+    _Unchecked { channelFile = argv[1]; }
 }

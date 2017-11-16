@@ -7,6 +7,7 @@
 
 #define printf(...) unchecked { printf(__VA_ARGS__); }
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}
+#include "hacks.h"
 
 static int remaining = 0;
 static array_ptr<char> temp : count(remaining);
@@ -78,7 +79,8 @@ void HashDelete(unsigned key, Hash hash) {
   HashEntry tmp = NULL;
   int j = (hash->mapfunc)(key);
   int size = hash->size;
-  array_ptr<HashEntry> ent : count(size) = &hash->array[j];
+  _Dynamic_check(j <= size);
+  UncheckedPtrInit(ptr<HashEntry>, ent, &hash->array[j]);
 
   while (*ent && (*ent)->key != key) {
     ent = &(*ent)->next;

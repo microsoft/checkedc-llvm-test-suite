@@ -113,9 +113,9 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   printf("Compute phase 1\n");
 
   /* Insert first node */
-  inserted = (Vertex)graph->vlist[0].starting_vertex;
+  _Unchecked { inserted = (Vertex)graph->vlist[0].starting_vertex; }
   tmp = inserted->next;
-  graph->vlist[0].starting_vertex = tmp;
+  _Unchecked { graph->vlist[0].starting_vertex = tmp; }
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */

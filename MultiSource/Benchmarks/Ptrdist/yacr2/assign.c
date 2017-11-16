@@ -67,20 +67,20 @@ FreeAssign(void)
      * Free cost matrix.
      */
     for (net = 1; net <= channelNets; net++) {
-	free(costMatrix[net].row);
+	_Unchecked { free(costMatrix[net].row); }
     }
-    free(costMatrix);
+    _Unchecked { free(costMatrix); }
 
     /*
      * Free structures associated with cost matrix.
      */
-    free(tracksNotPref);
-    free(tracksTopNotPref);
-    free(tracksBotNotPref);
-    free(tracksNoHCV);
-    free(tracksAssign);
-    free(netsAssign);
-    free(netsAssignCopy);
+    _Unchecked { free(tracksNotPref); }
+    _Unchecked { free(tracksTopNotPref); }
+    _Unchecked {  free(tracksBotNotPref); }
+    _Unchecked { free(tracksNoHCV); }
+    _Unchecked { free(tracksAssign); }
+    _Unchecked { free(netsAssign); }
+    _Unchecked { free(netsAssignCopy); }
 }
 
 void
@@ -366,7 +366,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     /*
      * What tracks to consider for assign.
      */
-    costNet = costMatrix[select].row;
+    _Unchecked { costNet = costMatrix[select].row; }
     assert((select >= 1) && (select <= channelNets));
     tracks = 0;
     for (track = 1; track <= channelTracks; track++) {
@@ -537,7 +537,7 @@ Select(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     for (net = 1; net <= channelNets; net++) {
 	if (CROSSING[net]) {
 	    cost = 0;
-	    costNet = costMatrix[net].row;
+	    _Unchecked { costNet = costMatrix[net].row; }
 	    for (track = 1; track <= channelTracks; track++) {
 		cost += costNet[track];
 	    }
@@ -573,7 +573,7 @@ BuildCostMatrix(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
      * Initialize cost matrix.
      */
     for (net = 1; net <= channelNets; net++) {
-	costNet = costMatrix[net].row;
+	_Unchecked { costNet = costMatrix[net].row; }
 	for (track = 1; track <= channelTracks; track++) {
 	    costNet[track] = 0;
 	}
@@ -585,7 +585,7 @@ BuildCostMatrix(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	     * Compute one column in cost matrix.
 	     * That is, the cost associated with each track for some net.
 	     */
-	    costNet = costMatrix[net].row;
+	    _Unchecked { costNet = costMatrix[net].row; }
 
 	    /*
 	     * Compute measures related to cost.

@@ -19,7 +19,7 @@ int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-typedef struct tree {
+struct tree {
   int sz;
   double x,y;
   ptr<struct tree> left;

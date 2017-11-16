@@ -5,7 +5,6 @@
 #pragma BOUNDS_CHECKED ON
 
 #ifdef TORONTO
-#define chatting(...) _Unchecked { printf(__VA_ARGS__); }
 #endif
 
 #ifdef __MINGW32__

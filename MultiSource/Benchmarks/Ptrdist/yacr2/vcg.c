@@ -47,12 +47,12 @@ AllocVCG(void)
 void
 FreeVCG(void)
 {
-    free(VCG);
-    free(storageRootVCG);
+    _Unchecked { free(VCG); }
+    _Unchecked { free(storageRootVCG); }
     storageLimitVCG = 0;
-    free(SCC);
-    free(perSCC);
-    free(removeVCG);
+    _Unchecked { free(SCC); }
+    _Unchecked { free(perSCC); }
+    _Unchecked { free(removeVCG); }
 }
 
 void
@@ -77,7 +77,7 @@ BuildVCG(void)
 	 * Above constraints.
 	 */
 	constraint = 0;
-	VCG[net].netsAboveHook = storageVCG;
+	_Unchecked { VCG[net].netsAboveHook = storageVCG; }
 	for (col = 1; col <= channelColumns; col++) {
 	    if ((TOP[col] == net) && (BOT[col] != net) && (BOT[col] != 0)) {
 		/*
@@ -113,7 +113,7 @@ BuildVCG(void)
 	 * Below constraints.
 	 */
 	constraint = 0;
-	VCG[net].netsBelowHook = storageVCG;
+	_Unchecked { VCG[net].netsBelowHook = storageVCG; }
 	for (col = 1; col <= channelColumns; col++) {
 	    if ((BOT[col] == net) && (TOP[col] != net) && (TOP[col] != 0)) {
 		/*
@@ -605,7 +605,7 @@ RemoveConstraintVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 			     */
 			    if (weight < best) {
 				best = weight;
-				remove = &VCG[net].netsAboveHook[which];
+				_Unchecked { remove = &VCG[net].netsAboveHook[which]; }
 			    }
 			}
 		    }
