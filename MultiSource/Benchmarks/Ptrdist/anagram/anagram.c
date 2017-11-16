@@ -529,7 +529,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
     register PWord pw = 0;
     Quad qMask;
     unsigned iq;
-    PPWord ppwEnd : bounds(ppwStart, apwCand+cpwCand) = &apwCand[0];
+    UncheckedBoundsInit(PPWord, ppwEnd, bounds(ppwStart, apwCand+cpwCand), &apwCand[0])
     ppwEnd += cpwCand;
 
     ;
@@ -591,7 +591,7 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
             /* The recursive call scrambles the tail, so we have to be
              * pessimistic.
              */
-	    ppwEnd = &apwCand[0];
+	    _Unchecked { ppwEnd = &apwCand[0]; }
 	    ppwEnd += cpwCand;
             _Unchecked { FindAnagram(&aqNext[0],
 			ppwStart, iLetter); }
