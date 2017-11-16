@@ -14,6 +14,8 @@
 #define min(a,b)	((a<b) ? a : b)
 #define max(a,b)	((a<b) ? b : a)
 
+#undef bzero
+void bzero(void * : byte_count(n), size_t n);
 
 /*
  *	plane allocation structures and routines

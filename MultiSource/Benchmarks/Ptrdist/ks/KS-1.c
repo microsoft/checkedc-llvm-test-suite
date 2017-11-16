@@ -55,7 +55,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
-	dest = atol(strtok(line, " \t\n"))-1;
+	dest = atol(strtok((_Nt_array_ptr<char>)line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
 	TRY(head = prev = calloc(1, sizeof(Module)),
@@ -64,7 +64,8 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	    exit(1));
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
-    _Nt_array_ptr<char> tok = NULL;
+	// TODO: Review after https://github.com/Microsoft/checkedc-clang/issues/424 is addressed
+    _Nt_array_ptr<char> tok : bounds(unknown) = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
 	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
