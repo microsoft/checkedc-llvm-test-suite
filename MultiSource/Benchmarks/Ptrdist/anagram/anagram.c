@@ -136,6 +136,7 @@
 #include <sys/stat.h>
 #include <setjmp.h>
 #include <unistd.h>
+#include "hacks.h"
 
 jmp_buf jbAnagram;
 
@@ -445,7 +446,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     pw = NextWord();
     bzero(pw->aqMask, sizeof(Quad)*MAX_QUADS);
     /* Zero(pw->aqMask); */
-    pw->pchWord = pchWord;
+    _Unchecked { pw->pchWord = pchWord; }
     pw->cchLength = cchLength;
     for (i = 0; i < ALPHABET; i++) {
         pw->aqMask[alPhrase[i].iq] |=
@@ -458,7 +459,7 @@ void
 AddWords(void) {
     _Array_ptr<char> pchLowerBounds = pchDictionary;
     _Array_ptr<char> pchUpperBounds = pchDictionary + pchDictionarySize;
-    _Array_ptr<char> pch : bounds(pchLowerBounds, pchUpperBounds) = pchDictionary;     /* walk through the dictionary */
+    UncheckedBoundsInit(_Array_ptr<char>, pch, bounds(pchLowerBounds, pchUpperBounds), pchDictionary)     /* walk through the dictionary */
 
     cpwCand = 0;
 
@@ -470,7 +471,7 @@ AddWords(void) {
             _Array_ptr<char> wordStart = pch;
             _Array_ptr<char> wordEnd = pch+wordLength;
             _Dynamic_check(wordEnd <= pchUpperBounds);
-            BuildWord(pch+2, wordStart, wordEnd);
+            _Unchecked { BuildWord(pch+2, wordStart, wordEnd); }
         }
         pch += *pch;
     }
@@ -509,7 +510,7 @@ static int X;
   int i;
   X = (X+1) & 1023;
   if (X != 0) return;
-    for (i = 0; i < cpwLast; i++) wprint((_Nt_array_ptr<char>)apwSol[i]->pchWord);
+    for (i = 0; i < cpwLast; i++) _Unchecked { wprint((_Nt_array_ptr<char>)apwSol[i]->pchWord); }
     printf("\n");
 }
 
@@ -588,8 +589,8 @@ void FindAnagram(_Array_ptr<Quad> pqMask : count(MAX_QUADS),
              */
 	    ppwEnd = &apwCand[0];
 	    ppwEnd += cpwCand;
-            FindAnagram(&aqNext[0],
-			ppwStart, iLetter);
+            _Unchecked { FindAnagram(&aqNext[0],
+			ppwStart, iLetter); }
         } else DumpWords();             /* found one */
         cchPhraseLength += pw->cchLength;
         --cpwLast;
@@ -636,13 +637,13 @@ _Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+si
     : bounds(achPhrase, achPhrase+size) {
     if (fInteractive) printf(">");
     fflush(stdout);
-    if (fgets(pch, size, stdin) == NULL) {
+    _Unchecked { if (fgets(pch, size, stdin) == NULL) _Checked {
 #ifdef PLUS_STATS
 	PrintDerefStats(stderr);
         PrintHeapSize(stderr);
 #endif /* PLUS_STATS */
 	exit(0);
-    }
+    } }
     return(pch);
 }
 
@@ -674,7 +675,7 @@ int Cdecl main(int cpchArgc, _Array_ptr<_Nt_array_ptr<char>> ppchArgv : count(cp
             cpwLast = 0;
             SortCandidates();
             _Unchecked{ if (setjmp(jbAnagram) == 0)
-                _Checked { FindAnagram(&aqMainMask[0], &apwCand[0], 0); } }
+                FindAnagram(&aqMainMask[0], &apwCand[0], 0); }
             Stat(printf("%lu:%lu probes\n", ulHighCount, ulLowCount);)
         }
     }
