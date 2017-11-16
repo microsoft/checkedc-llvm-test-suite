@@ -50,7 +50,8 @@ static void AddEdges(int count1, Graph retval, int numproc,
     helper[i] = retval->vlist[i];
   }
 
-  for (tmp = retval->vlist[j].starting_vertex; tmp; tmp=tmp->next)
+  _Unchecked { tmp = retval->vlist[j].starting_vertex; }
+  for (; tmp; tmp=tmp->next)
     {
       for (i=0; i<numproc*perproc; i++) 
         {
@@ -63,7 +64,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
               dist = compute_dist(i,count1,numvert);
               pn = i/perproc;
               offset = i % perproc;
-              dest = ((helper[pn].block)+offset);
+              _Unchecked { dest = ((helper[pn].block)+offset); }
               hash = tmp->edgehash;
               unchecked { HashInsert((void*)dist,(unsigned int) dest,hash); }
               /*assert(4, HashLookup((unsigned int) dest,hash) == (void*) dist);*/
@@ -94,16 +95,16 @@ Graph MakeGraph(int numvert, int numproc)
       v = NULL;
       for (i=0; i<perproc; i++) 
         {
-          tmp = block+(perproc-i-1);
+          _Unchecked { tmp = block+(perproc-i-1); }
           HashRange = numvert/4;
           tmp->mindist = 9999999;
           tmp->edgehash = MakeHash(numvert/4,hashfunc);
           tmp->next = v;
           v = tmp;
         }
-      retval->vlist[j].block = block;
+      _Unchecked { retval->vlist[j].block = block; }
       retval->vlist[j].len = perproc;
-      retval->vlist[j].starting_vertex = v;
+      _Unchecked { retval->vlist[j].starting_vertex = v; }
     }
 
   chatting("Make phase 3\n");
@@ -119,7 +120,7 @@ Graph MakeGraph(int numvert, int numproc)
 }
 
 void chatting(nt_array_ptr<char> str) {
-  printf(str);
+  printf("%s", str);
 }
 
 

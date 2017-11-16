@@ -15,6 +15,7 @@
 #include "em3d.h"
 #include "util.h"
 #include <stdchecked.h>
+#include "hacks.h"
 #pragma BOUNDS_CHECKED ON
 
 extern int NumNodes;
@@ -40,14 +41,14 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   prev_node = calloc(1, sizeof(node_t));
   node_table[0] = prev_node;
   *values = gen_uniform_double();
-  prev_node->value = values++;
+  _Unchecked { prev_node->value = values++; }
   prev_node->from_count = 0;
   
   /* Now we fill the node_table with allocated nodes */
   for (i=1; i<size; i++) {
     cur_node = calloc(1, sizeof(node_t));
     *values = gen_uniform_double();
-    cur_node->value = values++;
+    _Unchecked { cur_node->value = values++; }
     cur_node->from_count = 0;
     node_table[i] = cur_node;
     prev_node->next = cur_node;
@@ -69,8 +70,8 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
     array_ptr<ptr<node_t>> tmp : count(degree) = calloc(degree, (sizeof(ptr<node_t>)));
     dynamic_check(tmp != NULL);
 
-    cur_node->to_nodes = tmp;
     cur_node->degree = degree;
+    _Unchecked { cur_node->to_nodes = tmp; }
 
     for (j=0; j<degree; j++) {
       do {
@@ -84,7 +85,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
         }
 
         /* We expect these accesses to be remote */
-        local_table = table[dest_proc].table;
+        _Unchecked { local_table = table[dest_proc].table; }
         other_node = local_table[number];   /* <------ 4% load miss penalty */
         if (!other_node) {
           chatting("Error! on dest %d @ %d\n",number,dest_proc);
@@ -92,7 +93,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
         }
 
         array_ptr<ptr<node_t>> ub = tmp + j;
-        array_ptr<ptr<node_t>> tmp2 : bounds(tmp2, ub) = tmp;
+        UncheckedBoundsInit(array_ptr<ptr<node_t>>, tmp2, bounds(tmp2, ub), tmp);
         for ( ; tmp2 < ub; tmp2++)
           if (other_node == *tmp2) break;
         k = tmp2 - tmp;
@@ -157,12 +158,12 @@ void fill_from_fields(ptr<node_t> nodelist, int degree) {
 
       if (!other_node) { chatting("Help!!\n"); }
       count=(other_node->from_length)++;  /* <----- 30% load miss penalty */
-      otherlist=other_node->from_values;  /* <----- 10% load miss penalty */
+      _Unchecked { otherlist=other_node->from_values;  /* <----- 10% load miss penalty */ }
       thecount=other_node->from_count;
       if (!otherlist) {
         /*chatting("node 0x%p list 0x%p count %d\n",
                  other_node,otherlist,thecount);*/
-        otherlist = other_node->from_values;
+        _Unchecked { otherlist = other_node->from_values; }
         /*chatting("No from list!! 0x%p\n",otherlist);*/
       }
       
@@ -204,8 +205,8 @@ void make_tables(ptr<table_t> table,int groupname) {
   /* We use remote writes */
   table->e_table[groupname].size = n_nodes/PROCS;
   table->h_table[groupname].size = n_nodes/PROCS;
-  table->e_table[groupname].table = e_table;
-  table->h_table[groupname].table = h_table;
+  _Unchecked { table->e_table[groupname].table = e_table; }
+  _Unchecked { table->h_table[groupname].table = h_table; }
 }
 
 void make_all_neighbors(ptr<table_t> table,int groupname) {
@@ -217,16 +218,16 @@ void make_all_neighbors(ptr<table_t> table,int groupname) {
   init_random(SEED2*groupname);
   /* We expect table to be remote */
   local_table_size = table->h_table[groupname].size;
-  local_table = table->h_table[groupname].table;
-  local_table_array = table->e_table;
+  _Unchecked { local_table = table->h_table[groupname].table; }
+  _Unchecked { local_table_array = table->e_table; }
   first_node = local_table[0];
   make_neighbors(first_node,
 		 local_table_array,n_nodes/PROCS,
 		 d_nodes,local_p,groupname);
 
   local_table_size = table->e_table[groupname].size;
-  local_table = table->e_table[groupname].table;
-  local_table_array = table->h_table;
+  _Unchecked { local_table = table->e_table[groupname].table; }
+  _Unchecked { local_table_array = table->h_table; }
   first_node = local_table[0];
   make_neighbors(first_node,
 		 local_table_array,n_nodes/PROCS,
@@ -241,13 +242,13 @@ void update_all_from_coeffs(ptr<table_t> table, int groupname)
 
   /* Done by do_all, table not local */
   local_table_size = table->h_table[groupname].size;
-  local_table = table->h_table[groupname].table;
+  _Unchecked { local_table = table->h_table[groupname].table; }
   /* We expect this to be local */
   first_node = local_table[0];
   update_from_coeffs(first_node);
 
   local_table_size = table->e_table[groupname].size;
-  local_table = table->e_table[groupname].table;
+  _Unchecked { local_table = table->e_table[groupname].table; }
   first_node = local_table[0];
   update_from_coeffs(first_node);
 }
@@ -260,12 +261,12 @@ void fill_all_from_fields(ptr<table_t> table, int groupname)
 
   init_random(SEED3*groupname);
   local_table_size = table->h_table[groupname].size;
-  local_table = table->h_table[groupname].table;
+  _Unchecked { local_table = table->h_table[groupname].table; }
   first_node = local_table[0];
   fill_from_fields(first_node,d_nodes);
 
   local_table_size = table->e_table[groupname].size;
-  local_table = table->e_table[groupname].table;
+  _Unchecked { local_table = table->e_table[groupname].table; }
   first_node = local_table[0];
   fill_from_fields(first_node,d_nodes);
 }
@@ -277,12 +278,12 @@ void localize(ptr<table_t> table, int groupname)
   ptr<node_t> first_node = NULL;
 
   local_table_size = table->h_table[groupname].size;
-  local_table = table->h_table[groupname].table;
+  _Unchecked { local_table = table->h_table[groupname].table; }
   first_node = local_table[0];
   localize_local(first_node);
 
   local_table_size = table->e_table[groupname].size;
-  local_table = table->e_table[groupname].table;
+  _Unchecked { local_table = table->e_table[groupname].table; }
   first_node = local_table[0];
   localize_local(first_node);
 }
@@ -339,31 +340,32 @@ ptr<graph_t> initialize_graph(void) {
   chatting("cleanup for return now\n");
   for (i=0; i<NumNodes; i++) {
     int local_table_size = table->e_table[i*blocksize].size;
-    array_ptr<ptr<node_t>> local_table : count(local_table_size) = table->e_table[i*blocksize].table;
+    array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+    _Unchecked { local_table = table->e_table[i*blocksize].table; }
     ptr<node_t> local_node_r = local_table[0];
 
     retval->e_nodes[i] = local_node_r;
       
     local_table_size = table->h_table[i*blocksize].size;
-    local_table = table->h_table[i*blocksize].table;
+    _Unchecked { local_table = table->h_table[i*blocksize].table; }
     local_node_r = local_table[0];
     retval->h_nodes[i] = local_node_r;
     for (j = 1; j < blocksize; j++) {
       _Ptr<node_t>  local_node_l = NULL;
 
       local_table_size = table->e_table[i*blocksize+j-1].size;
-      local_table = table->e_table[i*blocksize+j-1].table;
+      _Unchecked { local_table = table->e_table[i*blocksize+j-1].table; }
       local_node_l = (_Ptr<node_t>)local_table[(n_nodes/PROCS)-1];
       local_table_size = table->e_table[i*blocksize+j].size;
-      local_table = table->e_table[i*blocksize+j].table;
+      _Unchecked { local_table = table->e_table[i*blocksize+j].table; }
       local_node_r = local_table[0];
       local_node_l->next = local_node_r;
       
       local_table_size = table->h_table[i*blocksize+j-1].size;
-      local_table = table->h_table[i*blocksize+j-1].table;
+      _Unchecked { local_table = table->h_table[i*blocksize+j-1].table; }
       local_node_l = (_Ptr<node_t>)local_table[(n_nodes/PROCS)-1];
       local_table_size = table->h_table[i*blocksize+j].size;
-      local_table = table->h_table[i*blocksize+j].table;
+      _Unchecked { local_table = table->h_table[i*blocksize+j].table; }
       local_node_r = local_table[0];
       local_node_l->next = local_node_r;
     }
