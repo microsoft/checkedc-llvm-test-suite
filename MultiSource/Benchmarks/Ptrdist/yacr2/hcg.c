@@ -34,15 +34,15 @@ AllocHCG(void)
 {
     HCG = malloc((channelNets + 1) * sizeof(nodeHCGType));
     storageRootHCG = malloc((channelNets + 1) * (channelNets + 1) * sizeof(ulong));
-    storageHCG = storageRootHCG;
+    _Unchecked { storageHCG = storageRootHCG; }
     storageLimitHCG = (channelNets + 1) * (channelNets + 1);
 }
 
 void
 FreeHCG(void)
 {
-    free(HCG);
-    free(storageRootHCG);
+    _Unchecked { free(HCG); }
+    _Unchecked { free(storageRootHCG); }
     storageLimitHCG = 0;
 }
 
@@ -70,7 +70,7 @@ BuildHCG(void)
 	last = LAST[net];
 	constraint = 0;
 	HCG[net].nets = constraint;
-	HCG[net].netsHook = storageHCG;
+	_Unchecked { HCG[net].netsHook = storageHCG; }
 	for (which = 1; which <= channelNets; which++) {
 	    if (((FIRST[which] < first) && (LAST[which] < first)) || ((FIRST[which] > last) && (LAST[which] > last))) {
 		/*

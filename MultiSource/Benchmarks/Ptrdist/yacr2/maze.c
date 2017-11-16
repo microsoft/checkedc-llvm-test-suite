@@ -73,10 +73,10 @@ InitAllocMaps(void)
 void
 FreeAllocMaps(void)
 {
-    free(horzPlane);
-    free(vertPlane);
-    free(viaPlane);
-    free(mazeRoute);
+    _Unchecked { free(horzPlane); }
+    _Unchecked { free(vertPlane); }
+    _Unchecked { free(viaPlane); }
+    _Unchecked { free(mazeRoute); }
 }
 
 
@@ -318,21 +318,21 @@ DrawNets(void)
     int numLeft = 0;
 
     /* initialize maps to empty */
-    bzero(horzPlane,
-	  (int)((channelColumns+1)*(channelTracks+2)));
-    bzero(vertPlane,
-	  (int)((channelColumns+1)*(channelTracks+2)));
-    bzero(viaPlane,
-	  (int)((channelColumns+1)*(channelTracks+2)));
-    bzero(mazeRoute,
-	  (int)(channelColumns+1));
+    _Unchecked { bzero(horzPlane,
+	  (int)((channelColumns+1)*(channelTracks+2))); }
+    _Unchecked { bzero(vertPlane,
+	  (int)((channelColumns+1)*(channelTracks+2))); }
+    _Unchecked { bzero(viaPlane,
+	  (int)((channelColumns+1)*(channelTracks+2))); }
+    _Unchecked { bzero(mazeRoute,
+	  (int)(channelColumns+1)); }
 
     /* draw all horizontal segments */
     for (i=1; i<=channelNets; i++) {
 	if (FIRST[i] != LAST[i])
-	    DrawSegment(horzPlane,
+	    _Unchecked { DrawSegment(horzPlane,
 			FIRST[i], netsAssign[i],
-			LAST[i], netsAssign[i]);
+			LAST[i], netsAssign[i]); }
 #ifdef VERBOSE
 	printf("Just routed net %d...\n", i);
 	PrintChannel();
@@ -346,43 +346,43 @@ DrawNets(void)
 	}
 	else if ((BOT[i] == 0) && (TOP[i] != 0)) {
 	    /* only one segment, therefore no vertical constraint violation */
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, 0,
-			i, netsAssign[TOP[i]]);
+			i, netsAssign[TOP[i]]); }
 	    DrawVia(i, netsAssign[TOP[i]]);
 	}
 	else if ((TOP[i] == 0) && (BOT[i] != 0)) {
 	    /* only one segment, therefore no vertical constraint violation */
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, netsAssign[BOT[i]],
-			i, channelTracks+1);
+			i, channelTracks+1); }
 	    DrawVia(i, netsAssign[BOT[i]]);
 	}
 	/* two segments to route */
 	else if ((TOP[i] == BOT[i]) && (FIRST[TOP[i]] == LAST[TOP[i]])) {
 	    /* same net, no track needed to route */
 	    assert((FIRST[TOP[i]] == i) && (LAST[TOP[i]] == i));
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, 0,
-			i, channelTracks+1);
+			i, channelTracks+1); }
 	}
 	else if (TOP[i] == BOT[i]) {
 	    /* connecting to same track, therefore no vcv */
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, 0,
-			i, channelTracks+1);
+			i, channelTracks+1); }
 	    DrawVia(i, netsAssign[BOT[i]]);
 	}
 	/* two segments to route, going to different tracks */
 	else if (netsAssign[TOP[i]] < netsAssign[BOT[i]]) {
 	    /* no vertical constraint violation */
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, 0,
-			i, netsAssign[TOP[i]]);
+			i, netsAssign[TOP[i]]); }
 	    DrawVia(i, netsAssign[TOP[i]]);
-	    DrawSegment(vertPlane,
+	    _Unchecked { DrawSegment(vertPlane,
 			i, netsAssign[BOT[i]],
-			i, channelTracks+1);
+			i, channelTracks+1); }
 	    DrawVia(i, netsAssign[BOT[i]]);
 	}
 	/* otherwise, maze routing is required */
@@ -490,7 +490,7 @@ Maze1Mech(unsigned long i,		/* column */
 	  unsigned long b1,		/* bent channel from b1 to b2 */
 	  unsigned long b2,		/* s1, b1 are at the terminals */
 	  int bXdelta, int bYdelta)	/* bend X, Y delta from s */
-{
+_Unchecked {
     if (SegmentFree(vertPlane,		/* straight vert seg in col i */
 		    i, s1,
 		    i, s2) &&
@@ -668,24 +668,24 @@ ExtendOK(unsigned long net, _Array_ptr<char> plane : count((channelColumns + 1)*
 	return 1;	/* inside the net */
     if ((x1 < FIRST[net]) && (x2 > LAST[net])) {
 	/* subsumes */
-	return (SegmentFree(plane,
+	_Unchecked { return (SegmentFree(plane,
 			    x1, y1,
 			    FIRST[net]-1, y1) &&
 		SegmentFree(plane,
 			    LAST[net]+1, y1,
-			    x2, y1));
+			    x2, y1)); }
     }
     else if (x1 < FIRST[net]) {
 	/* to the left possibly overlapping */
-	return SegmentFree(plane,
+	_Unchecked { return SegmentFree(plane,
 			   x1, y1,
-			   FIRST[net]-1, y1);
+			   FIRST[net]-1, y1); }
     }
     else if (x2 > LAST[net]) {
 	/* to the right possibly overlapping */
-	return SegmentFree(plane,
+	_Unchecked { return SegmentFree(plane,
 			   LAST[net]+1, y1,
-			   x2, y1);
+			   x2, y1); }
     }
     /* should not get here */
     abort();
@@ -717,7 +717,7 @@ Maze2Mech(unsigned long bentNet,	/* net to bend */
 	colFree = 1;
 	for (col = xStart;
 	     colFree && (col != xEnd);
-	     col += bXdelta) { /* search for col */
+	     col += bXdelta) _Unchecked { /* search for col */ // _Unchecked Required for all calls to SegmentFree and DrawSegment
 	    if ((colFree = SegmentFree(horzPlane,	/* bent horz seg */
 			    i, row,
 			    col, row)) &&
@@ -923,7 +923,7 @@ Maze3Mech(unsigned long topNet,		/* top net to bend */
 	    if (botEnd <= botStart)
 		continue;
 	    for (topCol = topStart; topCol <= topEnd; topCol++) {
-		for (botCol = botStart; botCol <= botEnd; botCol++) {
+		for (botCol = botStart; botCol <= botEnd; botCol++) _Unchecked {  // Required for all calls to SegmentFree and DrawSegment
 		    if ((topCol != i) && (botCol != i) &&
 			(topRow != botRow) && (topCol != botCol) &&
 			SegmentFree(vertPlane,	/* top down */

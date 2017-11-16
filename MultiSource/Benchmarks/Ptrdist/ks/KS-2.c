@@ -138,9 +138,9 @@ FindMaxGpAndSwap(void)
 
     /* swap the nodes out, into the swap lists */
     assert(maxA != NULL);
-    SwapNode(maxPrevA, maxA, &(groupA), &(swapToB));
+    _Unchecked { SwapNode(maxPrevA, maxA, &(groupA), &(swapToB)); }
     assert(maxB != NULL);
-    SwapNode(maxPrevB, maxB, &(groupB), &(swapToA));
+    _Unchecked { SwapNode(maxPrevB, maxB, &(groupB), &(swapToA)); }
 
 
     /* update the inverse mapping, these two node are now gone */
@@ -356,8 +356,8 @@ main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
 
 #ifndef KS_MODE
 	/* compute the swap costs */
-	ComputeDs(&(groupA), GroupA, SwappedToA);
-	ComputeDs(&(groupB), GroupB, SwappedToB);
+	_Unchecked { ComputeDs(&(groupA), GroupA, SwappedToA); }
+	_Unchecked { ComputeDs(&(groupB), GroupB, SwappedToB); }
 #endif /* !KS_MODE */
 
 	/* for all pairs of nodes in A,B */

@@ -108,9 +108,9 @@ void check_patients_inside(ptr<struct Village> village, ptr<struct List> list)
     if (p->time_left == 0) {
       t = village->hosp.free_personnel;
       village->hosp.free_personnel = t+1;
-      l = &(village->hosp.inside);
+      _Unchecked { l = &(village->hosp.inside); }
       removeList(l, p); 
-      l = &(village->returned);
+      _Unchecked { l = &(village->returned); }
       addList(l, p); }    
     list = list->forward;       /* :) adt_pf detected */
   } 
