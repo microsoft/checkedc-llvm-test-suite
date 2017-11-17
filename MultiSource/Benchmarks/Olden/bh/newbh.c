@@ -46,25 +46,21 @@ void freetree(nodeptr n);
 void freetree1(nodeptr n);
 int old_subindex(icstruct ic, int l);
 
-_Unchecked
-int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc));
+int dealwithargs(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc));
 int error(char *msg : itype(_Nt_array_ptr<char>));
 
 int arg1;
 
 /* Used to setup runtime system, get arguments-- see old_main */
-_Unchecked
-int main(int argc, _Array_ptr<char*> argv : count(argc)) {
+int main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc)) {
   treeptr t = NULL;
 
   /* Initialize the runtime system */
   dealwithargs(argc, argv);
   chatting("nbody = %d, numnodes = %d\n", nbody, NumNodes);
 
-  _Checked {
   t = old_main();
   return 0;
-  }
 }
 
 /* global! */

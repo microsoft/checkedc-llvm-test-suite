@@ -6,8 +6,7 @@
 extern int NumNodes;
 extern int nbody;
 
-_Unchecked
-int dealwithargs(int argc, _Array_ptr<char *> argv : count(argc)) {
+int dealwithargs(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc)) {
   int level;
 
   if (argc > 2) 

@@ -57,7 +57,7 @@ typedef unsigned char byte;
  * STRING: for null-terminated strings which are not taken apart.
  */
 
-typedef char *string;
+typedef _Nt_array_ptr<char> string;
 
 /*
  * REAL: default type is double; if single precision calculation is

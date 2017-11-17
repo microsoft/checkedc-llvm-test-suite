@@ -8,7 +8,7 @@
 
 #ifdef TORONTO
 #include <stdio_checked.h>
-#define chatting printf
+#define chatting(...) _Unchecked { printf(__VA_ARGS__); }
 #define PLAIN
 #define LOCAL(xxx) xxx
 #define local
@@ -236,7 +236,7 @@ typedef struct {
 
 
 
-#define assert(b,n) if (!(b)) _Unchecked {chatting("Assertion Failure #%d", (n)); abort();}
+#define assert(b,n) if (!(b)) {chatting("Assertion Failure #%d", (n)); abort();}
 
 
 #define TASKLIMIT 256
