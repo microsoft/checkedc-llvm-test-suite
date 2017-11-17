@@ -261,6 +261,7 @@ void Fatal(_Nt_array_ptr<const char> pchMsg, unsigned u) {
 }
 
 #undef isalpha
+#undef isdigit
 #undef tolower
 #undef bzero
 void bzero(void *s : byte_count(n), size_t n);
