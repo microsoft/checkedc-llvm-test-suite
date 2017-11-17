@@ -108,7 +108,7 @@ treeptr old_main(void) {
     ADDV(cmv,cmv,points.cmv);
     }
 
-  _Unchecked { chatting("bodies created \n"); }
+  chatting("bodies created \n");
   DIVVS(cmr, cmr, (real) nbody);		/* normalize cm coords */
   DIVVS(cmv, cmv, (real) nbody);
 
@@ -135,7 +135,7 @@ treeptr old_main(void) {
   }
   for (tmp=0; tmp<NumNodes; tmp++) 
     {
-     _Unchecked { chatting("Bodies per %d = %d\n",tmp ,bodiesper[tmp]); }
+     chatting("Bodies per %d = %d\n",tmp ,bodiesper[tmp]);
      t->bodiesperproc[tmp]=ptrper[tmp];
     }
 
@@ -352,7 +352,7 @@ void my_free(nodeptr n)
     Next(p) = bp_free_list;
     bp_free_list = p;
   }
-  else /* CELL */ _Unchecked {
+  else /* CELL */ {
     cellptr p = 0;
     _Unchecked { p = _Assume_bounds_cast<cellptr>(n); }
     FL_Next(p) = cp_free_list;
@@ -1184,7 +1184,6 @@ void printtree(nodeptr n)
 { ptree(n, 0);
 }
 
-_Unchecked
 void ptree(nodeptr n, int level)
 { 
   nodeptr r = NULL;
