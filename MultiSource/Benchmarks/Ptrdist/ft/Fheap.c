@@ -42,7 +42,7 @@
 #include "Fheap.h"
 #include "Fstruct.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef DO_INLINE
 #define INLINE inline

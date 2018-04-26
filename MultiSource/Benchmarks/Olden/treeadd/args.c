@@ -7,7 +7,7 @@
 
 #include "tree.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
  int NumNodes;

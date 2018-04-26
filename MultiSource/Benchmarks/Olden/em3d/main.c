@@ -3,7 +3,7 @@
 #include "em3d.h"
 #include "make_graph.h"
 #include <stdchecked.h>
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 extern int NumNodes;
 

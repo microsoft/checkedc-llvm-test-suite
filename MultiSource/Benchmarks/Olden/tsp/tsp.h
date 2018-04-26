@@ -3,7 +3,7 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 /* Toronto's hack */
@@ -66,4 +66,4 @@ Tree tsp(Tree t, int sz, int nproc);
 
 
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

@@ -19,7 +19,7 @@
 #include "types.h"
 #include "channel.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*

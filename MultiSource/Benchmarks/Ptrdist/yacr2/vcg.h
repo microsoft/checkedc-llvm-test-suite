@@ -18,7 +18,7 @@
 #ifndef VCG_H
 #define VCG_H
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 /*
  *
  * Defines.
@@ -253,5 +253,5 @@ VCV(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 
 #endif	/* VCG_CODE */
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif	/* VCG_H */

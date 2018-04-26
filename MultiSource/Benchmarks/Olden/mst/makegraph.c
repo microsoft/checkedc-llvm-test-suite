@@ -1,7 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "mst.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /*#define assert(num,a) \
    if (!(a)) unchecked {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}*/

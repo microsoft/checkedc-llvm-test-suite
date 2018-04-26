@@ -14,7 +14,7 @@
 #include "power.h"
 #include <stdio.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /* Domain of thetaR->P map is 0.65 to 1.00 [index*0.01+0.65] */
 double map_P _Checked[36] =

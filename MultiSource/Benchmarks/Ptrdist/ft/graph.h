@@ -31,7 +31,7 @@
 #ifndef _graph_h
 #define _graph_h
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 #define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
@@ -80,6 +80,6 @@ typedef struct _Vertices
 _Ptr<Vertices>  GenGraph(int nVertex, int nEdge);
 void      PrintGraph(_Ptr<Vertices>  graph);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 
 #endif

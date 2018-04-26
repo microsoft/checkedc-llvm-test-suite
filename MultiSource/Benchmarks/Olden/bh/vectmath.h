@@ -6,7 +6,7 @@
  * 	    It's free because it's yours.
  */
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifndef THREEDIM
 #  ifndef TWODIM
@@ -294,7 +294,7 @@ extern double sqrt(double x);
 
 
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 
 
 

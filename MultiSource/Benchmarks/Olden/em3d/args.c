@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #endif
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 int NumNodes;

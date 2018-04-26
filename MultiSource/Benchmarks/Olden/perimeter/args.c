@@ -2,7 +2,7 @@
 
 #include <stdchecked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifndef TORONTO
 #include <cm/cmmd.h>

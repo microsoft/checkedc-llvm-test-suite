@@ -12,7 +12,7 @@
 #include "defs.h"
 #include "code.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int nbody;
 

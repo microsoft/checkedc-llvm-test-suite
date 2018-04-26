@@ -33,7 +33,7 @@
 
 #include "graph.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 typedef Vertices Item;
 
@@ -43,6 +43,6 @@ int LessThan(_Ptr<Item> , _Ptr<Item> );
 int Equal(_Ptr<Item> , _Ptr<Item> );
 _Ptr<Item>  Subtract(_Ptr<Item> , int);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 
 #endif

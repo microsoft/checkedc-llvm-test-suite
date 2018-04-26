@@ -2,7 +2,7 @@
 
 #include <stdchecked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 extern int NumNodes;
@@ -55,4 +55,4 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 
 
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

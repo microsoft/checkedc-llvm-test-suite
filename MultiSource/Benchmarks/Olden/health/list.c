@@ -9,7 +9,7 @@
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include "health.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 void addList(ptr<struct List> list, ptr<struct Patient> patient) {
   ptr<struct List> b = NULL;

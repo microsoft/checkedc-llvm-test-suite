@@ -2,7 +2,7 @@
 #include <stdchecked.h>
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 extern int NumNodes,NDim;
 extern int flag;

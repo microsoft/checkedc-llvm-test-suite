@@ -17,7 +17,7 @@
 #ifndef HCG_H
 #define HCG_H
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 /*
  *
  * Defines.
@@ -118,5 +118,5 @@ NoHCV(_Array_ptr<nodeHCGType> : count(channelNets + 1),
 
 #endif	/* HCG_CODE */
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif	/* HCG_H */

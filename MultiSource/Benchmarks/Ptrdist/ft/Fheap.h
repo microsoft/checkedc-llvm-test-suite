@@ -51,7 +51,7 @@
  */
 #include "item.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 #define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
@@ -223,6 +223,6 @@ _Ptr<HeapP>  Find(_Ptr<HeapP>  h, _Ptr<Item>  item);
  */
 _Ptr<Item>  ItemOf(_Ptr<HeapP>  h);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 
 #endif

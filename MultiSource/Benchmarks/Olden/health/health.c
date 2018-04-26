@@ -9,7 +9,7 @@
 #include <math.h>
 #include "health.h"
 #include <assert.h>
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int  max_level;
 long max_time;
