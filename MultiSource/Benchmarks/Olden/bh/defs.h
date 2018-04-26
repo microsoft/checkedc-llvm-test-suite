@@ -26,7 +26,7 @@ int NumNodes;
 #define THREEDIM
 #include "vectmath.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define MAX_NUM_NODES 64
 extern double fabs(double);
@@ -250,5 +250,5 @@ extern int nbody;
 
 
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 

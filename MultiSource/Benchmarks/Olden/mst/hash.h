@@ -9,7 +9,7 @@ struct hash_entry {
   ptr<struct hash_entry> next;
 };
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 typedef ptr<struct hash_entry> HashEntry;
 
@@ -26,4 +26,4 @@ unchecked void *HashLookup(unsigned int key, Hash hash);
 unchecked void HashInsert(void *entry, unsigned int key, Hash hash);
 void HashDelete(unsigned int key, Hash hash);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

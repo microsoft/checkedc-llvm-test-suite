@@ -39,7 +39,7 @@
 #ifndef _fstruct_h
 #define _fstruct_h
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define ITEM(P)		((*(P)).item)
 #define PARENT(P)	((*(P)).parent)
@@ -57,6 +57,6 @@
 #define FALSE		0
 #define MAX_RANK	10000
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 
 #endif

@@ -4,7 +4,7 @@
 
 #include <stdchecked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 struct node { 
   int value;
@@ -20,4 +20,4 @@ typedef struct future_cell_int{
 
 #define NIL ((ptr<HANDLE>) 0)
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

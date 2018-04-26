@@ -39,7 +39,7 @@ extern double log(double x);
 #include "future-cell.h"
 #endif
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static double median(double min,double max,int n);
 static double uniform(double min, double max);

@@ -3,7 +3,7 @@
 #include <stdchecked.h>
 #include <stdlib_checked.h>
 #include "hash.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define printf(...) unchecked { printf(__VA_ARGS__); }
 #define assert(num,a) if (!(a)) {printf("Assertion failure:%d in hash\n",num); exit(-1);}

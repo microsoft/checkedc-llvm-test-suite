@@ -1,7 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "em3d.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 int nonlocals=0;
 void compute_nodes(register ptr<node_t> nodelist)
 {

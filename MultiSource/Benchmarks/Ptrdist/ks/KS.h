@@ -13,7 +13,7 @@
 #include <string.h>
 #include <assert.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /*
  *      module configuration
@@ -101,4 +101,4 @@ void SwapSubsetAndReset(unsigned long iMax);
 void PrintResults(int verbose);
 int main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc));
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

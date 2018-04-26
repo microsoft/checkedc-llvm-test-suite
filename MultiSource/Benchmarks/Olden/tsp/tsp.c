@@ -5,7 +5,7 @@
 #include "future-cell.h"
 #endif
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static Tree conquer(Tree t);
 static Tree merge(Tree a, Tree b, Tree t, int nproc);

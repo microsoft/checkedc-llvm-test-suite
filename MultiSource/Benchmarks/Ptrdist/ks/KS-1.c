@@ -15,7 +15,7 @@
 
 #include "KS.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 NetPtr modules _Checked [G_SZ];		/* all modules -> nets */
 unsigned long numModules;

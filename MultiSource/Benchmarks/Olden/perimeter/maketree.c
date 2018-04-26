@@ -4,7 +4,7 @@
 #include "perimeter.h"
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static int CheckOutside(int x, int y) 
 {

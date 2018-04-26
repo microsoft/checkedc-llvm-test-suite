@@ -1,7 +1,7 @@
 #define global 
 #include "defs.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 typedef struct {
   bodyptr pskip;		/* body to skip in force evaluation */

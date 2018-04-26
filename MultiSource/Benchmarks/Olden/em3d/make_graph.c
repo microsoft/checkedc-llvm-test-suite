@@ -16,7 +16,7 @@
 #include "util.h"
 #include <stdchecked.h>
 #include "hacks.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 extern int NumNodes;
 int NumMisses;

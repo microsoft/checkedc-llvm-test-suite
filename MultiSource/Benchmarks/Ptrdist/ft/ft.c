@@ -44,7 +44,7 @@
 #include "Fheap.h"
 #include "graph.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define MINUS_INFINITY		INT_MIN
 #define PLUS_INFINITY		INT_MAX

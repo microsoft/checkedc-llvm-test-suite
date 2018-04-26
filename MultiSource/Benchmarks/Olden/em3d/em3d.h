@@ -20,7 +20,7 @@ long lrand48(void);
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define chatting(...) unchecked { printf(__VA_ARGS__); }
 
 // extern char * min_ptr;
@@ -63,5 +63,5 @@ typedef struct table_t {
 void compute_nodes(ptr<node_t> nodelist);
 double gen_uniform_double(void);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif

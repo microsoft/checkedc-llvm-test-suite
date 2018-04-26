@@ -2,7 +2,7 @@
 
 #include <stdlib_checked.h>
 #include "em3d.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 #endif

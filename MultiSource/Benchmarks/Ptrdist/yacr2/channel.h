@@ -19,7 +19,7 @@
 #define CHANNEL_H
 
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 /*
  *
  * Defines.
@@ -111,5 +111,5 @@ DensityChannel(void);
 
 #endif	/* CHANNEL_CODE */
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif	/* CHANNEL_H */

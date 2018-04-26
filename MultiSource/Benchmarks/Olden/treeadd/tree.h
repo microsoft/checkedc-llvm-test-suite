@@ -8,7 +8,7 @@
 #include <string_checked.h>
 #include <stdchecked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 #define chatting(...) _Unchecked { printf(__VA_ARGS__); }
@@ -29,4 +29,4 @@ int TreeAdd (ptr<tree_t> t);
 
 
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
