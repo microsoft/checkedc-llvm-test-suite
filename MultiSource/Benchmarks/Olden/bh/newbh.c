@@ -77,7 +77,7 @@ treeptr old_main(void) {
   bodyptr prev=NULL;
   int tmp=0, range=((1<<NDIM) << NDIM) / NumNodes;
   int bodiesper _Checked[MAX_NUM_NODES];
-  bodyptr ptrper _Checked[MAX_NUM_NODES];
+  bodyptr ptrper _Checked[MAX_NUM_NODES] = {0};
 
   srand(123);					/*   set random generator   */
 
