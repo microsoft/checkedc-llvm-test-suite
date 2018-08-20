@@ -83,7 +83,7 @@ Graph MakeGraph(int numvert, int numproc)
   array_ptr<struct vert_st> block : count(perproc) = NULL;
   Graph retval = NULL;
 
-  retval = calloc<Graph>(1, sizeof(*retval));
+  retval = calloc<struct graph_st>(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
       retval->vlist[i].starting_vertex = NULL;
