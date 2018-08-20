@@ -83,7 +83,7 @@ Graph MakeGraph(int numvert, int numproc)
   array_ptr<struct vert_st> block : count(perproc) = NULL;
   Graph retval = NULL;
 
-  retval = (Graph)calloc(1, sizeof(*retval));
+  retval = calloc<Graph>(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
       retval->vlist[i].starting_vertex = NULL;
@@ -91,7 +91,7 @@ Graph MakeGraph(int numvert, int numproc)
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = calloc(perproc, sizeof(*tmp));
+      block = calloc<struct vert_st>(perproc, sizeof(*tmp));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {

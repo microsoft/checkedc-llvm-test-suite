@@ -18,7 +18,7 @@ void addList(ptr<struct List> list, ptr<struct Patient> patient) {
     b = list;
     list = list->forward; }
   
-  list = calloc(1, sizeof(struct List));
+  list = calloc<struct List>(1, sizeof(struct List));
   list->patient = patient;
   list->forward = NULL;
   list->back = b;

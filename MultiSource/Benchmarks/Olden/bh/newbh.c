@@ -82,7 +82,7 @@ treeptr old_main(void) {
   srand(123);					/*   set random generator   */
 
 /* Tree data structure is global, points to root, and bodylist, has size info */
-  t = (treeptr)malloc(sizeof(tree));
+  t = malloc<tree>(sizeof(tree));
   Root(t) = NULL;
   t->rmin[0] = -2.0;
   t->rmin[1] = -2.0;
@@ -364,7 +364,7 @@ void my_free(nodeptr n)
 bodyptr ubody_alloc(int p)
 { register bodyptr tmp = NULL;
 
-  tmp = (bodyptr)malloc(sizeof(body));
+  tmp = malloc<body>(sizeof(body));
 
   Type(tmp) = BODY;
   Proc(tmp) = p;
@@ -385,7 +385,7 @@ cellptr cell_alloc(int p)
   }
   else 
     {
-      tmp = (cellptr)malloc(sizeof(cell));
+      tmp = malloc<cell>(sizeof(cell));
     }
   Type(tmp) = CELL;
   Proc(tmp) = p;
