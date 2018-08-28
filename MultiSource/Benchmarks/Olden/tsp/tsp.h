@@ -8,6 +8,7 @@
 #ifdef TORONTO
 /* Toronto's hack */
 #define ALLOC(p, sz)      calloc(1, sz)
+#define ALLOC(T, p, sz)      calloc<T>(1, sz)
 #define chatting(...) _Unchecked { printf(__VA_ARGS__); } 
 extern int NumNodes, NDim;
 #endif

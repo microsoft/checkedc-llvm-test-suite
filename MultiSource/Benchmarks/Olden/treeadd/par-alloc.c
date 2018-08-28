@@ -17,7 +17,7 @@ ptr<tree_t> TreeAlloc (int level, int lo, int proc) {
     return NULL;
   else {
     ptr<tree_t> new = NULL, right = NULL, left = NULL;
-    new = (ptr<tree_t>) calloc(1, sizeof(tree_t));
+    new = calloc<tree_t>(1, sizeof(tree_t));
     left = TreeAlloc(level -1, lo+proc/2, proc/2);
     right=TreeAlloc(level-1,lo,proc/2);
     new->val = 1;

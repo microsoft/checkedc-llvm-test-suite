@@ -83,7 +83,7 @@ Tree build_tree(int n,int dir,int lo,int num_proc,double min_x,
 
   if (n==0) return NULL;
 
-  t = (Tree) ALLOC(lo,sizeof(*t));
+  t = (Tree) ALLOC(struct tree, lo, sizeof(*t));
 
   if (dir) {
     dir = !dir;

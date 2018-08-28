@@ -18,7 +18,7 @@ static array_ptr<void> localmalloc(int size) : byte_count(size)
   
   if (size>remaining) 
     {
-      temp = calloc(32768, sizeof(char));
+      temp = calloc<char>(32768, sizeof(char));
       if (!temp) printf("Error! malloc returns null\n");
       remaining = 32768;
     }
