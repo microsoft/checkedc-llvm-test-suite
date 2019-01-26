@@ -1,4 +1,39 @@
+include(External)
 llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
+
+set(SUPPORTED_GPU_CUDA_7_0
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53)
+set(SUPPORTED_GPU_CUDA_7_5
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53)
+set(SUPPORTED_GPU_CUDA_8_0
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62)
+set(SUPPORTED_GPU_CUDA_9_0
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70)
+set(SUPPORTED_GPU_CUDA_9_1
+  sm_30 sm_32 sm_35
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70 sm_72)
+set(SUPPORTED_GPU_CUDA_9_2
+  sm_30 sm_32 sm_35
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70 sm_72)
+set(SUPPORTED_GPU_CUDA_10_0
+  sm_30 sm_32 sm_35
+  sm_50 sm_52 sm_53
+  sm_60 sm_61 sm_62
+  sm_70 sm_72 sm_75)
 
 # Helper macro to extract version number at the end of the string
 # Input: get_version(Var String)
@@ -6,7 +41,7 @@ llvm_externals_find(TEST_SUITE_CUDA_ROOT "cuda" "CUDA prerequisites")
 # Output:
 #    Sets Var=x.y.z
 macro(get_version Var Path)
-    string(REGEX MATCH "[0-9]+(\.[0-9]+)+" ${Var} ${Path})
+    string(REGEX MATCH "[0-9]+(\\.[0-9]+)+" ${Var} ${Path})
 endmacro (get_version)
 
 # Helper function to glob CUDA source files and set LANGUAGE property
@@ -22,26 +57,38 @@ macro(cuda_glob Var)
   set(${Var} ${FileList})
 endmacro(cuda_glob)
 
-macro(create_one_local_test Name FileGlob)
-  cuda_glob(_sources ${FileGlob})
-  set(_executable ${Name}-${VariantSuffix})
-  set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
-  # Verify reference output if it exists.
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-    set(NO_REFERENCE_OUTPUT 1)
-    set(REFERENCE_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
-    llvm_test_traditional(${_executable})
-  else()
-    # otherwise just run the executable.
+macro(create_one_local_test_f Name FileGlob FilterRegex)
+  if (${VariantSuffix} MATCHES ${FilterRegex})
+    cuda_glob(_sources ${FileGlob})
+    set(_executable ${Name}-${VariantSuffix})
+    set(_executable_path ${CMAKE_CURRENT_BINARY_DIR}/${_executable})
     llvm_test_run()
+    set(REFERENCE_OUTPUT)
+    # Verify reference output if it exists.
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${Name}.reference_output)
+      set(REFERENCE_OUTPUT ${Name}.reference_output)
+      llvm_test_verify(WORKDIR ${CMAKE_CURRENT_BINARY_DIR}
+        ${FPCMP} %o ${REFERENCE_OUTPUT}-${VariantSuffix}
+      )
+      llvm_test_executable(${_executable} ${_sources})
+      llvm_test_data(${_executable}
+                     DEST_SUFFIX "-${VariantSuffix}"
+                     ${REFERENCE_OUTPUT})
+    else()
+      llvm_test_executable(${_executable} ${_sources})
+    endif()
+    target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
+    if(VariantLibs)
+      target_link_libraries(${_executable} ${VariantLibs})
+    endif()
+    add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
+    # Local tests are presumed to be fast.
+    list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
   endif()
-  llvm_test_executable(${_executable} ${_sources})
-  if(VariantLibs)
-    target_link_libraries(${_executable} ${VariantLibs})
-  endif()
-  add_dependencies(cuda-tests-simple-${VariantSuffix} ${_executable})
-  # Local tests are presumed to be fast.
-  list(APPEND CUDA_SIMPLE_TEST_TARGETS ${_executable}.test)
+endmacro()
+
+macro(create_one_local_test Name FileGlob)
+  create_one_local_test_f(${Name} ${FileGlob} ".*")
 endmacro()
 
 # Create targets for CUDA tests that are part of the test suite.
@@ -52,9 +99,17 @@ macro(create_local_cuda_tests VariantSuffix)
   create_one_local_test(cmath cmath.cu)
   create_one_local_test(complex complex.cu)
   create_one_local_test(math_h math_h.cu)
+  create_one_local_test(new new.cu)
   create_one_local_test(empty empty.cu)
   create_one_local_test(printf printf.cu)
   create_one_local_test(future future.cu)
+  # We only need SIMD tests on CUDA-8.0 to verivy that our reference is correct
+  # and matches NVIDIA-provided one.  and on CUDA-9.2 to verify that clang's
+  # implementation matches the reference.  This test also happens to be the
+  # longest one, so by not running unnecessary instances we speed up cuda
+  # buildbot a lot.
+  create_one_local_test_f(simd simd.cu
+                          "cuda-(8[.]0|9[.]2)-c[+][+]11-libc[+][+]")
 endmacro()
 
 macro(thrust_make_test_name TestName TestSourcePath)
@@ -72,7 +127,8 @@ macro(create_one_thrust_test TestSource)
   llvm_test_run(--verbose ${_ExtraThrustTestArgs})
   llvm_test_executable(${_executable} ${TestSource})
   target_link_libraries(${_executable} ${VariantLibs})
-  target_compile_options(${_executable} PUBLIC ${THRUST_CPPFLAGS})
+  target_compile_options(${_executable} BEFORE PUBLIC ${THRUST_CPPFLAGS})
+  target_compile_options(${_executable} PUBLIC ${VariantCPPFLAGS})
   list(APPEND THRUST_VARIANT_TESTS ${_executable})
 endmacro()
 
@@ -85,7 +141,8 @@ function(create_thrust_tests VariantSuffix)
     # test framework is common for all tests, so we build it once as a
     # library.
     add_library(ThrustTestFrameworkLib-${VariantSuffix} STATIC ${ThrustTestFramework})
-    append_compile_flags(ThrustTestFrameworkLib-${VariantSuffix} ${CPPFLAGS} ${THRUST_CPPFLAGS})
+    target_compile_options(ThrustTestFrameworkLib-${VariantSuffix} BEFORE PRIVATE ${THRUST_CPPFLAGS})
+    target_compile_options(ThrustTestFrameworkLib-${VariantSuffix} PRIVATE ${VariantCPPFLAGS})
     add_dependencies(ThrustTestFrameworkLib-${VariantSuffix} timeit-host fpcmp-host)
     list(APPEND VariantLibs ThrustTestFrameworkLib-${VariantSuffix})
 
@@ -107,8 +164,12 @@ function(create_thrust_tests VariantSuffix)
     # overhead, so it's actually way slower than running all tests
     # sequentially.
     llvm_test_run(--verbose ${_ExtraThrustTestArgs})
+    # CUDA SDK comes with its own version of thrust in its include directory.
+    # In order to use the thrust library we want, its include path must precede
+    # that of the CUDA SDK include path.
     llvm_test_executable(${_ThrustMainTarget} ${ThrustTestFramework} ${ThrustAllTestSources})
-    target_compile_options(${_ThrustMainTarget} PUBLIC ${THRUST_CPPFLAGS})
+    target_compile_options(${_ThrustMainTarget} BEFORE PUBLIC ${THRUST_CPPFLAGS})
+    target_compile_options(${_ThrustMainTarget} PUBLIC ${VariantCPPFLAGS})
     target_link_libraries(${_ThrustMainTarget} ${VariantLibs})
   endif()
   add_dependencies(cuda-tests-${VariantSuffix} cuda-tests-thrust-${VariantSuffix})
@@ -122,7 +183,7 @@ function(create_cuda_test_variant Std VariantSuffix)
     COMMENT "Build CUDA test variant ${VariantSuffix}")
 
   set(VariantLibs ${_Cuda_Libs} ${_Stdlib_Libs})
-  list(APPEND CPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
+  set(VariantCPPFLAGS ${_Cuda_CPPFLAGS} ${_Std_CPPFLAGS} ${_Stdlib_CPPFLAGS})
   list(APPEND LDFLAGS ${_Cuda_LDFLAGS} ${_Std_LDFLAGS} ${_Stdlib_LDFLAGS})
 
   # Create a separate test target for simple tests that can be built/tested quickly.
@@ -131,7 +192,7 @@ function(create_cuda_test_variant Std VariantSuffix)
   create_local_cuda_tests(${VariantSuffix})
   add_dependencies(cuda-tests-simple cuda-tests-simple-${VariantSuffix})
 
-  if(EXISTS ${THRUST_PATH} AND (NOT ${Std} STREQUAL "c++14"))
+  if(DEFINED THRUST_PATH AND (NOT ${Std} STREQUAL "c++14"))
     create_thrust_tests(${VariantSuffix})
   endif()
 
@@ -175,14 +236,11 @@ macro(create_cuda_tests)
   if(NOT CUDA_GPU_ARCH)
     list(APPEND CUDA_GPU_ARCH sm_35)
   endif()
+  list(SORT CUDA_GPU_ARCH)
 
   if (CUDA_JOBS)
     set(TEST_SUITE_LIT_FLAGS ${TEST_SUITE_LIT_FLAGS} -j ${CUDA_JOBS})
   endif()
-
-  foreach(GpuArch IN LISTS CUDA_GPU_ARCH)
-    list(APPEND CPPFLAGS --cuda-gpu-arch=${GpuArch})
-  endforeach()
 
   file(GLOB GccVersions ${TEST_SUITE_CUDA_ROOT}/gcc-*)
   list(SORT GccVersions)
@@ -261,6 +319,24 @@ macro(create_cuda_tests)
     get_version(_CudaVersion ${_CudaPath})
     set(_Cuda_Suffix "cuda-${_CudaVersion}")
     set(_Cuda_CPPFLAGS --cuda-path=${_CudaPath} -I${_CudaPath}/include)
+    # clear the list of GPUs to compile for.
+    set(_CudaArchFlags)
+    set(_CudaArchList)
+    string(REPLACE "." "_" _CudaVersionSuffix ${_CudaVersion})
+    foreach(_CudaGpuArch IN LISTS CUDA_GPU_ARCH)
+      if(_CudaGpuArch IN_LIST SUPPORTED_GPU_CUDA_${_CudaVersionSuffix})
+        list(APPEND _CudaArchFlags --cuda-gpu-arch=${_CudaGpuArch})
+        list(APPEND _CudaArchList ${_CudaGpuArch})
+      endif()
+    endforeach()
+    if (_CudaArchList)
+      message(STATUS "Building ${_Cuda_Suffix} targets for ${_CudaArchList}")
+    else()
+      message(WARNING "${_Cuda_Suffix} does not support ${CUDA_GPU_ARCH} GPUs. Skipped.")
+      continue()
+    endif()
+    list(APPEND _Cuda_CPPFLAGS ${_CudaArchFlags})
+
     set(_Cuda_Libs cudart-${_CudaVersion})
     foreach(_Std IN ITEMS "c++98" "c++11" "c++14")
       set(_Std_Suffix "${_Std}")
@@ -268,10 +344,6 @@ macro(create_cuda_tests)
       set(_Std_LDFLAGS -std=${_Std})
       foreach(_GccPath IN LISTS GCC_PATHS)
         get_version(_GccVersion ${_GccPath})
-        # libstdc++ seems not to support C++14 before version 5.0.
-        if(${_Std} STREQUAL "c++14" AND ${_GccVersion} VERSION_LESS "5.0")
-          continue()
-        endif()
         set(_Gcc_Suffix "libstdc++-${_GccVersion}")
         # Tell clang to use libstdc++ and where to find it.
         set(_Stdlib_CPPFLAGS -stdlib=libstdc++ -gcc-toolchain ${_GccPath})
@@ -279,17 +351,26 @@ macro(create_cuda_tests)
         # Add libstdc++ as link dependency.
         set(_Stdlib_Libs libstdcxx-${_GccVersion})
 
+        # libstdc++ seems not to support C++14 before version 5.0.  We still
+        # want to run in C++14 mode with old libstdc++s to test compiler C++14
+        # with stdlib C++11, but we add a -D so that our tests can detect this.
+        if (${_GccVersion} VERSION_LESS "5.0")
+          list(APPEND _Stdlib_CPPFLAGS -DSTDLIB_VERSION=2011)
+        else()
+          list(APPEND _Stdlib_CPPFLAGS -DSTDLIB_VERSION=2014)
+        endif()
+
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-${_Gcc_Suffix}")
       endforeach()
 
       if(HAVE_LIBCXX)
-	# Same as above, but for libc++
-	# Tell clang to use libc++
-	# We also need to add compiler's include path for cxxabi.h
-	get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
-	set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++-build)
-	set(_Stdlib_LDFLAGS  -stdlib=libc++)
-	set(_Stdlib_Libs libcxx)
+        # Same as above, but for libc++
+        # Tell clang to use libc++
+        # We also need to add compiler's include path for cxxabi.h
+        get_filename_component(_compiler_path ${CMAKE_CXX_COMPILER} DIRECTORY)
+        set(_Stdlib_CPPFLAGS -stdlib=libc++ -I${_compiler_path}/../include/c++/v1 -DSTDLIB_VERSION=2017)
+        set(_Stdlib_LDFLAGS  -stdlib=libc++)
+        set(_Stdlib_Libs libcxx)
         create_cuda_test_variant(${_Std} "${_Cuda_Suffix}-${_Std_Suffix}-libc++")
       endif()
     endforeach()

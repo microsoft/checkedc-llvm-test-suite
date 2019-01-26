@@ -1,5 +1,4 @@
-set(PROG p2c)
 list(APPEND CPPFLAGS -DNOMEMOPT)
-set(RUN_OPTIONS -v)
-set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/INPUT/mf.p)
-llvm_multisource()
+set(RUN_OPTIONS -v < INPUT/mf.p)
+llvm_multisource(p2c)
+llvm_test_data(p2c INPUT/mf.p)

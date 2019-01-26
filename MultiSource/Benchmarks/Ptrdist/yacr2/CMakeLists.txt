@@ -1,5 +1,5 @@
-set(PROG yacr2)
 list(APPEND CPPFLAGS -DTODD)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input2.in)
+set(RUN_OPTIONS input2.in)
 set(HASH_PROGRAM_OUTPUT 1)
-llvm_multisource()
+llvm_multisource(yacr2)
+llvm_test_data(yacr2 input2.in)

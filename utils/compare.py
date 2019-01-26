@@ -1,8 +1,10 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 """Tool to filter, organize, compare and display benchmarking results. Usefull
 for smaller datasets. It works great with a few dozen runs it is not designed to
 deal with hundreds.
 Requires the pandas library to be installed."""
+from __future__ import print_function
+
 import pandas as pd
 import sys
 import os.path
@@ -13,19 +15,25 @@ import argparse
 def read_lit_json(filename):
     import json
     jsondata = json.load(open(filename))
-    testnames = []
     columns = []
     columnindexes = {}
+    names = set()
     info_columns = ['hash']
+    # Pass1: Figure out metrics (= the column index)
     if 'tests' not in jsondata:
-        print "%s: Could not find toplevel 'tests' key"
+        print("%s: Could not find toplevel 'tests' key")
         sys.exit(1)
     for test in jsondata['tests']:
-        if "name" not in test:
-            print "Skipping unnamed test!"
-            continue
+        name = test.get("name")
+        if name is None:
+            sys.stderr.write("Error: Found unnamed test\n" % name)
+            sys.exit(1)
+        if name in names:
+            sys.stderr.write("Error: Multiple tests with name '%s'\n" % name)
+            sys.exit(1)
+        names.add(name)
         if "metrics" not in test:
-            print "Warning: '%s' has No metrics!" % test['name']
+            print("Warning: '%s' has No metrics!" % test['name'])
             continue
         for name in test["metrics"].keys():
             if name not in columnindexes:
@@ -36,12 +44,11 @@ def read_lit_json(filename):
                 columnindexes[name] = len(columns)
                 columns.append(name)
 
+    # Pass2 actual data construction
     nan = float('NaN')
     data = []
+    testnames = []
     for test in jsondata['tests']:
-        if "name" not in test:
-            print "Skipping unnamed test!"
-            continue
         name = test['name']
         if 'shortname' in test:
             name = test['shortname']
@@ -49,9 +56,9 @@ def read_lit_json(filename):
 
         datarow = [nan] * len(columns)
         if "metrics" in test:
-            for (metricname, value) in test['metrics'].iteritems():
+            for (metricname, value) in test['metrics'].items():
                 datarow[columnindexes[metricname]] = value
-        for (name, value) in test.iteritems():
+        for (name, value) in test.items():
             index = columnindexes.get(name)
             if index is not None:
                 datarow[index] = test[name]
@@ -143,7 +150,7 @@ def print_filter_stats(reason, before, after):
     n_after = len(after.groupby(level=1))
     n_filtered = n_before - n_after
     if n_filtered != 0:
-        print "%s: %s (filtered out)" % (reason, n_filtered)
+        print("%s: %s (filtered out)" % (reason, n_filtered))
 
 # Truncate a string to a maximum length by keeping a prefix, a suffix and ...
 # in the middle
@@ -206,15 +213,19 @@ def print_result(d, limit_output=True, shorten_names=True,
     formatters['diff'] = format_diff
     if shorten_names:
         drop_prefix, drop_suffix = determine_common_prefix_suffix(dataout.Program)
-        formatters['Program'] = lambda x: "%-45s" % truncate(x[drop_prefix:-drop_suffix], 10, 30)
-        # TODO: it would be cool to drop prefixes/suffix common to all
-        # names
+        def format_name(name, common_prefix, common_suffix):
+            name = name[common_prefix:]
+            if common_suffix > 0:
+                name = name[:-common_suffix]
+            return "%-45s" % truncate(name, 10, 30)
+
+        formatters['Program'] = lambda name: format_name(name, drop_prefix, drop_suffix)
     float_format = lambda x: "%6.2f" % (x,)
     pd.set_option("display.max_colwidth", 0)
     out = dataout.to_string(index=False, justify='left',
                             float_format=float_format, formatters=formatters)
-    print out
-    print d.describe()
+    print(out)
+    print(d.describe())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='compare.py')
@@ -240,6 +251,10 @@ if __name__ == "__main__":
                         dest='merge_function', const=pd.DataFrame.min)
     parser.add_argument('--merge-max', action='store_const',
                         dest='merge_function', const=pd.DataFrame.max)
+    parser.add_argument('--lhs-name', default="lhs",
+                        help="Name used to describe left side in 'vs' mode")
+    parser.add_argument('--rhs-name', default="rhs",
+                        help="Name used to describe right side in 'vs' mode")
     parser.add_argument('files', metavar='FILE', nargs='+')
     config = parser.parse_args()
 
@@ -260,7 +275,8 @@ if __name__ == "__main__":
         rhs_merged = config.merge_function(rhs_d, level=1)
 
         # Combine to new dataframe
-        data = pd.concat([lhs_merged, rhs_merged], names=['l/r'], keys=['lhs', 'rhs'])
+        data = pd.concat([lhs_merged, rhs_merged], names=['l/r'],
+                         keys=[config.lhs_name, config.rhs_name])
     else:
         data = readmulti(files)
 
@@ -289,7 +305,7 @@ if __name__ == "__main__":
     # Filter data
     proggroup = data.groupby(level=1)
     initial_size = len(proggroup.indices)
-    print "Tests: %s" % (initial_size,)
+    print("Tests: %s" % (initial_size,))
     if config.filter_failed and hasattr(data, 'Exec'):
         newdata = filter_failed(data)
         print_filter_stats("Failed", data, newdata)
@@ -312,10 +328,10 @@ if __name__ == "__main__":
         data = newdata
     final_size = len(data.groupby(level=1))
     if final_size != initial_size:
-        print "Remaining: %d" % (final_size,)
+        print("Remaining: %d" % (final_size,))
 
     # Reduce / add columns
-    print "Metric: %s" % (",".join(metrics),)
+    print("Metric: %s" % (",".join(metrics),))
     if len(metrics) > 0:
         data = data[metrics]
     data = add_diff_column(data)
@@ -325,7 +341,7 @@ if __name__ == "__main__":
         sortkey = data.columns[0]
 
     # Print data
-    print ""
+    print("")
     shorten_names = not config.full
     limit_output = (not config.all) and (not config.full)
     print_result(data, limit_output, shorten_names, config.show_diff, sortkey)

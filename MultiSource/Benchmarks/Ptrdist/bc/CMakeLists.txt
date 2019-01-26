@@ -1,5 +1,4 @@
-set(PROG bc)
-set(OBJS scan.o util.o main.o number.o storage.o load.o execute.o bc.o global.o)
-set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/primes.b)
+set(RUN_OPTIONS < primes.b)
 set(HASH_PROGRAM_OUTPUT 1)
-llvm_multisource()
+llvm_multisource(bc)
+llvm_test_data(bc primes.b)

@@ -1,4 +1,8 @@
-set(STDIN_FILENAME ${CMAKE_CURRENT_SOURCE_DIR}/../data/clinton.pcm )
-set(PROG rawcaudio)
-set(Source rawcaudio.c adpcm.c)
-llvm_multisource()
+set(RUN_OPTIONS < clinton.pcm)
+llvm_multisource(rawcaudio
+  rawcaudio.c
+  adpcm.c
+)
+llvm_test_data(rawcaudio SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../data
+  clinton.pcm
+)

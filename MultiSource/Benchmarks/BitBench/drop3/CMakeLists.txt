@@ -1,3 +1,3 @@
-set(PROG drop3)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input-file)
-llvm_multisource()
+set(RUN_OPTIONS input-file)
+llvm_multisource(drop3)
+llvm_test_data(drop3 input-file)

@@ -55,12 +55,24 @@ This process created the file `CMakeCache.txt' and the directory `CMakeFiles'.
 Please delete them.")
 endif()
 
+# Sanity check SIZEOF_VOID_P. This is sometimes empty when compiler detection
+# failed, error out to avoid a mostly working but invalid setup.
+if(NOT CMAKE_SIZEOF_VOID_P)
+  message(FATAL_ERROR "CMAKE_SIZEOF_VOID_P is not defined")
+endif()
+
 # Remote configuration (will be set in lit.site.cfg)
 set(TEST_SUITE_REMOTE_CLIENT "ssh" CACHE STRING "Remote execution client")
 set(TEST_SUITE_REMOTE_HOST "" CACHE STRING "Remote execution host")
-set(TEST_SUITE_REMOTE_USER "" CACHE STRING "Remote execution user")
-set(TEST_SUITE_REMOTE_PORT "" CACHE STRING "Remote execution port")
-mark_as_advanced(TEST_SUITE_REMOTE_CLIENT TEST_SUITE_REMOTE_USER TEST_SUITE_REMOTE_PORT)
+mark_as_advanced(TEST_SUITE_REMOTE_CLIENT)
+
+if(TEST_SUITE_REMOTE_HOST)
+  add_custom_target(rsync
+    COMMAND ${PROJECT_SOURCE_DIR}/utils/rsync.sh
+                ${TEST_SUITE_REMOTE_HOST} ${PROJECT_BINARY_DIR}
+    USES_TERMINAL
+  )
+endif()
 
 # Run Under configuration for RunSafely.sh (will be set in lit.site.cfg)
 set(TEST_SUITE_RUN_UNDER "" CACHE STRING "RunSafely.sh run-under (-u) parameter")
@@ -70,18 +82,32 @@ set(TEST_SUITE_RUN_TYPE "train" CACHE STRING
     "Type of benchmark inputs (may be test,train or ref)")
 
 get_filename_component(CMAKE_C_COMPILER_DIRECTORY ${CMAKE_C_COMPILER} DIRECTORY)
-find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
-             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
-find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
-             HINTS ${CMAKE_C_COMPILER_DIRECTORY})
-mark_as_advanced(TEST_SUITE_LLVM_SIZE TEST_SUITE_LLVM_PROFDATA)
+
+option(TEST_SUITE_COLLECT_CODE_SIZE "Measure code size of binaries" ON)
+if(TEST_SUITE_COLLECT_CODE_SIZE)
+  find_program(TEST_SUITE_LLVM_SIZE NAMES "llvm-size"
+               HINTS ${CMAKE_C_COMPILER_DIRECTORY})
+  mark_as_advanced(TEST_SUITE_LLVM_SIZE)
+  if(TEST_SUITE_LLVM_SIZE STREQUAL "TEST_SUITE_LLVM_SIZE-NOTFOUND")
+    message(FATAL_ERROR "llvm-size not found.
+Make sure it is in your path or set TEST_SUITE_COLLECT_CODE_SIZE to OFF")
+  endif()
+endif()
+
 
 # Enable profile generate mode in lit. Note that this does not automatically
 # add something like -fprofile-instr-generate to the compiler flags.
-set(TEST_SUITE_PROFILE_GENERATE "FALSE" CACHE BOOL
-    "Enable lit profile generate mode")
+option(TEST_SUITE_PROFILE_GENERATE "Enable lit profile generate mode" OFF)
 # Set value to python style True/False
 if(TEST_SUITE_PROFILE_GENERATE)
+  find_program(TEST_SUITE_LLVM_PROFDATA NAMES "llvm-profdata"
+               HINTS ${CMAKE_C_COMPILER_DIRECTORY})
+  mark_as_advanced(TEST_SUITE_LLVM_PROFDATA)
+  if(TEST_SUITE_LLVM_PROFDATA STREQUAL "TEST_SUITE_LLVM_PROFDATA-NOTFOUND")
+    message(FATAL_ERROR "llvm-profdata not found.
+Make sure it is in your path or set TEST_SUITE_PROFILE_GENERATE to OFF")
+  endif()
+
   set(TEST_SUITE_PROFILE_GENERATE "True")
   list(APPEND CFLAGS -fprofile-instr-generate)
   list(APPEND CXXFLAGS -fprofile-instr-generate)
@@ -90,8 +116,9 @@ else()
   set(TEST_SUITE_PROFILE_GENERATE "False")
 endif()
 
-set(TEST_SUITE_PROFILE_USE "FALSE" CACHE BOOL
-    "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark")
+option(TEST_SUITE_PROFILE_USE
+      "Add apropriate -fprofile-instr-use to CFLAGS/CXXFLAGS for each benchmark"
+      OFF)
 
 # When running the test-suite in diagnosis mode, use these flags passed by
 # LNT to gather data, for examples -ftime-report, or -mllvm -stats. This way
@@ -106,6 +133,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_DIAGNOSE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS
     "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_DIAGNOSE_LINKER_FLAGS}")
 
+# Append extra flags. These extra flags are mainly meant for cache files that
+# want to apply flags that get not override even when the user manually
+# specifies CMAKE_C_FLAGS and similar.
+set(TEST_SUITE_EXTRA_C_FLAGS CACHE STRING "Extra flags for CMAKE_C_FLAGS")
+set(TEST_SUITE_EXTRA_CXX_FLAGS CACHE STRING "Extra flags for CMAKE_CXX_FLAGS")
+set(TEST_SUITE_EXTRA_EXE_LINKER_FLAGS CACHE STRING
+    "Extra flags for CMAKE_EXE_LINKER_FLAGS")
+mark_as_advanced(TEST_SUITE_EXTRA_C_FLAGS, TEST_SUITE_EXTRA_CXX_FLAGS,
+                 TEST_SUITE_EXTRA_EXE_LINKER_FLAGS)
+set(CMAKE_C_CFLAGS "${CMAKE_C_CFLAGS} ${TEST_SUITE_EXTRA_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TEST_SUITE_EXTRA_CXX_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS
+    "${CMAKE_EXE_LINKER_FLAGS} ${TEST_SUITE_EXTRA_EXE_LINKER_FLAGS}")
+
+include(TestSuite)
 include(SingleMultiSource)
 find_package(TCL)
 
@@ -116,6 +158,10 @@ endif()
 if(NOT DEFINED ARCH)
   include(DetectArchitecture)
   detect_architecture(ARCH)
+endif()
+if(NOT DEFINED X86CPU_ARCH AND ARCH STREQUAL "x86")
+  include(DetectArchitecture)
+  detect_x86_cpu_architecture(X86CPU_ARCH)
 endif()
 if(NOT DEFINED ENDIAN)
   include(TestBigEndian)
@@ -129,8 +175,8 @@ endif()
 
 # Disabling address space randomization makes the performance of memory/cache
 # intensive benchmarks more deterministic.
-set(TEST_SUITE_DISABLE_PIE "True" CACHE BOOL
-    "Disable position independent executables and ASLR")
+option(TEST_SUITE_DISABLE_PIE
+       "Disable position independent executables and ASLR" ON)
 mark_as_advanced(TEST_SUITE_DISABLE_PIE)
 if(TEST_SUITE_DISABLE_PIE)
   if(APPLE AND NOT ARCH STREQUAL "AArch64")
@@ -153,24 +199,26 @@ add_subdirectory(tools)
 # Shortcut for the path to the fpcmp executable
 set(FPCMP ${CMAKE_BINARY_DIR}/tools/fpcmp)
 
-set(TEST_SUITE_TAKE_COMPILE_TIME "TRUE" CACHE BOOL
-    "Measure compile time by wrapping compiler invocations in timeit")
-mark_as_advanced(TEST_SUITE_TAKE_COMPILE_TIME)
-if(TEST_SUITE_TAKE_COMPILE_TIME)
+option(TEST_SUITE_COLLECT_COMPILE_TIME
+       "Measure compile time by wrapping compiler invocations in timeit" ON)
+if(TEST_SUITE_COLLECT_COMPILE_TIME)
   set(CMAKE_C_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_C_COMPILE_OBJECT}")
   set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_BINARY_DIR}/tools/timeit --summary <OBJECT>.time ${CMAKE_CXX_COMPILE_OBJECT}")
   set(CMAKE_C_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_C_LINK_EXECUTABLE}")
   set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/timeit --summary <TARGET>.link.time ${CMAKE_CXX_LINK_EXECUTABLE}")
 endif()
 
-set(TEST_SUITE_BENCHMARKING_ONLY "OFF" CACHE BOOL
-  "Only run the benchmarking only subset")
+option(TEST_SUITE_BENCHMARKING_ONLY "Only run the benchmarking only subset" OFF)
 
-set(TEST_SUITE_COLLECT_STATS "FALSE" CACHE BOOL
-    "Collect LLVM statistics")
+option(TEST_SUITE_COLLECT_STATS "Collect LLVM statistics" OFF)
 if(TEST_SUITE_COLLECT_STATS)
   list(APPEND CFLAGS -save-stats=obj)
   list(APPEND CXXFLAGS -save-stats=obj)
+  # Collect stats for LTO step too.
+  if (${CMAKE_C_FLAGS} MATCHES ".*-flto.*" AND
+      ${CMAKE_CXX_FLAGS} MATCHES ".*-flto.*")
+    list(APPEND LDFLAGS -save-stats=obj)
+  endif()
 endif()
 
 # Detect and include subdirectories
@@ -179,36 +227,50 @@ endif()
 # manually specify directories to include test-suites at external locations
 # and to leave out some of the default ones.
 if(NOT TEST_SUITE_SUBDIRS)
-  file(GLOB sub_cmakelists */CMakeLists.txt)
+  file(GLOB sub_cmakelists RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} */CMakeLists.txt)
   set(TEST_SUITE_SUBDIRS "")
   foreach(entry ${sub_cmakelists})
     get_filename_component(subdir ${entry} DIRECTORY)
-    # Exclude tools and CTMark from default list
-    if(NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/tools AND
-       NOT ${subdir} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/CTMark)
+	 # Exclude tools and CTMark from default list
+    if(NOT ${subdir} STREQUAL tools AND NOT ${subdir} STREQUAL CTMark)
       list(APPEND TEST_SUITE_SUBDIRS ${subdir})
     endif()
   endforeach()
-  set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
-      "Semicolon separated list of directories with CMakeLists.txt to include")
+  set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}")
 endif()
-mark_as_advanced(TEST_SUITE_SUBDIRS)
+set(TEST_SUITE_SUBDIRS "${TEST_SUITE_SUBDIRS}" CACHE STRING
+    "Semicolon separated list of directories with CMakeLists.txt to include")
 
 foreach(subdir ${TEST_SUITE_SUBDIRS})
+  # When we add subdirs outside the toplevel source directory then we have to
+  # make up a directory to use for the builddir.
+  if(subdir MATCHES "^/" OR subdir MATCHES "\\.\\.")
+    if(subdir MATCHES "/$")
+      message(FATAL_ERROR "Subdir must not end in '/'")
+    endif()
+    get_filename_component(subdir_name ${subdir} NAME)
+  else()
+    set(subdir_name ${subdir})
+  endif()
   message(STATUS "Adding directory ${subdir}")
-  add_subdirectory(${subdir})
+  add_subdirectory(${subdir} ${subdir_name})
 endforeach()
 
-set(TEST_SUITE_RUN_BENCHMARKS "ON" CACHE BOOL
-    "Actually run the benchmarks in lit")
+option(TEST_SUITE_RUN_BENCHMARKS "Actually run the benchmarks in lit" ON)
 
-set(LIT_MODULES "")
+set(TEST_SUITE_EXTRA_LIT_MODULES "" CACHE STRING
+    "Semicolon separated list of extra lit modules in use")
+mark_as_advanced(TEST_SUITE_EXTRA_LIT_MODULES)
+# Construct list testing modules (see also litsupport/modules/*.py)
+set(LIT_MODULES ${TEST_SUITE_EXTRA_LIT_MODULES})
 if(TEST_SUITE_RUN_BENCHMARKS)
   list(APPEND LIT_MODULES run)
 endif()
-list(APPEND LIT_MODULES codesize)
+if(TEST_SUITE_COLLECT_CODE_SIZE)
+  list(APPEND LIT_MODULES codesize)
+endif()
 list(APPEND LIT_MODULES hash)
-if(TEST_SUITE_TAKE_COMPILE_TIME)
+if(TEST_SUITE_COLLECT_COMPILE_TIME)
   list(APPEND LIT_MODULES compiletime)
 endif()
 if(TEST_SUITE_RUN_UNDER)
@@ -217,9 +279,6 @@ endif()
 list(APPEND LIT_MODULES timeit)
 if(TEST_SUITE_PROFILE_GENERATE)
   list(APPEND LIT_MODULES profilegen)
-endif()
-if(TEST_SUITE_REMOTE_HOST)
-  list(APPEND LIT_MODULES remote)
 endif()
 if(TEST_SUITE_COLLECT_STATS)
   list(APPEND LIT_MODULES stats)

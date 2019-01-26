@@ -1,3 +1,3 @@
-set(PROG ks)
-list(APPEND RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/KL-4.in)
-llvm_multisource()
+set(RUN_OPTIONS KL-4.in)
+llvm_multisource(ks)
+llvm_test_data(ks KL-4.in)
