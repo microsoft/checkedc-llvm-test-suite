@@ -7,7 +7,7 @@
 
 #define printf(...) unchecked { printf(__VA_ARGS__); }
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static int adj(Direction d, ChildType ct)
 {

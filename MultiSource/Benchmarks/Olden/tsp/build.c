@@ -39,7 +39,7 @@ extern double log(double x);
 #include "future-cell.h"
 #endif
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static double median(double min,double max,int n);
 static double uniform(double min, double max);
@@ -83,7 +83,7 @@ Tree build_tree(int n,int dir,int lo,int num_proc,double min_x,
 
   if (n==0) return NULL;
 
-  t = (Tree) ALLOC(lo,sizeof(*t));
+  t = (Tree) ALLOC(struct tree, lo, sizeof(*t));
 
   if (dir) {
     dir = !dir;

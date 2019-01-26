@@ -21,7 +21,7 @@
 #include "hcg.h"
 #include "channel.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 /*
  *
@@ -32,8 +32,8 @@
 void
 AllocHCG(void)
 {
-    HCG = malloc((channelNets + 1) * sizeof(nodeHCGType));
-    storageRootHCG = malloc((channelNets + 1) * (channelNets + 1) * sizeof(ulong));
+    HCG = malloc<nodeHCGType>((channelNets + 1) * sizeof(nodeHCGType));
+    storageRootHCG = malloc<ulong>((channelNets + 1) * (channelNets + 1) * sizeof(ulong));
     _Unchecked { storageHCG = storageRootHCG; }
     storageLimitHCG = (channelNets + 1) * (channelNets + 1);
 }
@@ -41,8 +41,8 @@ AllocHCG(void)
 void
 FreeHCG(void)
 {
-    _Unchecked { free(HCG); }
-    _Unchecked { free(storageRootHCG); }
+    _Unchecked { free<nodeHCGType>(HCG); }
+    _Unchecked { free<ulong>(storageRootHCG); }
     storageLimitHCG = 0;
 }
 

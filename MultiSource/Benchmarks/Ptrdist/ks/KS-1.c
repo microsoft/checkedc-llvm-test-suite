@@ -15,7 +15,7 @@
 
 #include "KS.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 NetPtr modules _Checked [G_SZ];		/* all modules -> nets */
 unsigned long numModules;
@@ -58,7 +58,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	dest = atol(strtok((_Nt_array_ptr<char>)line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
-	TRY(head = prev = calloc(1, sizeof(Module)),
+	TRY(head = prev = calloc<Module>(1, sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
@@ -93,7 +93,7 @@ NetsToModules(void)
 
     for (net=0; net<numNets; net++) {
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(netNode = calloc(1, sizeof(Net)),
+	    TRY(netNode = calloc<Net>(1, sizeof(Net)),
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
@@ -142,7 +142,7 @@ InitLists(void)
     for (p = 0; p<numModules/2; p++) {
 
 	/* build the group A module list */
-	TRY(mr = calloc(1, sizeof(ModuleRec)),
+	TRY(mr = calloc<ModuleRec>(1, sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -161,7 +161,7 @@ InitLists(void)
 	moduleToGroup[p] = GroupA;
 
 	/* build the group B module list */
-	TRY(mr = calloc(1, sizeof(ModuleRec));,
+	TRY(mr = calloc<ModuleRec>(1, sizeof(ModuleRec));,
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));

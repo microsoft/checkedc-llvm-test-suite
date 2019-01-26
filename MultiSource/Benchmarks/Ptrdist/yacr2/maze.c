@@ -7,7 +7,7 @@
 #include "channel.h"
 #include "assign.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 #define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
 
@@ -55,10 +55,10 @@ void
 InitAllocMaps(void)
 {
     /* allocate maps */
-    horzPlane = malloc((channelColumns+1)*(channelTracks+3));
-    vertPlane = malloc((channelColumns+1)*(channelTracks+3));
-    viaPlane = malloc((channelColumns+1)*(channelTracks+3));
-    mazeRoute = malloc((channelColumns+1));
+    horzPlane = malloc<char>((channelColumns+1)*(channelTracks+3));
+    vertPlane = malloc<char>((channelColumns+1)*(channelTracks+3));
+    viaPlane = malloc<char>((channelColumns+1)*(channelTracks+3));
+    mazeRoute = malloc<char>((channelColumns+1));
 
 
     /* if (!horzPlane || !vertPlane || !viaPlane || !mazeRoute) { */
@@ -73,10 +73,10 @@ InitAllocMaps(void)
 void
 FreeAllocMaps(void)
 {
-    _Unchecked { free(horzPlane); }
-    _Unchecked { free(vertPlane); }
-    _Unchecked { free(viaPlane); }
-    _Unchecked { free(mazeRoute); }
+    _Unchecked { free<char>(horzPlane); }
+    _Unchecked { free<char>(vertPlane); }
+    _Unchecked { free<char>(viaPlane); }
+    _Unchecked { free<char>(mazeRoute); }
 }
 
 

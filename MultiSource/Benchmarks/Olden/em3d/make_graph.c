@@ -16,7 +16,7 @@
 #include "util.h"
 #include <stdchecked.h>
 #include "hacks.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 extern int NumNodes;
 int NumMisses;
@@ -26,7 +26,7 @@ int d_nodes;
 int local_p;
 
 array_ptr<ptr<node_t>> make_table(int size, int procname) : count(size) {
-  array_ptr<ptr<node_t>> retval : count(size) = calloc(size, sizeof(ptr<node_t>));
+  array_ptr<ptr<node_t>> retval : count(size) = calloc<ptr<node_t>>(size, sizeof(ptr<node_t>));
   assert(retval);
   return retval;
 }
@@ -38,7 +38,7 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   ptr<node_t> prev_node = NULL;
   int i;
   
-  prev_node = calloc(1, sizeof(node_t));
+  prev_node = calloc<node_t>(1, sizeof(node_t));
   node_table[0] = prev_node;
   *values = gen_uniform_double();
   _Unchecked { prev_node->value = values++; }
@@ -46,7 +46,7 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   
   /* Now we fill the node_table with allocated nodes */
   for (i=1; i<size; i++) {
-    cur_node = calloc(1, sizeof(node_t));
+    cur_node = calloc<node_t>(1, sizeof(node_t));
     *values = gen_uniform_double();
     _Unchecked { cur_node->value = values++; }
     cur_node->from_count = 0;
@@ -67,7 +67,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
     int j,k;
     int dest_proc;
 
-    array_ptr<ptr<node_t>> tmp : count(degree) = calloc(degree, (sizeof(ptr<node_t>)));
+    array_ptr<ptr<node_t>> tmp : count(degree) = calloc<ptr<node_t>>(degree, (sizeof(ptr<node_t>)));
     dynamic_check(tmp != NULL);
 
     cur_node->degree = degree;
@@ -134,12 +134,12 @@ void update_from_coeffs(ptr<node_t> nodelist) {
     
     if (from_count < 1) {
       chatting("Help! no from count (from_count=%d) \n", from_count);
-      cur_node->from_values = (array_ptr<ptr<double>>)calloc(20, sizeof(ptr<double>));
-      cur_node->coeffs = (array_ptr<double>)calloc(20, sizeof(double));
+      cur_node->from_values = calloc<ptr<double>>(20, sizeof(ptr<double>));
+      cur_node->coeffs = calloc<double>(20, sizeof(double));
       cur_node->from_length = 0;
     } else {
-      cur_node->from_values = (array_ptr<ptr<double>>)calloc(from_count, sizeof(ptr<double>));
-      cur_node->coeffs = (array_ptr<double>)calloc(from_count, sizeof(double));
+      cur_node->from_values = calloc<ptr<double>>(from_count, sizeof(ptr<double>));
+      cur_node->coeffs = calloc<double>(from_count, sizeof(double));
       cur_node->from_length = 0;
     }
   }
@@ -194,10 +194,10 @@ void make_tables(ptr<table_t> table,int groupname) {
   int procname = 0;
 
   init_random(SEED1*groupname);
-  h_values = (array_ptr<double>)calloc(n_nodes/PROCS, sizeof(double));
+  h_values = calloc<double>(n_nodes/PROCS, sizeof(double));
   h_table = make_table(n_nodes/PROCS,procname);
   fill_table(h_table,h_values,n_nodes/PROCS,procname);
-  e_values = (array_ptr<double>)calloc(n_nodes/PROCS, sizeof(double));
+  e_values = calloc<double>(n_nodes/PROCS, sizeof(double));
   e_table = make_table(n_nodes/PROCS,procname);
   fill_table(e_table,e_values,n_nodes/PROCS,procname);
 
@@ -310,8 +310,8 @@ ptr<graph_t> initialize_graph(void) {
   int i,j,blocksize;
   int groupsize;
 
-  table = calloc(1, sizeof(table_t));
-  retval = calloc(1, sizeof(graph_t));
+  table = calloc<table_t>(1, sizeof(table_t));
+  retval = calloc<graph_t>(1, sizeof(graph_t));
 
   groupsize = PROCS/NumNodes;
 

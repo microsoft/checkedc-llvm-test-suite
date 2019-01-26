@@ -18,7 +18,7 @@
 #ifndef ASSIGN_H
 #define ASSIGN_H
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 /*
  *
  * Defines.
@@ -179,6 +179,6 @@ IdealTrack(ulong,
 
 #endif	/* ASSIGN_CODE */
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif	/* ASSIGN_H */
 

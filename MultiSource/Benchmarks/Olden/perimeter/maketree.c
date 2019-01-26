@@ -4,7 +4,7 @@
 #include "perimeter.h"
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 static int CheckOutside(int x, int y) 
 {
@@ -40,7 +40,7 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 #ifdef FUTURES
   retval = (QuadTree) ALLOC(lo_proc,sizeof(*retval));
 #else
-  retval = (QuadTree) calloc(1, sizeof(*retval));
+  retval = calloc<struct quad_struct>(1, sizeof(*retval));
 #endif
   retval->parent = parent;
   retval->childtype = ct;

@@ -15,7 +15,7 @@
 
 #include "KS.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /* handle special cases where both nodes are switched */
 float

@@ -32,7 +32,7 @@
 #include "Fheap.h"
 #include "Fstruct.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int
 SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
@@ -170,4 +170,4 @@ PrettyPrint(_Ptr<HeapP>  h)
   printf(")");
 }
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

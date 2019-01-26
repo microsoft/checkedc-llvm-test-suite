@@ -15,7 +15,7 @@
 #ifndef OPTION_H
 #define OPTION_H
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /*
  *
@@ -64,5 +64,5 @@ Option(int argc,
 
 #endif	/* OPTION_CODE */
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif	/* OPTION_H */

@@ -9,7 +9,7 @@
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
 #include "health.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 void addList(ptr<struct List> list, ptr<struct Patient> patient) {
   ptr<struct List> b = NULL;
@@ -18,7 +18,7 @@ void addList(ptr<struct List> list, ptr<struct Patient> patient) {
     b = list;
     list = list->forward; }
   
-  list = calloc(1, sizeof(struct List));
+  list = calloc<struct List>(1, sizeof(struct List));
   list->patient = patient;
   list->forward = NULL;
   list->back = b;

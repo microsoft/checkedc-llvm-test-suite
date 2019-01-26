@@ -23,7 +23,7 @@
 #include "vcg.h"
 #include "hcg.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
@@ -40,22 +40,22 @@ AllocAssign(void)
     /*
      * Allocate cost matrix.
      */
-    costMatrix = malloc((channelNets+1) * sizeof(struct costMatrixRow));
+    costMatrix = malloc<struct costMatrixRow>((channelNets+1) * sizeof(struct costMatrixRow));
     for (net = 1; net <= channelNets; net++) {
 	costMatrix[net].len = channelTracks + 2;
-	costMatrix[net].row = malloc((channelTracks+2) * sizeof(long));
+	costMatrix[net].row = malloc<long>((channelTracks+2) * sizeof(long));
     }
 
     /*
      * Allocate structures associated with cost matrix.
      */
-    tracksNotPref = malloc((channelTracks+2) * sizeof(ulong));
-    tracksTopNotPref = malloc((channelTracks+2) * sizeof(ulong));
-    tracksBotNotPref = malloc((channelTracks+2) * sizeof(ulong));
-    tracksNoHCV = malloc((channelTracks+2) * sizeof(ulong));
-    tracksAssign = malloc((channelTracks+2) * sizeof(ulong));
-    netsAssign = malloc((channelNets+1) * sizeof(ulong));
-    netsAssignCopy = malloc((channelNets+1) * sizeof(ulong));
+    tracksNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
+    tracksTopNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
+    tracksBotNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
+    tracksNoHCV = malloc<ulong>((channelTracks+2) * sizeof(ulong));
+    tracksAssign = malloc<ulong>((channelTracks+2) * sizeof(ulong));
+    netsAssign = malloc<ulong>((channelNets+1) * sizeof(ulong));
+    netsAssignCopy = malloc<ulong>((channelNets+1) * sizeof(ulong));
 }
 
 void
@@ -67,20 +67,20 @@ FreeAssign(void)
      * Free cost matrix.
      */
     for (net = 1; net <= channelNets; net++) {
-	_Unchecked { free(costMatrix[net].row); }
+	_Unchecked { free<long>(costMatrix[net].row); }
     }
-    _Unchecked { free(costMatrix); }
+    _Unchecked { free<struct costMatrixRow>(costMatrix); }
 
     /*
      * Free structures associated with cost matrix.
      */
-    _Unchecked { free(tracksNotPref); }
-    _Unchecked { free(tracksTopNotPref); }
-    _Unchecked {  free(tracksBotNotPref); }
-    _Unchecked { free(tracksNoHCV); }
-    _Unchecked { free(tracksAssign); }
-    _Unchecked { free(netsAssign); }
-    _Unchecked { free(netsAssignCopy); }
+    _Unchecked { free<ulong>(tracksNotPref); }
+    _Unchecked { free<ulong>(tracksTopNotPref); }
+    _Unchecked { free<ulong>(tracksBotNotPref); }
+    _Unchecked { free<ulong>(tracksNoHCV); }
+    _Unchecked { free<ulong>(tracksAssign); }
+    _Unchecked { free<ulong>(netsAssign); }
+    _Unchecked { free<ulong>(netsAssignCopy); }
 }
 
 void

@@ -1,7 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "mst.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /*#define assert(num,a) \
    if (!(a)) unchecked {printf("Assertion failure:%d in makegraph\n",num); exit(-1);}*/
@@ -43,7 +43,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
                      int perproc, int numvert, int j) 
 {
   Vertex tmp = NULL;
-  VertexArray helper checked[MAXPROC] = { 0 };
+  VertexArray helper checked[MAXPROC] = {0};
   int i;
 
   for (i=0; i<numproc; i++) {
@@ -83,7 +83,7 @@ Graph MakeGraph(int numvert, int numproc)
   array_ptr<struct vert_st> block : count(perproc) = NULL;
   Graph retval = NULL;
 
-  retval = (Graph)calloc(1, sizeof(*retval));
+  retval = calloc<struct graph_st>(1, sizeof(*retval));
   for (i=0; i<MAXPROC; i++) 
     {
       retval->vlist[i].starting_vertex = NULL;
@@ -91,7 +91,7 @@ Graph MakeGraph(int numvert, int numproc)
   chatting("Make phase 2\n");
   for (j=numproc-1; j>=0; j--) 
     {
-      block = calloc(perproc, sizeof(*tmp));
+      block = calloc<struct vert_st>(perproc, sizeof(*tmp));
       v = NULL;
       for (i=0; i<perproc; i++) 
         {

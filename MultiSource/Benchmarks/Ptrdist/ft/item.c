@@ -34,7 +34,7 @@
 
 #include "item.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int LessThan(_Ptr<Item>  item1, _Ptr<Item>  item2)
 {

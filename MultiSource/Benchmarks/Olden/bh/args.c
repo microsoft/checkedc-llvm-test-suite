@@ -1,7 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 extern int NumNodes;
 extern int nbody;

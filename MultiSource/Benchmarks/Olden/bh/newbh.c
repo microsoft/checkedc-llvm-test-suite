@@ -12,7 +12,7 @@
 #include "defs.h"
 #include "code.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int nbody;
 
@@ -77,12 +77,12 @@ treeptr old_main(void) {
   bodyptr prev=NULL;
   int tmp=0, range=((1<<NDIM) << NDIM) / NumNodes;
   int bodiesper _Checked[MAX_NUM_NODES];
-  bodyptr ptrper _Checked[MAX_NUM_NODES] = { 0 };
+  bodyptr ptrper _Checked[MAX_NUM_NODES] = {0};
 
   srand(123);					/*   set random generator   */
 
 /* Tree data structure is global, points to root, and bodylist, has size info */
-  t = (treeptr)malloc(sizeof(tree));
+  t = malloc<tree>(sizeof(tree));
   Root(t) = NULL;
   t->rmin[0] = -2.0;
   t->rmin[1] = -2.0;
@@ -364,7 +364,7 @@ void my_free(nodeptr n)
 bodyptr ubody_alloc(int p)
 { register bodyptr tmp = NULL;
 
-  tmp = (bodyptr)malloc(sizeof(body));
+  tmp = malloc<body>(sizeof(body));
 
   Type(tmp) = BODY;
   Proc(tmp) = p;
@@ -385,7 +385,7 @@ cellptr cell_alloc(int p)
   }
   else 
     {
-      tmp = (cellptr)malloc(sizeof(cell));
+      tmp = malloc<cell>(sizeof(cell));
     }
   Type(tmp) = CELL;
   Proc(tmp) = p;
@@ -652,7 +652,7 @@ void gravstep(real rsize, nodeptr rt, bodyptr p, int nstep, real dthf)
 
 void hackgrav(bodyptr p, real rsize, nodeptr rt)
 {
-  hgstruct hg = { 0 };
+  hgstruct hg = {0};
   real szsq;
 
   NOTEST();

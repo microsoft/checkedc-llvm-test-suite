@@ -3,7 +3,7 @@
 #include <stdchecked.h>
 #include <stdlib_checked.h>
 #include "hash.h"
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define MAXPROC 1
 
 #define printf(...) unchecked { printf(__VA_ARGS__); }
@@ -37,4 +37,4 @@ int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
 int atoi(const char * : itype(nt_array_ptr<const char>));
 void chatting(nt_array_ptr<char> str);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

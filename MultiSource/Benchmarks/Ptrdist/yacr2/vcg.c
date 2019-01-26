@@ -23,7 +23,7 @@
 #include "assign.h"
 #include "channel.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
@@ -35,24 +35,24 @@
 void
 AllocVCG(void)
 {
-    VCG = malloc((channelNets + 1) * sizeof(nodeVCGType));
-    storageRootVCG = malloc((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType));
+    VCG = malloc<nodeVCGType>((channelNets + 1) * sizeof(nodeVCGType));
+    storageRootVCG = malloc<constraintVCGType>((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType));
     storageVCG = storageRootVCG;
     storageLimitVCG = (channelNets + 1) * (channelNets + 1);
-    SCC = malloc((channelNets + 1) * sizeof(ulong));
-    perSCC = malloc((channelNets + 1) * sizeof(ulong));
-    removeVCG = malloc((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType *));
+    SCC = malloc<ulong>((channelNets + 1) * sizeof(ulong));
+    perSCC = malloc<ulong>((channelNets + 1) * sizeof(ulong));
+    removeVCG = malloc<_Ptr<constraintVCGType>>((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType *));
 }
 
 void
 FreeVCG(void)
 {
-    _Unchecked { free(VCG); }
-    _Unchecked { free(storageRootVCG); }
+    _Unchecked { free<nodeVCGType>(VCG); }
+    _Unchecked { free<constraintVCGType>(storageRootVCG); }
     storageLimitVCG = 0;
-    _Unchecked { free(SCC); }
-    _Unchecked { free(perSCC); }
-    _Unchecked { free(removeVCG); }
+    _Unchecked { free<ulong>(SCC); }
+    _Unchecked { free<ulong>(perSCC); }
+    _Unchecked { free<_Ptr<constraintVCGType>>(removeVCG); }
 }
 
 void

@@ -11,7 +11,7 @@
 #include <stdchecked.h>
 #include <stdio_checked.h>
 #include <stdlib_checked.h>
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define chatting(...) unchecked { printf(__VA_ARGS__); }
 
@@ -99,6 +99,6 @@ float get_total_time(ptr<struct Village> village);
 float get_total_hosps(ptr<struct Village> village);
 struct Results get_results(ptr<struct Village> village);
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF
 #endif
 

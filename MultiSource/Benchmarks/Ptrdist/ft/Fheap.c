@@ -42,7 +42,7 @@
 #include "Fheap.h"
 #include "Fstruct.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #ifdef DO_INLINE
 #define INLINE inline
@@ -144,7 +144,7 @@ DeleteMin(_Ptr<HeapP>  h)
 
   if(h1 == NULL)
   {
-    free(h);
+    free<HeapP>(h);
     return(NULL);
   }
 
@@ -266,7 +266,7 @@ DeleteMin(_Ptr<HeapP>  h)
     }
   }
 
-  free(h);
+  free<HeapP>(h);
 
   return(min);
 }
@@ -388,7 +388,7 @@ Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i)
     while(h1 != CHILD(i));
   }
 
-  free(i);
+  free<HeapP>(i);
   return(h);
 }
 
@@ -499,7 +499,7 @@ NewHeap(_Ptr<Item>  i)
 {
   _Ptr<HeapP>  h = 0;
 
-  h = calloc(1, sizeof(HeapP));
+  h = calloc<HeapP>(1, sizeof(HeapP));
 
   if(h == NULL)
   {

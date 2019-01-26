@@ -140,7 +140,7 @@
 
 jmp_buf jbAnagram;
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /* Before compiling, make sure Quad and MASK_BITS are set properly.  For best
  * results, make Quad the largest integer size supported on your machine.
@@ -295,7 +295,7 @@ void ReadDict(_Nt_array_ptr<char> pchFile) {
     _Array_ptr<char> buffer : count(ulLen) = 0;
     _Array_ptr<char> pch : bounds(buffer, buffer+ulLen) = 0;
     _Array_ptr<char> pchBase : bounds(buffer, buffer+ulLen) = 0;
-    pchBase = buffer = pchDictionary = calloc(pchDictionarySize, sizeof(char));
+    pchBase = buffer = pchDictionary = calloc<char>(pchDictionarySize, sizeof(char));
 
     if(pchDictionary == NULL)
 	Fatal("Unable to allocate memory for dictionary\n", 0);
@@ -383,7 +383,7 @@ void BuildMask(_Array_ptr<char> pchPhrase : bounds(achPhrase, achPhrase+255)) {
 }
 
 PWord NewWord(void) {
-    PWord pw = calloc(1, sizeof(Word));
+    PWord pw = calloc<Word>(1, sizeof(Word));
     if (pw == NULL)
         Fatal("Out of memory after %d candidates\n", cpwCand);
     return pw;

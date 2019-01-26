@@ -21,7 +21,7 @@
 #include <math_checked.h>
 #include <stdlib_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 /*
  * STREAM: a replacement for FILE *.
@@ -125,4 +125,4 @@ typedef _Ptr<real()> rproc;
 #define   MAX(x,y)     (((x) > (y)) ? (x) : (y))
 #define   MIN(x,y)     (((x) < (y)) ? (x) : (y))
 
-#pragma BOUNDS_CHECKED OFF
+#pragma CHECKED_SCOPE OFF

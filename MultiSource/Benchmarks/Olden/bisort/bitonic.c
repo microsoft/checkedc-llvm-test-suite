@@ -6,7 +6,7 @@
 #include "proc.h"   /* Procedure Types/Nums */
 #include <stdio_checked.h>
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
@@ -64,7 +64,7 @@ int random(int seed) {
 
 ptr<HANDLE> RandTree(int n, int seed, int node, int level) {
   int next_val,my_name;
-  future_cell_int f_left = { 0 }, f_right = { 0 };
+  future_cell_int f_left = { 0 }, f_right = {0};
   ptr<HANDLE> h = NIL;
   my_name=foo++;
   if (n > 1) {

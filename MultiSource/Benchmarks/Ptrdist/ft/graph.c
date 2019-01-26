@@ -33,7 +33,7 @@
 #include <stdlib_checked.h>
 #include "graph.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 #define TRUE 1
 #define FALSE 0
@@ -226,7 +226,7 @@ NewVertex(void)
 {
   _Ptr<Vertices>  vertex = 0;
 
-  vertex = calloc(1, sizeof(Vertices));
+  vertex = calloc<Vertices>(1, sizeof(Vertices));
 
   if(vertex == NULL)
   {
@@ -246,7 +246,7 @@ NewEdge(void)
 {
   _Ptr<Edges>  edge = 0;
 
-  edge = calloc(1, sizeof(Edges));
+  edge = calloc<Edges>(1, sizeof(Edges));
 
   if(edge == NULL)
   {

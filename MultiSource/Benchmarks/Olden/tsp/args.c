@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include "tsp.h"
 
-#pragma BOUNDS_CHECKED ON
+#pragma CHECKED_SCOPE ON
 
 int NumNodes, NDim;
 int flag;
