@@ -77,7 +77,7 @@ treeptr old_main(void) {
   bodyptr prev=NULL;
   int tmp=0, range=((1<<NDIM) << NDIM) / NumNodes;
   int bodiesper _Checked[MAX_NUM_NODES];
-  bodyptr ptrper _Checked[MAX_NUM_NODES];
+  bodyptr ptrper _Checked[MAX_NUM_NODES] = { 0 };
 
   srand(123);					/*   set random generator   */
 
@@ -95,7 +95,7 @@ treeptr old_main(void) {
 /* Creates a list of bodies */
   for (i=0; i < 32; i++)
     {
-    datapoints points;
+    datapoints points = { 0.0 };
     int processor= i/(32/NumNodes);
 
     points=uniform_testdata(processor, nbody/32, i+1);
@@ -401,7 +401,7 @@ cellptr cell_alloc(int p)
 
 datapoints uniform_testdata(int proc, int nbodyx, int seedfactor)
 {
-  datapoints retval;
+  datapoints retval = { 0.0 };
   real rsc, vsc, r, v, x, y;
   bodyptr head = NULL, p = NULL, prev = NULL;
   register int i;
@@ -652,7 +652,7 @@ void gravstep(real rsize, nodeptr rt, bodyptr p, int nstep, real dthf)
 
 void hackgrav(bodyptr p, real rsize, nodeptr rt)
 {
-  hgstruct hg;
+  hgstruct hg = { 0 };
   real szsq;
 
   NOTEST();
@@ -840,7 +840,7 @@ void expandbox(bodyptr p, treeptr t, int nsteps, int proc)
     int k;
     vector rmid;
     cellptr  newt = NULL;
-    tree tmp;
+    tree tmp = { 0.0 };
     real rsize;
     int inbox;
 

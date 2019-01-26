@@ -64,7 +64,7 @@ int random(int seed) {
 
 ptr<HANDLE> RandTree(int n, int seed, int node, int level) {
   int next_val,my_name;
-  future_cell_int f_left, f_right;
+  future_cell_int f_left = { 0 }, f_right = { 0 };
   ptr<HANDLE> h = NIL;
   my_name=foo++;
   if (n > 1) {

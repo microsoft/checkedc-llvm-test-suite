@@ -24,7 +24,7 @@ hgstruct walksub(nodeptr p, real dsq, real tolsq, hgstruct hg, int level)
 {
   register int k, i;
   register nodeptr r = NULL;
-  nodeptr tmp _Checked[NSUB];
+  nodeptr tmp _Checked[NSUB] = { 0 };
 
 
   if (subdivp(p, dsq, tolsq, hg)) {           /* should p be opened?    */

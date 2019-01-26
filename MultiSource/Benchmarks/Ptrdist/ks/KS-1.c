@@ -65,7 +65,8 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
     _Nt_array_ptr<char> tok = NULL;
-	while ((tok = strtok(NULL, " \t\n")) != NULL) {
+  // Checked C: TODO: return bounds-safe interface being lost.
+	while ((tok = (_Nt_array_ptr<char>) strtok(NULL, " \t\n")) != NULL) {
 	    TRY(node = calloc(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,

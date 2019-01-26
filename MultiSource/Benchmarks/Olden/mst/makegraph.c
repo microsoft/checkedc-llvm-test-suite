@@ -43,7 +43,7 @@ static void AddEdges(int count1, Graph retval, int numproc,
                      int perproc, int numvert, int j) 
 {
   Vertex tmp = NULL;
-  VertexArray helper checked[MAXPROC];
+  VertexArray helper checked[MAXPROC] = { 0 };
   int i;
 
   for (i=0; i<numproc; i++) {

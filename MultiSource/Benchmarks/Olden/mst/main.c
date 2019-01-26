@@ -16,7 +16,7 @@ typedef struct fc_br {
 
 static BlueReturn BlueRule(Vertex inserted, Vertex vlist) 
 {
-  BlueReturn retval;
+  BlueReturn retval = { 0 };
   Vertex tmp = NULL, prev = NULL;
   Hash hash = NULL;
   int dist,dist2;
@@ -84,7 +84,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
 static Vertex MyVertexList = NULL;
 
 static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
-  future_cell_BlueReturn fcleft;
+  future_cell_BlueReturn fcleft = { 0 };
   BlueReturn retright;
 
   if (nproc > 1) {
@@ -122,7 +122,7 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   printf("Compute phase 2\n");
   while (numvert) 
     {
-      BlueReturn br;
+      BlueReturn br = { 0 };
       
       br = Do_all_BlueRule(inserted,numproc,0);
       inserted = br.vert;    
