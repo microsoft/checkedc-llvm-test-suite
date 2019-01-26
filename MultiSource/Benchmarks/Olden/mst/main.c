@@ -85,7 +85,7 @@ static Vertex MyVertexList = NULL;
 
 static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
   future_cell_BlueReturn fcleft = { 0 };
-  BlueReturn retright;
+  BlueReturn retright = { 0 };
 
   if (nproc > 1) {
      fcleft.value = Do_all_BlueRule(inserted,nproc/2,pn+nproc/2);
