@@ -1,3 +1,11 @@
+##===- TestSuite.cmake ----------------------------------------------------===##
+#
+# Defines helper functions to create .test files that describe how to run a
+# benchmark and optionally how to prepare before running, how to verify the
+# results and how to extract metrics from the output.
+#
+##===----------------------------------------------------------------------===##
+
 # Specify a "RUN: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_run)
   CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;EXECUTABLE;WORKDIR" "" ${ARGN})
@@ -22,13 +30,16 @@ endmacro()
 
 # Specify a "VERIFY: " line to be put in a .test file. See also llvm_add_test().
 macro(llvm_test_verify)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;WORKDIR" "" ${ARGN})
   if(NOT DEFINED TESTSCRIPT)
     set(TESTSCRIPT "" PARENT_SCOPE)
   endif()
   # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
   # whitespace-separated string.
   string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(DEFINED ARGS_WORKDIR)
+    set(JOINED_ARGUMENTS "cd ${ARGS_WORKDIR} ; ${JOINED_ARGUMENTS}")
+  endif()
   if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
     set(TESTSCRIPT "${TESTSCRIPT}VERIFY: ${JOINED_ARGUMENTS}\n")
   endif()
@@ -37,13 +48,16 @@ endmacro()
 # Specify a "PREPARE: " line to be put in a .test file. See also
 # llvm_add_test().
 macro(llvm_test_prepare)
-  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE" "" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARGS "" "RUN_TYPE;WORKDIR" "" ${ARGN})
   if(NOT DEFINED TESTSCRIPT)
     set(TESTSCRIPT "" PARENT_SCOPE)
   endif()
   # ARGS_UNPARSED_ARGUMENTS is a semicolon-separated list. Change it into a
   # whitespace-separated string.
   string(REPLACE ";" " " JOINED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS}")
+  if(DEFINED ARGS_WORKDIR)
+    set(JOINED_ARGUMENTS "cd ${ARGS_WORKDIR} ; ${JOINED_ARGUMENTS}")
+  endif()
   if(NOT DEFINED ARGS_RUN_TYPE OR "${ARGS_RUN_TYPE}" STREQUAL "${TEST_SUITE_RUN_TYPE}")
     set(TESTSCRIPT "${TESTSCRIPT}PREPARE: ${JOINED_ARGUMENTS}\n")
   endif()
@@ -72,5 +86,10 @@ function(llvm_add_test testfile executable)
   # Produce .test file
   file(GENERATE OUTPUT ${testfile} CONTENT "${TESTSCRIPT}")
   # flush the test script
+  set(TESTSCRIPT "" PARENT_SCOPE)
+endfunction()
+
+function(llvm_add_test_for_target target)
+  llvm_add_test($<TARGET_FILE:${target}>.test $<TARGET_FILE:${target}>)
   set(TESTSCRIPT "" PARENT_SCOPE)
 endfunction()

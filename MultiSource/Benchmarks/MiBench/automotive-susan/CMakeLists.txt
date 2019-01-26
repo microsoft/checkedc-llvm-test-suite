@@ -1,5 +1,5 @@
-set(PROG automotive-susan)
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input_large.pgm /dev/null -s)
+set(RUN_OPTIONS input_large.pgm /dev/null -s)
 set(HASH_PROGRAM_OUTPUT 1)
-llvm_multisource()
+llvm_multisource(automotive-susan)
+llvm_test_data(automotive-susan input_large.pgm)

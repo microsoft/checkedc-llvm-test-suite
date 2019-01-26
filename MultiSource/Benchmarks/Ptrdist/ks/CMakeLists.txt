@@ -1,8 +1,11 @@
-set(PROG ks)
 if(LARGE_PROBLEM_SIZE)
   list(APPEND RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/KL-5.in)
   set(HASH_PROGRAM_OUTPUT 1)
+  llvm_multisource(ks)
+  llvm_test_data(ks KL-5.in)
 else()
   list(APPEND RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/KL-4.in)
+   llvm_multisource(ks)
+  llvm_test_data(ks KL-4.in)
 endif()
-llvm_multisource()
+

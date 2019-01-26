@@ -69,7 +69,7 @@ AC_CACHE_CHECK([type of operating system we're going to target],
     llvm_cv_target_os_type="IRIX" ;;
   *-*-cygwin*)
     llvm_cv_target_os_type="Cygwin" ;;
-  *-*-darwin* | *-*-macosx*)
+  *-*-darwin* | *-*-macosx* | *-*-ios*)
     llvm_cv_target_os_type="Darwin" ;;
   *-*-minix*)
     llvm_cv_target_os_type="Minix" ;;
@@ -358,6 +358,13 @@ AC_PROG_CC(gcc)
 AC_PROG_CPP
 
 dnl Verify that GCC is version 3.0 or higher
+
+dnl Get CPU features
+if (test "$llvm_cv_target_arch" == "x86" ||
+    test "$llvm_cv_target_arch" == "x86_64")
+then 
+CHECK_X86_FEATURES
+fi
 
 dnl Check for GNU Make.  We use its extensions too, so don't build without it
 AC_CHECK_GNU_MAKE

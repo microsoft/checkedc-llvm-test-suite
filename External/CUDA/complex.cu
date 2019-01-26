@@ -1,15 +1,10 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-
-#include <assert.h>
-#include <stdio.h>
-#include <complex>
 
 // These are loosely adapted from libc++'s tests.  In general, we don't care a
 // ton about verifying the return types or results we get, on the assumption
@@ -19,13 +14,16 @@
 // We do care about the results of complex multiplication / division, since
 // these use code we've written.
 
-// These tests are pretty annoying to write without C++11, so we require that.
-// In addition, these tests currently don't compile with libc++, because of the
-// issue in https://reviews.llvm.org/D25403.
-//
-// TODO: Once that issue is resolved, take out !defined(_LIBCPP_VERSION) here.
-#if __cplusplus >= 201103L && !defined(_LIBCPP_VERSION)
+#include <stdio.h>
 
+// These tests are pretty annoying to write without C++11, so we require that.
+//
+// In addition, these tests don't work in C++14 mode with pre-C++14 versions of
+// libstdc++ (compile errors in <complex>).
+#if __cplusplus >= 201103L && (__cplusplus < 201402L || STDLIB_VERSION >= 2014)
+
+#include <assert.h>
+#include <complex>
 #include <type_traits>
 
 template <class T>
@@ -69,7 +67,7 @@ __device__ void test_promotion() {
 }
 
 __device__ void test_literals() {
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201402L && STDLIB_VERSION >= 2014
   using namespace std::literals::complex_literals;
 
   {

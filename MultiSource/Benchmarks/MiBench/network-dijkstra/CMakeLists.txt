@@ -1,4 +1,4 @@
-set(PROG network-dijkstra)
 list(APPEND LDFLAGS -lm)
-set(RUN_OPTIONS ${CMAKE_CURRENT_SOURCE_DIR}/input.dat)
-llvm_multisource()
+set(RUN_OPTIONS input.dat)
+llvm_multisource(network-dijkstra)
+llvm_test_data(network-dijkstra input.dat)
