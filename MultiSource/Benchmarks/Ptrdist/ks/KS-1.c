@@ -43,12 +43,12 @@ ReadNetList(_Nt_array_ptr<char> fname)
 
     TRY(inFile = fopen(fname, "r"),
 	inFile != NULL, "ReadData",
-	"unable to open input file [%s]", inFile, 0, 0,
+	"unable to open input file [%s]", fname, 0, 0,
 	exit(1));
 
     _Unchecked { TRY(fgets(line, BUF_LEN, inFile),
 	sscanf((const char*)line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
-	"unable to parse header in file [%s]", inFile, 0, 0,
+	"unable to parse header in file [%s]", fname, 0, 0,
 	exit(1)); }
 
     for (net = 0; net < numNets; net++) {
@@ -67,7 +67,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
     _Nt_array_ptr<char> tok = NULL;
   // Checked C: TODO: return bounds-safe interface being lost.
 	while ((tok = (_Nt_array_ptr<char>) strtok(NULL, " \t\n")) != NULL) {
-	    TRY(node = calloc(1, sizeof(Module)),
+	    TRY(node = calloc<Module>(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
 		exit(1));
