@@ -11,11 +11,6 @@ PARALLEL_DIRS := Fhourstones Fhourstones-3.1 \
                  nbench ASCI_Purple MiBench Trimaran VersaBench NPB-serial\
                  BitBench ASC_Sequoia TSVC DOE-ProxyApps-C
 
-# On ARM qemu, SciMark2-C takes ~18m to run. For now we disable it.
-ifeq ($(ARCH),ARM)
-PARALLEL_DIRS := $(filter-out SciMark2-C,$(PARALLEL_DIRS))
-endif
-
 # Disable TSVC on Darwin until the tests support SMALL_PROBLEM_SIZE=1.
 ifeq ($(TARGET_OS),Darwin)
 ifeq ($(ARCH),ARM)
@@ -40,9 +35,12 @@ PARALLEL_DIRS := $(filter-out 7zip, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out PAQ8p, $(PARALLEL_DIRS))
 endif
 
+# Disable the following tests for ARM target as they take a long time to
+# execute.
 ifeq ($(ARCH),ARM)
-# On ARM qemu, mafft takes a long time to run. So we skip it.
 PARALLEL_DIRS := $(filter-out mafft, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out PAQ8p, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out SciMark2-C,$(PARALLEL_DIRS))
 endif
 
 include $(LEVEL)/MultiSource/Makefile.multisrc
