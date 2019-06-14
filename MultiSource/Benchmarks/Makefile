@@ -40,4 +40,9 @@ PARALLEL_DIRS := $(filter-out 7zip, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out PAQ8p, $(PARALLEL_DIRS))
 endif
 
+ifeq ($(ARCH),ARM)
+# On ARM qemu, mafft takes a long time to run. So we skip it.
+PARALLEL_DIRS := $(filter-out mafft, $(PARALLEL_DIRS))
+endif
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
