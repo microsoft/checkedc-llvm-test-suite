@@ -37,7 +37,7 @@ void
 ReadNetList(_Nt_array_ptr<char> fname)
 {
     _Ptr<FILE> inFile = 0;
-    char line _Nt_Checked[BUF_LEN + 1] = { 0 };
+    char line _Nt_checked[BUF_LEN + 1] = { 0 };
     unsigned long net, dest;
     ModulePtr node = 0, prev = 0, head = 0;
 
