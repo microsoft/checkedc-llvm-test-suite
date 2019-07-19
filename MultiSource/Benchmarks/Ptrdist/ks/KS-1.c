@@ -37,7 +37,7 @@ void
 ReadNetList(_Nt_array_ptr<char> fname)
 {
     _Ptr<FILE> inFile = 0;
-    char line _Checked[BUF_LEN];
+    char line _Nt_checked[BUF_LEN + 1] = { 0 };
     unsigned long net, dest;
     ModulePtr node = 0, prev = 0, head = 0;
 
@@ -55,7 +55,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	fgets(line, BUF_LEN, inFile);
 	
 	/* net connections for "dest" */
-	dest = atol(strtok((_Nt_array_ptr<char>)line, " \t\n"))-1;
+	dest = atol(strtok(line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
 	TRY(head = prev = calloc<Module>(1, sizeof(Module)),
@@ -65,8 +65,7 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
     _Nt_array_ptr<char> tok = NULL;
-  // Checked C: TODO: return bounds-safe interface being lost.
-	while ((tok = (_Nt_array_ptr<char>) strtok(NULL, " \t\n")) != NULL) {
+	while ((tok = strtok(NULL, " \t\n")) != NULL) {
 	    TRY(node = calloc<Module>(1, sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
