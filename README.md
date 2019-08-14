@@ -5,14 +5,15 @@ to use Checked C. The modified programs will be used to benchmark the Checked C
 version of LLVM/clang.
 
 We have deleted test-only code from the master branch of the repo and left only
-benchmarks in the master branch.  That makes the repo easier to work with.  It decreases
-disk usage from about 2.3 GBytes to under 500 MBytes when using the master branch.
+benchmarks in the master branch.  That makes the repo easier to work with.  It
+decreases disk usage from about 2.3 GBytes to under 500 MBytes when using the
+master branch.
 
 Checked C is an extension to C that adds checking to detect or prevent common 
 programming  errors such as out-of-bounds memory accesses.  For more information
 on Checked C, see the Checked C specification in the
 [Checked C repo](https://github.com/Microsoft/checkedc).  The Checked C
-version of   LLVM/clang lives in two repos: the
+version of LLVM/clang lives in two repos: the
 [Checked C clang repo](https://github.com/Microsoft/checked-clang)
 and the [Checked C LLVM repo](https://github.com/Microsoft/checkedc-llvm).
 
@@ -35,9 +36,39 @@ the Checked C implementation has not broken existing tests.
 
 ## Running tests
 
-To run tests on Linux, see the LNT [quick start directions](http://llvm.org/docs/lnt/quickstart.html)
-on the LLVM site.  You will want to add the argument `--ccflags -fcheckedc-extension`
-to the LNT command-line.  The tests can also be run on Windows 10 using
+### On Linux
+1. Setup LNT
+Note: These steps have been adopted from the [LNT Quickstart Guide](http://llvm.org/docs/lnt/quickstart.html).
+```
+sudo apt-get install bison flex
+sudo apt-get install python-pip
+sudo pip install setuptools
+sudo easy_install virtualenv
+virtualenv ~/mysandbox
+svn co http://llvm.org/svn/llvm-project/lnt/trunk ~/lnt
+~/mysandbox/bin/python ~/lnt/setup.py install
+```
+
+2. Invoke LNT tests
+Prerequisite: Make sure you have checked out and built the Checked C compiler.
+```
+SRC_DIR=</path/to/llvm/src> \
+BUILD_DIR=</path/to/llvm/build> \
+<SRC_DIR>/llvm/tools/clang/automation/UNIX/run-lnt-local.sh
+```
+
+Optional flags:
+```
+TEST_TARGET="X86_64;ARM" LNT_BIN=</path/to/lnt>
+```
+
+The test results are generated at:
+```
+<BUILD_DIR>/LNT-Results-Release-Linux/<TEST_TARGET>/build/test.log
+```
+
+### On Windows
+The LNT tests can also be run on Windows 10 using
 the [Windows Subsystem for Linux](https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/).
 See the directions [here](docs/Benchmarking-on-Windows.md).
 
