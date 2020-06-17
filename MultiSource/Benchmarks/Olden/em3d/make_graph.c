@@ -340,7 +340,8 @@ ptr<graph_t> initialize_graph(void) {
   chatting("cleanup for return now\n");
   for (i=0; i<NumNodes; i++) {
     int local_table_size = table->e_table[i*blocksize].size;
-    array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+    int local_table_bounds = local_table_size;
+    array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
     _Unchecked { local_table = table->e_table[i*blocksize].table; }
     ptr<node_t> local_node_r = local_table[0];
 
