@@ -286,6 +286,7 @@ SCCofVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     /*
      * Identify all SCC.
      */
+    ulong originalTotalSCC = totalSCC;
     totalSCC = 0;
     for (net = 1; net <= channelNets; net++) {
 	SCC[net] = VCG[net].netsBelowLabel;
