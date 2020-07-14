@@ -242,7 +242,7 @@ SCCofVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     ;
 
     ulong originalTotalSCC = totalSCC;
-    _Array_ptr<ulong> perSCC : count(originalTotalSCC) = paramSCC;
+    _Array_ptr<ulong> perSCC : count(originalTotalSCC + 1) = paramSCC;
 
     /*
      * DFS of above edges.
