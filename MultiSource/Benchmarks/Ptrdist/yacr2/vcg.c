@@ -229,7 +229,7 @@ DFSBelowVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 void
 SCCofVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	     _Array_ptr<ulong> SCC : count(channelNets + 1),
-		 _Array_ptr<ulong> paramSCC : count(totalSCC + 1))
+		 _Array_ptr<ulong> tmpPerSCC : count(totalSCC + 1))
 {
     ulong      	net;
     ulong      	scc;
@@ -242,7 +242,7 @@ SCCofVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     ;
 
     ulong originalTotalSCC = totalSCC;
-    _Array_ptr<ulong> perSCC : count(originalTotalSCC + 1) = paramSCC;
+    _Array_ptr<ulong> perSCC : count(originalTotalSCC + 1) = tmpPerSCC;
 
     /*
      * DFS of above edges.
