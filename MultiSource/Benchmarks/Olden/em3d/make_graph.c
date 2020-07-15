@@ -211,8 +211,9 @@ void make_tables(ptr<table_t> table,int groupname) {
 
 void make_all_neighbors(ptr<table_t> table,int groupname) {
   ptr<node_t> first_node = NULL;
-  int local_table_size;
-  array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+  int local_table_size = 1;
+  int local_table_bounds = local_table_size;
+  array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
   array_ptr<table_arr_t> local_table_array : count(1) = NULL;
 
   init_random(SEED2*groupname);
@@ -236,8 +237,9 @@ void make_all_neighbors(ptr<table_t> table,int groupname) {
 
 void update_all_from_coeffs(ptr<table_t> table, int groupname)    
 {
-  int local_table_size;
-  array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+  int local_table_size = 1;
+  int local_table_bounds = local_table_size;
+  array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
   ptr<node_t> first_node = NULL;
 
   /* Done by do_all, table not local */
@@ -255,8 +257,9 @@ void update_all_from_coeffs(ptr<table_t> table, int groupname)
 
 void fill_all_from_fields(ptr<table_t> table, int groupname)
 {
-  int local_table_size;
-  array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+  int local_table_size = 1;
+  int local_table_bounds = local_table_size;
+  array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
   ptr<node_t> first_node = NULL;
 
   init_random(SEED3*groupname);
@@ -273,8 +276,9 @@ void fill_all_from_fields(ptr<table_t> table, int groupname)
 
 void localize(ptr<table_t> table, int groupname)
 {
-  int local_table_size;
-  array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+  int local_table_size = 1;
+  int local_table_bounds = local_table_size;
+  array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
   ptr<node_t> first_node = NULL;
 
   local_table_size = table->h_table[groupname].size;
@@ -340,7 +344,8 @@ ptr<graph_t> initialize_graph(void) {
   chatting("cleanup for return now\n");
   for (i=0; i<NumNodes; i++) {
     int local_table_size = table->e_table[i*blocksize].size;
-    array_ptr<ptr<node_t>> local_table : count(local_table_size) = NULL;
+    int local_table_bounds = local_table_size;
+    array_ptr<ptr<node_t>> local_table : count(local_table_bounds) = NULL;
     _Unchecked { local_table = table->e_table[i*blocksize].table; }
     ptr<node_t> local_node_r = local_table[0];
 
