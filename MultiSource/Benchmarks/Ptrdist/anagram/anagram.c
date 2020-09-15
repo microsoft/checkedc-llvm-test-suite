@@ -638,8 +638,8 @@ void SortCandidates(void) {
 
 int fInteractive;
 
-_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+size), int size)
-    : bounds(achPhrase, achPhrase+size) {
+_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : count(size), int size)
+    : count(size) {
     if (fInteractive) printf(">");
     fflush(stdout);
     _Unchecked { if (fgets(pch, size, stdin) == NULL) _Checked {
