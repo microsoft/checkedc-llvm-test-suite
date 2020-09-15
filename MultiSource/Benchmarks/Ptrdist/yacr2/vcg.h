@@ -150,7 +150,7 @@ AcyclicVCG(void);
 void
 RemoveConstraintVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 					_Array_ptr<ulong> : count(channelNets + 1),
-					_Array_ptr<ulong> : count(totalSCC + 1),
+					_Array_ptr<ulong> : count(channelNets + 1),
 					_Array_ptr<_Ptr<constraintVCGType>> : count((channelNets + 1) * (channelNets + 1)));
 
 ulong
@@ -227,7 +227,7 @@ AcyclicVCG(void);
 extern void
 RemoveConstraintVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 					_Array_ptr<ulong> : count(channelNets + 1),
-					_Array_ptr<ulong> : count(totalSCC + 1),
+					_Array_ptr<ulong> : count(channelNets + 1),
 					_Array_ptr<_Ptr<constraintVCGType>> : count((channelNets + 1) * (channelNets + 1)));
 
 extern ulong
