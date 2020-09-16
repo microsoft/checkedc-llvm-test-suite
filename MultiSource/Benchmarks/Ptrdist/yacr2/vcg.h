@@ -127,7 +127,7 @@ DFSBelowVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 void
 SCCofVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 		 _Array_ptr<ulong> : count(channelNets + 1),
-         _Array_ptr<ulong> : count(countSCC + 1),
+		 _Array_ptr<ulong> : count(countSCC + 1),
 		 ulong countSCC);
 
 void

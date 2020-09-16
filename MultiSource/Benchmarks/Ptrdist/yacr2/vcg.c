@@ -40,8 +40,8 @@ AllocVCG(void)
     storageVCG = storageRootVCG;
     storageLimitVCG = (channelNets + 1) * (channelNets + 1);
     SCC = malloc<ulong>((channelNets + 1) * sizeof(ulong));
-	perSCC = malloc<ulong>((channelNets + 1) * sizeof(ulong));
-	removeVCG = malloc<_Ptr<constraintVCGType>>((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType *));
+    perSCC = malloc<ulong>((channelNets + 1) * sizeof(ulong));
+    removeVCG = malloc<_Ptr<constraintVCGType>>((channelNets + 1) * (channelNets + 1) * sizeof(constraintVCGType *));
 }
 
 void
@@ -291,7 +291,7 @@ SCCofVCG(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     for (net = 1; net <= channelNets; net++) {
 	SCC[net] = VCG[net].netsBelowLabel;
 	if (SCC[net] > totalSCC) {
-		totalSCC = SCC[net];
+	    totalSCC = SCC[net];
 	}
     }
     assert(totalSCC > 0);
