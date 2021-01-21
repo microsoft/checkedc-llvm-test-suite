@@ -293,9 +293,9 @@ void ReadDict(_Nt_array_ptr<char> pchFile) {
     unsigned long ulLen;
     pchDictionarySize = ulLen = statBuf.st_size + 2 * (unsigned long)MAXWORDS;
     _Array_ptr<char> buffer : count(ulLen) = 0;
-    _Array_ptr<char> pch : bounds(buffer, buffer+ulLen) = 0;
     _Array_ptr<char> pchBase : bounds(buffer, buffer+ulLen) = 0;
     pchBase = buffer = pchDictionary = calloc<char>(pchDictionarySize, sizeof(char));
+    _Array_ptr<char> pch : bounds(buffer, buffer+ulLen) = 0;
 
     if(pchDictionary == NULL)
 	Fatal("Unable to allocate memory for dictionary\n", 0);
@@ -638,8 +638,8 @@ void SortCandidates(void) {
 
 int fInteractive;
 
-_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : bounds(achPhrase, achPhrase+size), int size)
-    : bounds(achPhrase, achPhrase+size) {
+_Array_ptr<char> GetPhrase(_Array_ptr<char> pch : count(size), int size)
+    : count(size) {
     if (fInteractive) printf(">");
     fflush(stdout);
     _Unchecked { if (fgets(pch, size, stdin) == NULL) _Checked {

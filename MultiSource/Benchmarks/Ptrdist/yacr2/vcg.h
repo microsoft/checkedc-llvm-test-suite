@@ -76,7 +76,7 @@ _Array_ptr<_Ptr<constraintVCGType>>		removeVCG : count((channelNets + 1) * (chan
 ulong					removeTotalVCG;
 _Array_ptr<ulong>				SCC : count(channelNets + 1);
 ulong					totalSCC;
-_Array_ptr<ulong>				perSCC : count(totalSCC + 1);
+_Array_ptr<ulong>				perSCC : count(channelNets + 1);
 
 #else	/* VCG_CODE */
 
@@ -88,7 +88,7 @@ extern _Array_ptr<_Ptr<constraintVCGType>>		removeVCG : count((channelNets + 1) 
 extern ulong					removeTotalVCG;
 extern _Array_ptr<ulong>				SCC : count(channelNets + 1);
 extern ulong					totalSCC;
-extern _Array_ptr<ulong>				perSCC : count(totalSCC + 1);
+extern _Array_ptr<ulong>				perSCC : count(channelNets + 1);
 
 #endif	/* VCG_CODE */
 
@@ -127,7 +127,8 @@ DFSBelowVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 void
 SCCofVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 		 _Array_ptr<ulong> : count(channelNets + 1),
-         _Array_ptr<ulong> : count(totalSCC + 1));
+		 _Array_ptr<ulong> : count(countSCC + 1),
+		 ulong countSCC);
 
 void
 SCC_DFSAboveVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
@@ -149,7 +150,7 @@ AcyclicVCG(void);
 void
 RemoveConstraintVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 					_Array_ptr<ulong> : count(channelNets + 1),
-					_Array_ptr<ulong> : count(totalSCC + 1),
+					_Array_ptr<ulong> : count(channelNets + 1),
 					_Array_ptr<_Ptr<constraintVCGType>> : count((channelNets + 1) * (channelNets + 1)));
 
 ulong
@@ -203,7 +204,8 @@ DFSBelowVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 extern void
 SCCofVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 		 _Array_ptr<ulong> : count(channelNets + 1),
-		 _Array_ptr<ulong> : count(totalSCC + 1));
+		 _Array_ptr<ulong> : count(countSCC + 1),
+		 ulong countSCC);
 
 extern void
 SCC_DFSAboveVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
@@ -225,7 +227,7 @@ AcyclicVCG(void);
 extern void
 RemoveConstraintVCG(_Array_ptr<nodeVCGType> : count(channelNets + 1),
 					_Array_ptr<ulong> : count(channelNets + 1),
-					_Array_ptr<ulong> : count(totalSCC + 1),
+					_Array_ptr<ulong> : count(channelNets + 1),
 					_Array_ptr<_Ptr<constraintVCGType>> : count((channelNets + 1) * (channelNets + 1)));
 
 extern ulong
