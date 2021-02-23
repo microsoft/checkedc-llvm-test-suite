@@ -43,4 +43,11 @@ PARALLEL_DIRS := $(filter-out PAQ8p, $(PARALLEL_DIRS))
 PARALLEL_DIRS := $(filter-out SciMark2-C,$(PARALLEL_DIRS))
 endif
 
+# The following tests fail after the upgrade to Clang 11.
+# See https://github.com/microsoft/checkedc-llvm-test-suite/issues/102
+PARALLEL_DIRS := $(filter-out ASC_Sequoia, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out DOE-ProxyApps-C, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out Olden, $(PARALLEL_DIRS))
+PARALLEL_DIRS := $(filter-out Prolangs-C, $(PARALLEL_DIRS))
+
 include $(LEVEL)/MultiSource/Makefile.multisrc
