@@ -17,9 +17,6 @@ version of LLVM/clang lives in two repos: the
 [Checked C clang repo](https://github.com/Microsoft/checked-clang)
 and the [Checked C LLVM repo](https://github.com/Microsoft/checkedc-llvm).
 
-## Status
-
-At this time, no benchmarks have been converted to use Checked C.
 
 ## Branch organization
 
@@ -39,32 +36,35 @@ the Checked C implementation has not broken existing tests.
 ### On Linux
 1. Setup LNT
 Note: These steps have been adopted from the [LNT Quickstart Guide](http://llvm.org/docs/lnt/quickstart.html).
+These instructions are for Ubuntu 20.
 ```
-sudo apt-get install bison flex
-sudo apt-get install python-pip
-sudo pip install setuptools
-sudo easy_install virtualenv
-virtualenv ~/mysandbox
-svn co http://llvm.org/svn/llvm-project/lnt/trunk ~/lnt
-~/mysandbox/bin/python ~/lnt/setup.py install
+sudo apt install bison flex tclsh
+sudo apt install virtualenv
+sudo virtualenv ~/mysandbox
+git clone https://github.com/llvm/llvm-lnt.git  ~/lnt
+sudo ~/mysandbox/bin/python ~/lnt/setup.py install
 ```
 
 2. Invoke LNT tests
+
 Prerequisite: Make sure you have checked out and built the Checked C compiler.
 ```
-SRC_DIR=</path/to/llvm/src> \
-BUILD_DIR=</path/to/llvm/build> \
+export SRC_DIR=</path/to/llvm/src>
+export BUILD_DIR=</path/to/llvm/build>
+mkdir $SRC_DIR/llvm/tools/clang
+git clone https://github.com/microsoft/checkedc-automation.git $SRC_DIR/llvm/tools/clang/automation
 <SRC_DIR>/llvm/tools/clang/automation/UNIX/run-lnt-local.sh
 ```
 
 Optional flags:
 ```
-TEST_TARGET="X86_64;ARM" LNT_BIN=</path/to/lnt>
+TEST_TARGET="X86_64;ARM"
+LNT_BIN=</path/to/lnt> // By default, lnt is picked up from ~/mysandbox/bin/lnt.
 ```
 
 The test results are generated at:
 ```
-<BUILD_DIR>/LNT-Results-Release-Linux/<TEST_TARGET>/build/test.log
+<BUILD_DIR>/LNT-Results-Release-Linux/<TEST_TARGET>/test-<TIME_STAMP>/test.log
 ```
 
 ### On Windows
