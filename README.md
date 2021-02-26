@@ -36,12 +36,10 @@ the Checked C implementation has not broken existing tests.
 ### On Linux
 1. Setup LNT
 Note: These steps have been adopted from the [LNT Quickstart Guide](http://llvm.org/docs/lnt/quickstart.html).
+These instruction are for Ubuntu 20.
 ```
-sudo apt-get install bison flex
-sudo apt-get install python3-pip
-sudo pip3 install setuptools
-sudo apt-get install virtualenv
-sudo apt-get install tclsh
+sudo apt install bison flex tclsh
+sudo apt install virtualenv
 sudo virtualenv ~/mysandbox
 git clone https://github.com/llvm/llvm-lnt.git  ~/lnt
 sudo ~/mysandbox/bin/python ~/lnt/setup.py install
