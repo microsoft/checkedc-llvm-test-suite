@@ -13,8 +13,8 @@ import litsupport.testplan
 import os
 
 
-SKIPPED = lit.Test.ResultCode('SKIPPED', False)
-NOEXE = lit.Test.ResultCode('NOEXE', True)
+SKIPPED = lit.Test.ResultCode('SKIPPED', 'Skipped', False)
+NOEXE = lit.Test.ResultCode('NOEXE', 'NoExe', True)
 
 
 class TestSuiteTest(lit.formats.ShTest):
