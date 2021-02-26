@@ -51,9 +51,8 @@ Prerequisite: Make sure you have checked out and built the Checked C compiler.
 ```
 export SRC_DIR=</path/to/llvm/src>
 export BUILD_DIR=</path/to/llvm/build>
-mkdir $SRC_DIR/llvm/tools/clang
-git clone https://github.com/microsoft/checkedc-automation.git $SRC_DIR/llvm/tools/clang/automation
-<SRC_DIR>/llvm/tools/clang/automation/UNIX/run-lnt-local.sh
+git clone https://github.com/microsoft/checkedc-automation.git <AUTOMATION_DIR>
+<AUTOMATION_DIR>/UNIX/run-lnt-local.sh
 ```
 
 Optional flags:
