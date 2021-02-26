@@ -59,7 +59,7 @@ git clone https://github.com/microsoft/checkedc-automation.git $SRC_DIR/llvm/too
 Optional flags:
 ```
 TEST_TARGET="X86_64;ARM"
-LNT_BIN=</path/to/lnt> // if the name and location of the virtual environment is not ~/mysandbox.
+LNT_BIN=</path/to/lnt> // By default, lnt is picked up from ~/mysandbox/bin/lnt.
 ```
 
 The test results are generated at:
