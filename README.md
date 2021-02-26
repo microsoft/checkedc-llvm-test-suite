@@ -36,7 +36,7 @@ the Checked C implementation has not broken existing tests.
 ### On Linux
 1. Setup LNT
 Note: These steps have been adopted from the [LNT Quickstart Guide](http://llvm.org/docs/lnt/quickstart.html).
-These instruction are for Ubuntu 20.
+These instructions are for Ubuntu 20.
 ```
 sudo apt install bison flex tclsh
 sudo apt install virtualenv
