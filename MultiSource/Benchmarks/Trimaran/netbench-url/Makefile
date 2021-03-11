@@ -1,6 +1,7 @@
 LEVEL = ../../../..
 
 PROG     = netbench-url
+CFLAGS  += -DNO_IMPLICIT_INCLUDE_CHECKED_HDRS
 ifdef LARGE_PROBLEM_SIZE
 RUN_OPTIONS = $(PROJ_SRC_DIR)/medium_inputs 1400
 else
