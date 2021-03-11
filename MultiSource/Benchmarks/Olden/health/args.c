@@ -6,8 +6,8 @@
  *****************************************************************/
 
 #include <stdchecked.h>
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "health.h"
 
 void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc)) {

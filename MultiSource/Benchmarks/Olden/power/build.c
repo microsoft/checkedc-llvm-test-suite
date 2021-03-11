@@ -10,7 +10,7 @@
  * University of California at Berkeley
  */
 
-#include <stdlib_checked.h>
+#include <stdlib.h>
 #include "power.h"
 
 #pragma CHECKED_SCOPE ON

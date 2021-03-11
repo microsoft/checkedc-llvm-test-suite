@@ -37,8 +37,8 @@
  */
 
 #include <assert.h>
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "Fheap.h"
 #include "Fstruct.h"
 

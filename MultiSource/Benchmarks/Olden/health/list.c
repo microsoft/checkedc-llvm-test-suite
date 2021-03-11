@@ -6,8 +6,8 @@
  ********************************************************************/
 
 #include <stdchecked.h>
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "health.h"
 #pragma CHECKED_SCOPE ON
 

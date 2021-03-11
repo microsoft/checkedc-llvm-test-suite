@@ -28,7 +28,7 @@
  *
  */
 
-#include <stdio_checked.h>
+#include <stdio.h>
 #include "Fheap.h"
 #include "Fstruct.h"
 

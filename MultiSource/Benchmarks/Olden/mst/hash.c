@@ -1,7 +1,7 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include <stdchecked.h>
-#include <stdlib_checked.h>
+#include <stdlib.h>
 #include "hash.h"
 #pragma CHECKED_SCOPE ON
 

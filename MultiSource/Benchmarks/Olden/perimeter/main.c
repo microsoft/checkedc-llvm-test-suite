@@ -2,8 +2,8 @@
 
 #include <stdchecked.h>
 #include "perimeter.h"
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define printf(...) unchecked { printf(__VA_ARGS__); }
 

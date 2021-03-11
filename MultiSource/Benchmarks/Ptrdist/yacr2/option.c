@@ -5,7 +5,7 @@
  *
  */
 
-#include <string_checked.h>
+#include <string.h>
 
 #define OPTION_CODE
 
@@ -16,8 +16,8 @@
  *
  */
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "channel.h"
 
 #pragma CHECKED_SCOPE ON

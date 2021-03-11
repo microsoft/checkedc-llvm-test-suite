@@ -4,7 +4,7 @@
 /* UP - 0, DOWN - 1 */
 #include "node.h"   /* Node Definition */
 #include "proc.h"   /* Procedure Types/Nums */
-#include <stdio_checked.h>
+#include <stdio.h>
 
 #pragma CHECKED_SCOPE ON
 

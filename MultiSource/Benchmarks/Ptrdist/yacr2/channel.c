@@ -14,8 +14,8 @@
  *
  */
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "types.h"
 #include "channel.h"
 
