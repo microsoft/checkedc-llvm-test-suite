@@ -1,4 +1,5 @@
 list(APPEND CPPFLAGS -Dconst=)
+list(APPEND CFLAGS -DNO_IMPLICIT_INCLUDE_CHECKED_HDRS)
 list(APPEND LDFLAGS -lm)
 set(RUN_OPTIONS -a -d americanmed+ < large.txt)
 llvm_multisource(office-ispell)

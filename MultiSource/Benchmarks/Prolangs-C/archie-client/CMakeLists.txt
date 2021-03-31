@@ -1,6 +1,7 @@
 include(CheckFunctionExists)
 check_function_exists(re_comp HAVE_RE_COMP)
 
+list(APPEND CFLAGS -DNO_IMPLICIT_INCLUDE_CHECKED_HDRS)
 if(HAVE_RE_COMP)
   if(TARGET_OS STREQUAL "SunOS")
     list(APPEND LDFLAGS -lsocket -lnsl)
