@@ -4,8 +4,8 @@
  *  Health.c : Model of the Columbian Health Care System           *
  *******************************************************************/ 
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "health.h"
 #include <assert.h>

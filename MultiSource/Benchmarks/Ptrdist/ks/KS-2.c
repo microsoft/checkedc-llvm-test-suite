@@ -8,9 +8,9 @@
  *	date:		Thursday, February 25, 1993
  */
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
-#include <string_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include "KS.h"

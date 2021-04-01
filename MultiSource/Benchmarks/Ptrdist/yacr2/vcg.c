@@ -15,8 +15,8 @@
  *
  */
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "types.h"
 #include "vcg.h"

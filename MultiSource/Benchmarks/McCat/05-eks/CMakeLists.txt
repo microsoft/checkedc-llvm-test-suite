@@ -1,2 +1,3 @@
 list(APPEND LDFLAGS -lm)
+list(APPEND CFLAGS -DNO_IMPLICIT_INCLUDE_CHECKED_HDRS)
 llvm_multisource(eks)

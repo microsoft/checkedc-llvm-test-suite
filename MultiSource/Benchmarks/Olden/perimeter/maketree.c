@@ -2,7 +2,7 @@
 
 #include <stdchecked.h>
 #include "perimeter.h"
-#include <stdlib_checked.h>
+#include <stdlib.h>
 
 #pragma CHECKED_SCOPE ON
 
