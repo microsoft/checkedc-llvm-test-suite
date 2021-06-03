@@ -74,8 +74,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
     array_ptr<ptr<node_t>> tmp : count(degree) = calloc<ptr<node_t>>(degree, (sizeof(ptr<node_t>)));
     dynamic_check(tmp != NULL);
 
-    cur_node->degree = degree;
-    _Unchecked { cur_node->to_nodes = tmp; }
+    _Unchecked { cur_node->degree = degree, cur_node->to_nodes = tmp; }
 
     for (j=0; j<degree; j++) {
       do {
@@ -209,10 +208,14 @@ void make_tables(ptr<table_t> table,int groupname) {
 
   /* This is done on procname-- we expect table to be remote */
   /* We use remote writes */
-  table->e_table[groupname].size = n_nodes/PROCS;
-  table->h_table[groupname].size = n_nodes/PROCS;
-  _Unchecked { table->e_table[groupname].table = e_table; }
-  _Unchecked { table->h_table[groupname].table = h_table; }
+  _Unchecked {
+    table->e_table[groupname].size = n_nodes/PROCS,
+      table->e_table[groupname].table = e_table;
+  }
+  _Unchecked {
+    table->h_table[groupname].size = n_nodes/PROCS,
+      table->h_table[groupname].table = h_table;
+  }
 }
 
 void make_all_neighbors(ptr<table_t> table,int groupname) {

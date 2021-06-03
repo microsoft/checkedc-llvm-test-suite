@@ -102,9 +102,11 @@ Graph MakeGraph(int numvert, int numproc)
           tmp->next = v;
           v = tmp;
         }
-      _Unchecked { retval->vlist[j].block = block; }
-      retval->vlist[j].len = perproc;
-      _Unchecked { retval->vlist[j].starting_vertex = v; }
+      _Unchecked {
+        retval->vlist[j].len = perproc,
+          retval->vlist[j].block = block,
+          retval->vlist[j].starting_vertex = v;
+      }
     }
 
   chatting("Make phase 3\n");
