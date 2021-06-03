@@ -36,8 +36,8 @@ Hash MakeHash(int size, ptr<int(unsigned int)> map)
   int i;
 
   retval = (Hash) localmalloc(sizeof(*retval));
-  retval->array = (array_ptr<HashEntry>)localmalloc(size*sizeof(HashEntry));
-  retval->size = size;
+  retval->size = size,
+    retval->array = (array_ptr<HashEntry>)localmalloc(size*sizeof(HashEntry));
   for (i=0; i<size; i++)
     retval->array[i] = NULL;
   retval->mapfunc = map;
