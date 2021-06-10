@@ -447,8 +447,7 @@ void BuildWord(_Array_ptr<char> pchWord : bounds(wordStart, wordEnd),
     pw = NextWord();
     bzero(pw->aqMask, sizeof(Quad)*MAX_QUADS);
     /* Zero(pw->aqMask); */
-    _Unchecked { pw->pchWord = pchWord; }
-    pw->cchLength = cchLength;
+    _Unchecked { pw->cchLength = cchLength, pw->pchWord = pchWord; }
     for (i = 0; i < ALPHABET; i++) {
         pw->aqMask[alPhrase[i].iq] |=
             (Quad)cchFrequency[i] << alPhrase[i].uShift;

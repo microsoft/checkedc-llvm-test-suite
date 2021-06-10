@@ -42,14 +42,18 @@ void fill_table(array_ptr<ptr<node_t>> node_table : count(size), array_ptr<doubl
   node_table[0] = prev_node;
   *values = gen_uniform_double();
   _Unchecked { prev_node->value = values++; }
-  prev_node->from_count = 0;
+  prev_node->from_count = 0,
+    prev_node->from_values = _Dynamic_bounds_cast<array_ptr<ptr<double>>>(prev_node->from_values, count(prev_node->from_count)),
+    prev_node->coeffs = _Dynamic_bounds_cast<array_ptr<double>>(prev_node->coeffs, count(prev_node->from_count));
   
   /* Now we fill the node_table with allocated nodes */
   for (i=1; i<size; i++) {
     cur_node = calloc<node_t>(1, sizeof(node_t));
     *values = gen_uniform_double();
     _Unchecked { cur_node->value = values++; }
-    cur_node->from_count = 0;
+    cur_node->from_count = 0,
+      cur_node->from_values = _Dynamic_bounds_cast<array_ptr<ptr<double>>>(cur_node->from_values, count(cur_node->from_count)),
+      cur_node->coeffs = _Dynamic_bounds_cast<array_ptr<double>>(cur_node->coeffs, count(cur_node->from_count));
     node_table[i] = cur_node;
     prev_node->next = cur_node;
     prev_node = cur_node;
@@ -70,8 +74,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
     array_ptr<ptr<node_t>> tmp : count(degree) = calloc<ptr<node_t>>(degree, (sizeof(ptr<node_t>)));
     dynamic_check(tmp != NULL);
 
-    cur_node->degree = degree;
-    _Unchecked { cur_node->to_nodes = tmp; }
+    _Unchecked { cur_node->degree = degree, cur_node->to_nodes = tmp; }
 
     for (j=0; j<degree; j++) {
       do {
@@ -120,7 +123,9 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
       if ((((unsigned long long) other_node) >> 7) < 2048)
         chatting("post other_node = 0x%x\n",other_node);
 #endif
-      ++other_node->from_count;            /* <----- 12% load miss penalty */
+      ++other_node->from_count,            /* <----- 12% load miss penalty */
+          other_node->from_values = _Dynamic_bounds_cast<array_ptr<ptr<double>>>(other_node->from_values, count(other_node->from_count)),
+          other_node->coeffs = _Dynamic_bounds_cast<array_ptr<double>>(other_node->coeffs, count(other_node->from_count));
     }
   }
 }
@@ -203,10 +208,14 @@ void make_tables(ptr<table_t> table,int groupname) {
 
   /* This is done on procname-- we expect table to be remote */
   /* We use remote writes */
-  table->e_table[groupname].size = n_nodes/PROCS;
-  table->h_table[groupname].size = n_nodes/PROCS;
-  _Unchecked { table->e_table[groupname].table = e_table; }
-  _Unchecked { table->h_table[groupname].table = h_table; }
+  _Unchecked {
+    table->e_table[groupname].size = n_nodes/PROCS,
+      table->e_table[groupname].table = e_table;
+  }
+  _Unchecked {
+    table->h_table[groupname].size = n_nodes/PROCS,
+      table->h_table[groupname].table = h_table;
+  }
 }
 
 void make_all_neighbors(ptr<table_t> table,int groupname) {

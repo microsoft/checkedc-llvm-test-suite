@@ -42,8 +42,8 @@ AllocAssign(void)
      */
     costMatrix = malloc<struct costMatrixRow>((channelNets+1) * sizeof(struct costMatrixRow));
     for (net = 1; net <= channelNets; net++) {
-	costMatrix[net].len = channelTracks + 2;
-	costMatrix[net].row = malloc<long>((channelTracks+2) * sizeof(long));
+	costMatrix[net].len = channelTracks + 2,
+	  costMatrix[net].row = malloc<long>((channelTracks+2) * sizeof(long));
     }
 
     /*
