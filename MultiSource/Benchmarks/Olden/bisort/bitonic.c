@@ -6,10 +6,6 @@
 #include "proc.h"   /* Procedure Types/Nums */
 #include <stdio.h>
 
-#pragma CHECKED_SCOPE ON
-
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
-
 #define CONST_m1 10000
 #define CONST_b 31415821
 #define RANGE 100
@@ -17,13 +13,12 @@
 int NumNodes, NDim;
 
 int random(int);
-void *calloc(size_t nmemb, size_t size) : byte_count(nmemb * size);
 
 int flag=0,foo=0;
 
 #define LocalNewNode(h,v) \
 { \
-    h = (ptr<HANDLE>) calloc(1,sizeof(struct node)); \
+    h = (HANDLE *) malloc(sizeof(struct node)); \
       h->value = v; \
 	h->left = NIL; \
 	  h->right = NIL; \
@@ -31,8 +26,8 @@ int flag=0,foo=0;
 
 #define NewNode(h,v,procid) LocalNewNode(h,v)
 
-void InOrder(ptr<HANDLE> h) {
-  ptr<HANDLE> l = NIL, r = NIL;
+void InOrder(HANDLE *h) {
+  HANDLE *l, *r;
   if ((h != NIL)) {
     l = h->left;
     r = h->right;
@@ -62,10 +57,10 @@ int random(int seed) {
   return mult(seed,CONST_b)+1;
 }
 
-ptr<HANDLE> RandTree(int n, int seed, int node, int level) {
+HANDLE* RandTree(int n, int seed, int node, int level) {
   int next_val,my_name;
-  future_cell_int f_left = { 0 }, f_right = {0};
-  ptr<HANDLE> h = NIL;
+  future_cell_int f_left, f_right;
+  HANDLE *h;
   my_name=foo++;
   if (n > 1) {
     int newnode;
@@ -87,9 +82,7 @@ ptr<HANDLE> RandTree(int n, int seed, int node, int level) {
   return h;
 }
 
-// CHECKED-C: The only two conversions that checked-c-convert could
-// perform automatically were these two.
-void SwapValue(ptr<HANDLE> l, ptr<HANDLE> r) {
+void SwapValue(HANDLE *l, HANDLE *r) {
   int temp,temp2;
   
   temp = l->value;
@@ -100,8 +93,13 @@ void SwapValue(ptr<HANDLE> l, ptr<HANDLE> r) {
 
 void
 /***********/
-SwapValLeft(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> ll, ptr<HANDLE> rl, int lval, int rval)
+SwapValLeft(l,r,ll,rl,lval,rval)
 /***********/
+HANDLE *l;
+HANDLE *r;
+HANDLE *ll;
+HANDLE *rl;
+int lval, rval;
 {
   r->value = lval;
   r->left = ll;
@@ -112,8 +110,13 @@ SwapValLeft(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> ll, ptr<HANDLE> rl, int lv
 
 void
 /************/
-SwapValRight(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> lr, ptr<HANDLE> rr, int lval, int rval)
+SwapValRight(l,r,lr,rr,lval,rval)
 /************/
+HANDLE *l;
+HANDLE *r;
+HANDLE *lr;
+HANDLE *rr;
+int lval, rval;
 {  
   r->value = lval;
   r->right = lr;
@@ -124,15 +127,17 @@ SwapValRight(ptr<HANDLE> l, ptr<HANDLE> r, ptr<HANDLE> lr, ptr<HANDLE> rr, int l
 
 int
 /********************/
-Bimerge(ptr<HANDLE> root, int spr_val, int dir)
+Bimerge(root,spr_val,dir)
 /********************/
+HANDLE *root;
+int spr_val,dir;
 
 { int rightexchange;
   int elementexchange;
-  ptr<HANDLE> pl = NIL, pll = NIL, plr = NIL;
-  ptr<HANDLE> pr = NIL, prl = NIL, prr = NIL;
-  ptr<HANDLE> rl = NIL;
-  ptr<HANDLE> rr = NIL;
+  HANDLE *pl,*pll,*plr;
+  HANDLE *pr,*prl,*prr;
+  HANDLE *rl;
+  HANDLE *rr;
   int rv,lv;
 
 
@@ -197,11 +202,13 @@ Bimerge(ptr<HANDLE> root, int spr_val, int dir)
 
 int
 /*******************/
-Bisort(ptr<HANDLE> root, int spr_val, int dir)
+Bisort(root,spr_val,dir)
 /*******************/
+HANDLE *root;
+int spr_val,dir;
 
-{ ptr<HANDLE> l = NIL;
-  ptr<HANDLE> r = NIL;
+{ HANDLE *l;
+  HANDLE *r;
   int val;
   /*printf("bisort %x\n", root);*/
   if ((root->left == NIL))  /* <---- 8.7% load penalty */
@@ -229,8 +236,8 @@ Bisort(ptr<HANDLE> root, int spr_val, int dir)
   return spr_val;
 } 
 
-int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc)) {
-  ptr<HANDLE> h = NIL;
+int main(int argc, char **argv) {
+  HANDLE *h;
   int sval;
   int n;
    

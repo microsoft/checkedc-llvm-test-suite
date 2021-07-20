@@ -34,19 +34,17 @@
 
 #include "item.h"
 
-#pragma CHECKED_SCOPE ON
-
-int LessThan(_Ptr<Item>  item1, _Ptr<Item>  item2)
+int LessThan(Item * item1, Item * item2)
 {
   return(KEY(item1) < KEY(item2));
 }
 
-int Equal(_Ptr<Item>  item1, _Ptr<Item>  item2)
+int Equal(Item * item1, Item * item2)
 {
   return(KEY(item1) == KEY(item2));
 }
 
-_Ptr<Item>  Subtract(_Ptr<Item>  item, int delta)
+Item * Subtract(Item * item, int delta)
 {
     assert(delta > 0);
 

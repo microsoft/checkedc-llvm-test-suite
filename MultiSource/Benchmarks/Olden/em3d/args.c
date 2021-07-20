@@ -1,14 +1,11 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "em3d.h"
-#include <stdchecked.h>
 
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #include <fcntl.h>
 #endif
-
-#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
 int NumNodes;
@@ -21,7 +18,7 @@ extern int __NumNodes;
 extern int DebugFlag;
 
 #ifndef TORONTO
-unchecked void filestuff()
+void filestuff()
 {
   CMMD_fset_io_mode(stdout, CMMD_independent);
   fcntl(fileno(stdout), F_SETFL, O_APPEND);
@@ -30,7 +27,7 @@ unchecked void filestuff()
 }
 #endif
 
-void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+void dealwithargs(int argc, char *argv[])
 {
 #ifdef TORONTO
   if (argc > 4)

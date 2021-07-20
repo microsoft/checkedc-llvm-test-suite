@@ -31,33 +31,28 @@
 #ifndef _graph_h
 #define _graph_h
 
-#pragma CHECKED_SCOPE ON
-
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
-#define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
-
 struct _Vertices;
 
 typedef struct _Edges
 {
   int               weight;
 
-  _Ptr<struct _Vertices>  source;
-  _Ptr<struct _Vertices>  vertex;
-  _Ptr<struct _Edges>  next;
+  struct _Vertices * source;
+  struct _Vertices * vertex;
+  struct _Edges * next;
 } Edges;
 
 typedef struct _Vertices
 {
   int               id;
-  _Ptr<Edges>  edges;
-  _Ptr<struct _Vertices>  next;
+  Edges * edges;
+  struct _Vertices * next;
 
   /*
    * For the ft algorithm.
    */
   int               key;
-  _Ptr<Edges>  chosenEdge;
+  Edges * chosenEdge;
 } Vertices;
 
 #define NULL_EDGE	((void *) 0)
@@ -77,9 +72,7 @@ typedef struct _Vertices
 #define KEY(V)		((*(V)).key)
 #define CHOSEN_EDGE(V)	((*(V)).chosenEdge)
 
-_Ptr<Vertices>  GenGraph(int nVertex, int nEdge);
-void      PrintGraph(_Ptr<Vertices>  graph);
-
-#pragma CHECKED_SCOPE OFF
+Vertices * GenGraph(int nVertex, int nEdge);
+void      PrintGraph(Vertices * graph);
 
 #endif

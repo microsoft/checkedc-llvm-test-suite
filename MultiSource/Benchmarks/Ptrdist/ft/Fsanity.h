@@ -31,8 +31,6 @@
 #ifndef _fsanity_h
 #define _fsanity_h
 
-#pragma CHECKED_SCOPE ON
-
 /*
  * Check the entry ordering in the structure.
  *
@@ -49,7 +47,7 @@
  *   FALSE:	check failed
  *   TRUE:	check succeeded
  */
-int  SanityCheck1(_Ptr<Heap> h, _Ptr<Item> i);
+int  SanityCheck1(Heap * h, Item * i);
 
 /*
  * Check the rank fields in the structure.
@@ -64,7 +62,7 @@ int  SanityCheck1(_Ptr<Heap> h, _Ptr<Item> i);
  *   FALSE:	check failed
  *   TRUE:	check succeeded
  */
-int  SanityCheck2(_Ptr<Heap> h);
+int  SanityCheck2(Heap * h);
 
 /*
  * Check the rank fields in the structure.
@@ -82,7 +80,7 @@ int  SanityCheck2(_Ptr<Heap> h);
  *   FALSE:	check failed
  *   TRUE:	check succeeded
  */
-int  SanityCheck3(_Ptr<Heap> h, int rank);
+int  SanityCheck3(Heap * h, int rank);
 
 /*
  * Print the structure in some human readable form.  It is printed in a
@@ -98,8 +96,6 @@ int  SanityCheck3(_Ptr<Heap> h, int rank);
  * Return values:
  *   none
  */
-void PrettyPrint(_Ptr<Heap> h);
-
-#pragma CHECKED_SCOPE OFF
+void PrettyPrint(Heap * h);
 
 #endif

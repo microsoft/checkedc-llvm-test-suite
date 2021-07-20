@@ -19,8 +19,6 @@
 #include "types.h"
 #include "channel.h"
 
-#pragma CHECKED_SCOPE ON
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -54,7 +52,7 @@ BuildChannel(void)
 void
 DimensionChannel(void)
 {
-    _Ptr<FILE>	channelFP = NULL;
+    FILE	*channelFP;
     ulong	line;
     ulong	dim;
     ulong	net;
@@ -90,7 +88,7 @@ DimensionChannel(void)
     do {
 	line++;
 	unsigned int c1, b1, t1;
-	_Unchecked { stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1); }
+	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
 	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
@@ -125,7 +123,7 @@ DimensionChannel(void)
 
     /*
      * Close channel description file.
-	 */
+     */
     if (fclose(channelFP) == EOF) {
 	/*
 	 * Error in channel file description.
@@ -158,7 +156,7 @@ DimensionChannel(void)
 void
 DescribeChannel(void)
 {
-    _Ptr<FILE> channelFP = NULL;
+    FILE	*channelFP;
     ulong	line;
     ulong	col;
     ulong	bot;
@@ -168,12 +166,12 @@ DescribeChannel(void)
     /*
      * Top terminals of channel.
      */
-    TOP = malloc<ulong>((channelColumns+1) * sizeof(ulong));
+    TOP = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
 
     /*
      * Bottom terminals of channel.
      */
-    BOT = malloc<ulong>((channelColumns+1) * sizeof(ulong));
+    BOT = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
 
     /*
      * Initialize terminals of channel.
@@ -208,7 +206,7 @@ DescribeChannel(void)
     do {
 	line++;
 	unsigned int c1, b1, t1;
-	_Unchecked { stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1); }
+	stat = fscanf(channelFP, "%u%u%u", &c1, &b1, &t1);
 	col = c1; bot = b1; top = t1;
 	if (stat != EOF) {
 	    if (stat == 3) {
@@ -269,10 +267,10 @@ DensityChannel(void)
     /*
      * Allocate track dimension structures.
      */
-    FIRST = malloc<ulong>((channelNets+1) * sizeof(ulong));
-    LAST = malloc<ulong>((channelNets+1) * sizeof(ulong));
-    DENSITY = malloc<ulong>((channelColumns+1) * sizeof(ulong));
-    CROSSING = malloc<ulong>((channelNets+1) * sizeof(ulong));
+    FIRST = (ulong *)malloc((channelNets+1) * sizeof(ulong));
+    LAST = (ulong *)malloc((channelNets+1) * sizeof(ulong));
+    DENSITY = (ulong *)malloc((channelColumns+1) * sizeof(ulong));
+    CROSSING = (ulong *)malloc((channelNets+1) * sizeof(ulong));
 
     /*
      * Initialize track dimension structures.

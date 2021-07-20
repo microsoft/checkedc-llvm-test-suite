@@ -12,22 +12,20 @@
 
 #ifndef FILE
 #ifdef TORONTO
-#include <stdio_checked.h>
+#include <stdio.h>
 #else
 #  include "stdio.h"
 #endif
 #endif
 
-#include <math_checked.h>
-#include <stdlib_checked.h>
-
-#pragma CHECKED_SCOPE ON
+#include <math.h>
+#include <stdlib.h>
 
 /*
  * STREAM: a replacement for FILE *.
  */
 
-typedef _Ptr<FILE> stream;
+typedef FILE *stream;
 
 /*
  * NULL: denotes a pointer to no object.
@@ -57,7 +55,7 @@ typedef unsigned char byte;
  * STRING: for null-terminated strings which are not taken apart.
  */
 
-typedef _Nt_array_ptr<char> string;
+typedef char *string;
 
 /*
  * REAL: default type is double; if single precision calculation is
@@ -65,11 +63,9 @@ typedef _Nt_array_ptr<char> string;
  */
 
 #ifndef  SINGLEPREC
-  typedef  double  real;
-  typedef  _Ptr<double> realptr;
+  typedef  double  real, *realptr;
 #else
-  typedef  float   real;
-  typedef  _Ptr<float> realptr;
+  typedef  float   real, *realptr;
 #endif
 
 /*
@@ -87,9 +83,9 @@ typedef _Nt_array_ptr<char> string;
  * real-valued functions, respectively.
  */
 
-typedef _Ptr<void()> proc;
-typedef _Ptr<int()>  iproc;
-typedef _Ptr<real()> rproc;
+typedef void (*proc)();
+typedef int (*iproc)();
+typedef real (*rproc)();
 
 /*
  * PRIVATE: declare something to be local to a file.
@@ -124,5 +120,3 @@ typedef _Ptr<real()> rproc;
 #define   ABS(x)       (((x) < 0) ? -(x) : (x))
 #define   MAX(x,y)     (((x) > (y)) ? (x) : (y))
 #define   MIN(x,y)     (((x) < (y)) ? (x) : (y))
-
-#pragma CHECKED_SCOPE OFF

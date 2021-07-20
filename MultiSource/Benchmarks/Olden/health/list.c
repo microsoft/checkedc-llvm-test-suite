@@ -5,30 +5,29 @@
  *           To be used with health.c                               *
  ********************************************************************/
 
-#include <stdchecked.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "health.h"
-#pragma CHECKED_SCOPE ON
 
-void addList(ptr<struct List> list, ptr<struct Patient> patient) {
-  ptr<struct List> b = NULL;
+void addList(struct List *list, struct Patient *patient) {
+  struct List *b;
 
   while (list != NULL) {
     b = list;
     list = list->forward; }
   
-  list = calloc<struct List>(1, sizeof(struct List));
+  list = (struct List *)malloc(sizeof(struct List));
   list->patient = patient;
   list->forward = NULL;
   list->back = b;
   b->forward = list;
 } 
 
-void removeList(ptr<struct List> list, ptr<struct Patient> patient) {
-  ptr<struct List>      l1 = NULL, l2 = NULL;
-  ptr<struct Patient>   p = list->patient;
+void removeList(struct List *list, struct Patient *patient) {
+  struct List          *l1,*l2;
+  struct Patient       *p;
 
+  p = list->patient;
   while(p != patient) {
       list = list->forward; 
       p = list->patient;

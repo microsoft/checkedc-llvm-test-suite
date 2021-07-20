@@ -1,7 +1,6 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "mst.h"
-#pragma CHECKED_SCOPE ON
 
 typedef struct blue_return {
   Vertex vert;
@@ -16,9 +15,9 @@ typedef struct fc_br {
 
 static BlueReturn BlueRule(Vertex inserted, Vertex vlist) 
 {
-  BlueReturn retval = {0};
-  Vertex tmp = NULL, prev = NULL;
-  Hash hash = NULL;
+  BlueReturn retval;
+  Vertex tmp,prev;
+  Hash hash;
   int dist,dist2;
   int count;
   
@@ -31,7 +30,7 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
   retval.vert = vlist;
   retval.dist = vlist->mindist;
   hash = vlist->edgehash;
-  unchecked { dist = (int) HashLookup((unsigned int) inserted, hash); }
+  dist = (int) HashLookup((unsigned int) inserted, hash);
   /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,vlist);*/
   if (dist) 
     {
@@ -50,14 +49,16 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
       count++;
       if (tmp==inserted) 
         {
-          Vertex next = tmp->next;
+          Vertex next;
+
+          next = tmp->next;
           prev->next = next;
         }
       else 
         {
           hash = tmp->edgehash; /* <------  6% miss in tmp->edgehash */ 
           dist2 = tmp->mindist;
-          unchecked { dist = (int) HashLookup((unsigned int) inserted, hash); }
+          dist = (int) HashLookup((unsigned int) inserted, hash);
           /*printf("Found %d at 0x%x for 0x%x\n",dist,inserted,tmp);*/
           if (dist) 
             {
@@ -84,8 +85,8 @@ static BlueReturn BlueRule(Vertex inserted, Vertex vlist)
 static Vertex MyVertexList = NULL;
 
 static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
-  future_cell_BlueReturn fcleft = {0};
-  BlueReturn retright = {0};
+  future_cell_BlueReturn fcleft;
+  BlueReturn retright;
 
   if (nproc > 1) {
      fcleft.value = Do_all_BlueRule(inserted,nproc/2,pn+nproc/2);
@@ -106,23 +107,23 @@ static BlueReturn Do_all_BlueRule(Vertex inserted, int nproc, int pn) {
 
 static int ComputeMst(Graph graph,int numproc,int numvert) 
 {
-  Vertex inserted = NULL, tmp = NULL;
+  Vertex inserted,tmp;
   int cost=0,dist;
 
   /* make copy of graph */
   printf("Compute phase 1\n");
 
   /* Insert first node */
-  _Unchecked { inserted = (Vertex)graph->vlist[0].starting_vertex; }
+  inserted = graph->vlist[0];
   tmp = inserted->next;
-  _Unchecked { graph->vlist[0].starting_vertex = tmp; }
+  graph->vlist[0] = tmp;
   MyVertexList = tmp;
   numvert--;
   /* Announce insertion and find next one */
   printf("Compute phase 2\n");
   while (numvert) 
     {
-      BlueReturn br = {0};
+      BlueReturn br;
       
       br = Do_all_BlueRule(inserted,numproc,0);
       inserted = br.vert;    
@@ -133,9 +134,9 @@ static int ComputeMst(Graph graph,int numproc,int numvert)
   return cost;
 }
 
-int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+int main(int argc, char *argv[]) 
 {
-  Graph graph = NULL;
+  Graph graph;
   int dist;
   int size;
  

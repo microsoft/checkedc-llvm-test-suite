@@ -5,17 +5,13 @@
 #include <fcntl.h>
 #endif
 
-#include "tree.h"
-
-#pragma CHECKED_SCOPE ON
-
 #ifdef TORONTO
  int NumNodes;
 #else
 extern int __NumNodes;
 #endif
 
-extern int atoi(const char * : itype(nt_array_ptr<const char>));
+extern int atoi(const char *);
 
 #ifndef TORONTO
 void filestuff()
@@ -27,7 +23,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+int dealwithargs(int argc, char *argv[])
 {
   int level;
 

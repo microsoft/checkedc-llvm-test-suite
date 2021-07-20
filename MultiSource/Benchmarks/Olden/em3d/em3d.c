@@ -1,17 +1,17 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "em3d.h"
-#pragma CHECKED_SCOPE ON
 int nonlocals=0;
-void compute_nodes(register ptr<node_t> nodelist)
+void compute_nodes(nodelist)
+register node_t *nodelist;
 {
   register int i;
-  register ptr<node_t> localnode = NULL;
+  register node_t *localnode;
   
   for (; nodelist; ) {
     register double cur_value;
     register int from_count ;
-    register _Ptr<double>  other_value = NULL;
+    register double *other_value;
     register double coeff;
     register double value;
     /*register double *coeffs;*/

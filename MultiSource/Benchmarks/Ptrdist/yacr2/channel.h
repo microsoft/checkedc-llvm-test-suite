@@ -19,7 +19,6 @@
 #define CHANNEL_H
 
 
-#pragma CHECKED_SCOPE ON
 /*
  *
  * Defines.
@@ -42,35 +41,35 @@
 
 #ifdef CHANNEL_CODE
 
+ulong *		TOP;
+ulong *		BOT;
+ulong *		FIRST;
+ulong *		LAST;
+ulong *		DENSITY;
+ulong *		CROSSING;
 ulong			channelNets;
 ulong			channelColumns;
-_Array_ptr<ulong>		TOP : count(channelColumns + 1);
-_Array_ptr<ulong>		BOT : count(channelColumns + 1);
-_Array_ptr<ulong>		FIRST : count(channelNets + 1);
-_Array_ptr<ulong>		LAST : count(channelNets + 1);
-_Array_ptr<ulong>		DENSITY : count(channelColumns + 1);
-_Array_ptr<ulong>		CROSSING : count(channelNets + 1);
 ulong			channelTracks;
 ulong			channelTracksCopy;
 ulong			channelDensity;
 ulong			channelDensityColumn;
-_Nt_array_ptr<char>		channelFile;
+char *		channelFile;
 
 #else	/* CHANNEL_CODE */
 
+extern ulong *	TOP;
+extern ulong *	BOT;
+extern ulong *	FIRST;
+extern ulong *	LAST;
+extern ulong *	DENSITY;
+extern ulong *	CROSSING;
 extern ulong		channelNets;
 extern ulong		channelColumns;
-extern _Array_ptr<ulong>		TOP : count(channelColumns + 1);
-extern _Array_ptr<ulong>		BOT : count(channelColumns + 1);
-extern _Array_ptr<ulong>		FIRST : count(channelNets + 1);
-extern _Array_ptr<ulong>		LAST : count(channelNets + 1);
-extern _Array_ptr<ulong>		DENSITY : count(channelColumns + 1);
-extern _Array_ptr<ulong>		CROSSING : count(channelNets + 1);
 extern ulong		channelTracks;
 extern ulong		channelTracksCopy;
 extern ulong		channelDensity;
 extern ulong		channelDensityColumn;
-extern _Nt_array_ptr<char>		channelFile;
+extern char *	channelFile;
 
 #endif	/* CHANNEL_CODE */
 
@@ -111,5 +110,4 @@ DensityChannel(void);
 
 #endif	/* CHANNEL_CODE */
 
-#pragma CHECKED_SCOPE OFF
 #endif	/* CHANNEL_H */

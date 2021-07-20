@@ -26,8 +26,6 @@
 #include "maze.h"
 
 
-#pragma CHECKED_SCOPE ON
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 /*
  *
  * Code.
@@ -36,7 +34,7 @@
 
 int
 main(int argc,
-     _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
+     char *argv[])
 {
     ulong      	done;
     ulong	fail;

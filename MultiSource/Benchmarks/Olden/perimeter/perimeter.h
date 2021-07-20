@@ -1,13 +1,10 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
-
-#include <stdchecked.h>
-
-#pragma CHECKED_SCOPE ON
-
 #ifdef TORONTO
 extern int NumNodes;
 #define chatting      printf
 #endif
+
+#define NULL 0
 
 #ifndef TORONTO
 #include <cm/cmmd.h>
@@ -27,22 +24,20 @@ typedef struct quad_struct {
   ChildType childtype;
 
 #ifndef TORONTO
-  ptr<struct quad_struct> nw {50};
-  ptr<struct quad_struct> ne {50};
-  ptr<struct quad_struct> sw {50};
-  ptr<struct quad_struct> se {50};
-  ptr<struct quad_struct> parent {50};
+  struct quad_struct *nw {50};
+  struct quad_struct *ne {50};
+  struct quad_struct *sw {50};
+  struct quad_struct *se {50};
+  struct quad_struct *parent {50};
 #else
-  ptr<struct quad_struct> nw;
-  ptr<struct quad_struct> ne;
-  ptr<struct quad_struct> sw;
-  ptr<struct quad_struct> se;
-  ptr<struct quad_struct> parent;
+  struct quad_struct *nw;
+  struct quad_struct *ne;
+  struct quad_struct *sw;
+  struct quad_struct *se;
+  struct quad_struct *parent;
 #endif
 
-} quad_struct;
-
-typedef ptr<struct quad_struct> QuadTree;
+} quad_struct, *QuadTree;
 
 
 QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
@@ -55,4 +50,5 @@ QuadTree MakeTree(int size, int center_x, int center_y, int lo_proc,
 
 
 
-#pragma CHECKED_SCOPE OFF
+
+

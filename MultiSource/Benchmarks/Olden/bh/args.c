@@ -1,12 +1,10 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 #include <stdlib.h>
 
-#pragma CHECKED_SCOPE ON
-
 extern int NumNodes;
 extern int nbody;
 
-int dealwithargs(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc)) {
+int dealwithargs(int argc, char *argv[]) {
   int level;
 
   if (argc > 2) 

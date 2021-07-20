@@ -18,7 +18,7 @@
 #ifndef ASSIGN_H
 #define ASSIGN_H
 
-#pragma CHECKED_SCOPE ON
+
 /*
  *
  * Defines.
@@ -37,11 +37,6 @@
  *
  */
 
-struct costMatrixRow {
-    _Array_ptr<long> row : count(len);
-    ulong len;
-};
-
 
 /*
  *
@@ -49,36 +44,33 @@ struct costMatrixRow {
  *
  */
 
-extern ulong channelNets;
-extern ulong channelTracks;
-
 #ifdef ASSIGN_CODE
 
-_Array_ptr<struct costMatrixRow>			costMatrix : count(channelNets + 1);
-_Array_ptr<ulong>			tracksNoHCV : count(channelTracks+2);
-_Array_ptr<ulong>			tracksNotPref : count(channelTracks+2);
-_Array_ptr<ulong>			tracksTopNotPref : count(channelTracks+2);
-_Array_ptr<ulong>			tracksBotNotPref : count(channelTracks+2);
+long * *			costMatrix;
+ulong *			tracksNoHCV;
+ulong *			tracksNotPref;
+ulong *			tracksTopNotPref;
+ulong *			tracksBotNotPref;
 ulong				cardNotPref;
 ulong				cardTopNotPref;
 ulong				cardBotNotPref;
-_Array_ptr<ulong>			tracksAssign : count(channelTracks+2);
-_Array_ptr<ulong>			netsAssign : count(channelNets + 1);
-_Array_ptr<ulong>			netsAssignCopy : count(channelNets + 1);
+ulong *			tracksAssign;
+ulong *			netsAssign;
+ulong *			netsAssignCopy;
 
 #else	/* ASSIGN_CODE */
 
-extern _Array_ptr<struct costMatrixRow>			costMatrix : count(channelNets + 1); // 2dim, second dim is (channelTracks + 2)
-extern _Array_ptr<ulong>			tracksNoHCV : count(channelTracks+2);
-extern _Array_ptr<ulong>			tracksNotPref : count(channelTracks+2);
-extern _Array_ptr<ulong>			tracksTopNotPref : count(channelTracks+2);
-extern _Array_ptr<ulong>			tracksBotNotPref : count(channelTracks+2);
-extern ulong				cardNotPref;
-extern ulong				cardTopNotPref;
-extern ulong				cardBotNotPref;
-extern _Array_ptr<ulong>			tracksAssign : count(channelTracks+2);
-extern _Array_ptr<ulong>			netsAssign : count(channelNets + 1);
-extern _Array_ptr<ulong>			netsAssignCopy : count(channelNets + 1);
+extern ulong * *		costMatrix;
+extern ulong *		tracksNoHCV;
+extern ulong *		tracksNotPref;
+extern ulong *		tracksTopNotPref;
+extern ulong *		tracksBotNotPref;
+extern ulong			cardNotPref;
+extern ulong			cardTopNotPref;
+extern ulong			cardBotNotPref;
+extern ulong *		tracksAssign;
+extern ulong *		netsAssign;
+extern ulong *		netsAssignCopy;
 
 #endif	/* ASSIGN_CODE */
 
@@ -110,28 +102,28 @@ void
 LeftNetsAssign(void);
 
 void
-Assign(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-       _Array_ptr<ulong> : count(channelNets + 1),
+Assign(nodeVCGType *,
+       ulong *,
        ulong);
 
 void
-Select(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-       _Array_ptr<nodeHCGType> : count(channelNets + 1),
-       _Array_ptr<ulong> : count(channelNets + 1),
-       _Ptr<ulong>,
-       _Array_ptr<ulong> : count(channelNets + 1));
+Select(nodeVCGType *,
+       nodeHCGType *,
+       ulong *,
+       ulong *,
+       ulong *);
 
 void
-BuildCostMatrix(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-        _Array_ptr<nodeHCGType> : count(channelNets + 1),
-        _Array_ptr<ulong> : count(channelNets + 1),
-        _Array_ptr<ulong> : count(channelNets + 1));
+BuildCostMatrix(nodeVCGType *,
+		nodeHCGType *,
+		ulong *,
+		ulong *);
 
 void
 IdealTrack(ulong,
 	   ulong,
 	   ulong,
-	   _Ptr<ulong>);
+	   ulong *);
 
 #else	/* ASSIGN_CODE */
 
@@ -154,31 +146,30 @@ extern void
 LeftNetsAssign(void);
 
 extern void
-Assign(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-       _Array_ptr<ulong> : count(channelNets + 1),
+Assign(nodeVCGType *,
+       ulong *,
        ulong);
 
 extern void
-Select(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-       _Array_ptr<nodeHCGType> : count(channelNets + 1),
-       _Array_ptr<ulong> : count(channelNets + 1),
-       _Ptr<ulong>,
-       _Array_ptr<ulong> : count(channelNets + 1));
+Select(nodeVCGType *,
+       nodeHCGType *,
+       ulong *,
+       ulong *,
+       ulong *);
 
 extern void
-BuildCostMatrix(_Array_ptr<nodeVCGType> : count(channelNets + 1),
-        _Array_ptr<nodeHCGType> : count(channelNets + 1),
-        _Array_ptr<ulong> : count(channelNets + 1),
-        _Array_ptr<ulong> : count(channelNets + 1));
+BuildCostMatrix(nodeVCGType *,
+		nodeHCGType *,
+		ulong *,
+		ulong *);
 
 extern void
 IdealTrack(ulong,
 	   ulong,
 	   ulong,
-	   _Ptr<ulong>);
+	   ulong *);
 
 #endif	/* ASSIGN_CODE */
 
-#pragma CHECKED_SCOPE OFF
 #endif	/* ASSIGN_H */
 
