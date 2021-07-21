@@ -12,6 +12,8 @@
  *
  */
 
+void *malloc(unsigned Size);
+
 typedef struct demand {
   double P;
   double Q;
@@ -19,7 +21,7 @@ typedef struct demand {
 
 #include <math.h>
 
-#pragma CHECKED_SCOPE ON
+#define NULL 0
 
 #ifdef SMALL_PROBLEM_SIZE   /* __llvm__ SCALED BACK SETTINGS */
 #define NUM_FEEDERS 8
@@ -45,55 +47,47 @@ typedef struct demand {
 #define H_EPSILON 0.000001
 #define ROOT_EPSILON 0.00001
 
-struct root {
+typedef struct root {
   Demand D;
   double theta_R; 
   double theta_I; 
   Demand last;
   double last_theta_R; 
   double last_theta_I;
-  _Ptr<struct lateral> feeders _Checked[NUM_FEEDERS];
-};  /* sizeof(struct root) = 108 bytes */
+  struct lateral *feeders[NUM_FEEDERS];
+} *Root;  /* sizeof(struct root) = 108 bytes */
 
-typedef _Ptr<struct root> Root;
-
-struct lateral {
+typedef struct lateral {
   Demand D;
   double alpha;
   double beta;
   double R;
   double X;
-  _Ptr<struct lateral> next_lateral;
-  _Ptr<struct branch> branch;
-}; /* sizeof(struct lateral) = 64 bytes */
+  struct lateral *next_lateral;
+  struct branch *branch;
+} *Lateral; /* sizeof(struct lateral) = 64 bytes */
 
-typedef _Ptr<struct lateral> Lateral;
-
-struct branch {
+typedef struct branch {
   Demand D;
   double alpha;
   double beta;
   double R;
   double X;
-  _Ptr<struct branch> next_branch;
-  _Ptr<struct leaf> leaves _Checked[LEAVES_PER_BRANCH];
-}; /* sizeof(struct branch) = 92 bytes */
+  struct branch *next_branch;
+  struct leaf *leaves[LEAVES_PER_BRANCH];
+} *Branch; /* sizeof(struct branch) = 92 bytes */
 
-typedef _Ptr<struct branch> Branch;
-
-struct leaf {
+typedef struct leaf {
   Demand D;
   double pi_R;
   double pi_I;
-};  /* sizeof(struct leaf) = 32 bytes */
-
-typedef _Ptr<struct leaf> Leaf;
+} *Leaf;  /* sizeof(struct leaf) = 32 bytes */
 
 /* Prototypes */
 Root build_tree(void);
 Lateral build_lateral(int i, int num);
 Branch build_branch(int i, int j, int num);
-Leaf build_leaf(void);
+Leaf build_leaf();
 
 void Compute_Tree(Root r);
 Demand Compute_Lateral(Lateral l, double theta_R, double theta_I,
@@ -102,4 +96,3 @@ Demand Compute_Branch(Branch b, double theta_R, double theta_I,
                        double pi_R, double pi_I);
 Demand Compute_Leaf(Leaf l, double pi_R, double pi_I);
 
-#pragma CHECKED_SCOPE OFF

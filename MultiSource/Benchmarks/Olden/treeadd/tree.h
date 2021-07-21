@@ -3,30 +3,23 @@
 /* tree.h
  */
 
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
-#include <string_checked.h>
-#include <stdchecked.h>
-
-#pragma CHECKED_SCOPE ON
-
 #ifdef TORONTO
-#define chatting(...) _Unchecked { printf(__VA_ARGS__); }
+#include <stdio.h>
+#define chatting printf
 #define PLAIN
 #endif
 
 typedef struct tree {
     int		val;
-    ptr<struct tree> left;
-    ptr<struct tree> right;
+    struct tree *left, *right;
 } tree_t;
 
-extern ptr<tree_t> TreeAlloc(int level, int lo, int hi);
-int TreeAdd (ptr<tree_t> t);
+extern tree_t *TreeAlloc (int level, int lo, int hi);
+int TreeAdd (tree_t *t);
 
 
 
 
 
 
-#pragma CHECKED_SCOPE OFF
+

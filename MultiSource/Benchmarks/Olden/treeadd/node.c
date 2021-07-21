@@ -17,21 +17,19 @@
 #include <stdlib.h>
 #include "tree.h"
 
-#pragma CHECKED_SCOPE ON
-
 #ifdef TORONTO
 extern int NumNodes;
 #endif
 
-int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
+int dealwithargs(int argc, char *argv[]);
 
 typedef struct {
     long 	level;
 } startmsg_t;
 
-int main (int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+int main (int argc, char *argv[])
 {
-    ptr<tree_t> root = NULL;
+    tree_t	*root;
     int level,result;
 
 #ifdef FUTURES
@@ -54,7 +52,7 @@ int main (int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 	     level, __NumNodes);
 #endif
     /* only processor 0 will continue here. */
-    chatting("About to enter TreeAlloc\n");
+    chatting("About to enter TreeAlloc\n"); 
 #ifndef TORONTO
     CMMD_node_timer_start(0);
 #endif
@@ -68,7 +66,7 @@ int main (int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 #ifndef TORONTO
     CMMD_node_timer_stop(0);
 #endif
-    chatting("About to enter TreeAdd\n");
+    chatting("About to enter TreeAdd\n"); 
     
 #ifndef PLAIN
     ClearAllStats();
@@ -94,11 +92,12 @@ int main (int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
 #endif
     exit(0);
 
+
 }
 
 /* TreeAdd:
  */
-int TreeAdd (ptr<tree_t> t)
+int TreeAdd (tree_t *t)
 {
   if (t == NULL)  {
     return 0;
@@ -107,7 +106,7 @@ int TreeAdd (ptr<tree_t> t)
 #ifdef FUTURES    
     future_cell_int leftval;
     int rightval;
-    ptr<tree_t> tleft = NULL, tright = NULL;
+    tree_t *tleft, *tright;
     int value;
 
     tleft = t->left;
@@ -125,7 +124,7 @@ int TreeAdd (ptr<tree_t> t)
 #else
     int leftval;
     int rightval;
-    ptr<tree_t> tleft = NULL, tright = NULL;
+    tree_t *tleft, *tright;
     int value;
 
     tleft = t->left;            /* <---- 57% load penalty */

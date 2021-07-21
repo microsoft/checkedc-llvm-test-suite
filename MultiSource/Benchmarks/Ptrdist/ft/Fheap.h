@@ -51,19 +51,14 @@
  */
 #include "item.h"
 
-#pragma CHECKED_SCOPE ON
-
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
-#define fprintf(...) _Unchecked { fprintf(__VA_ARGS__); }
-
 typedef struct _Heap
 {
-  _Ptr<Item>      item;
+  Item *     item;
 
-  _Ptr<struct _Heap>  parent;
-  _Ptr<struct _Heap>  child;
-  _Ptr<struct _Heap>  forward;
-  _Ptr<struct _Heap>  backward;
+  struct _Heap * parent;
+  struct _Heap * child;
+  struct _Heap * forward;
+  struct _Heap * backward;
   int           rank;
   short         marked;
 } HeapP;
@@ -83,7 +78,7 @@ typedef struct _Heap
  * Return values:
  *   none
  */
-void  InitFHeap(void);
+void  InitFHeap();
 
 /*
  * Create a heap structure.
@@ -97,7 +92,7 @@ void  InitFHeap(void);
  * Return values:
  *   a heap, to be precise an empty, i.e. NULL_HEAP
  */
-_Ptr<HeapP>  MakeHeap(void);
+HeapP * MakeHeap();
 
 /*
  * Find the item with lowest key.
@@ -112,7 +107,7 @@ _Ptr<HeapP>  MakeHeap(void);
  *   an item if the heap is not empty
  *   NULL_ITEM otherwise
  */
-_Ptr<Item>  FindMin(_Ptr<HeapP>  h);
+Item * FindMin(HeapP * h);
 
 /*
  * Insert an item in a heap.
@@ -128,7 +123,7 @@ _Ptr<Item>  FindMin(_Ptr<HeapP>  h);
  *   a handle to the inserted item, useful in connection with Delete()
  *   and DecreaseKey().
  */
-_Ptr<HeapP>  Insert(_Ptr<_Ptr<HeapP>>  h, _Ptr<Item>  i);
+HeapP * Insert(HeapP * * h, Item * i);
 
 /*
  * Meld to heaps.
@@ -142,7 +137,7 @@ _Ptr<HeapP>  Insert(_Ptr<_Ptr<HeapP>>  h, _Ptr<Item>  i);
  * Return values:
  *   a bigger heap, possibly NULL_HEAP
  */
-_Ptr<HeapP>  Meld(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2);
+HeapP * Meld(HeapP * h1, HeapP * h2);
 
 /*
  * Remove the smallest item in a heap
@@ -156,7 +151,7 @@ _Ptr<HeapP>  Meld(_Ptr<HeapP>  h1, _Ptr<HeapP>  h2);
  * Return values:
  *   a smaller heap, possibly NULL_HEAP
  */
-_Ptr<HeapP>  DeleteMin(_Ptr<HeapP>  h);
+HeapP * DeleteMin(HeapP * h);
 
 /*
  * Decrease the key of an item in a heap.
@@ -174,7 +169,7 @@ _Ptr<HeapP>  DeleteMin(_Ptr<HeapP>  h);
  * Return values:
  *   a heap, possibly NULL_HEAP
  */
-_Ptr<HeapP>  DecreaseKey(_Ptr<HeapP>  h, _Ptr<HeapP>  i, int delta);
+HeapP * DecreaseKey(HeapP * h, HeapP * i, int delta);
 
 /*
  * Delete an entry in a heap.
@@ -190,7 +185,7 @@ _Ptr<HeapP>  DecreaseKey(_Ptr<HeapP>  h, _Ptr<HeapP>  i, int delta);
  * Return values:
  *   a smaller heap, possibly NULL_HEAP
  */
-_Ptr<HeapP>  Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i);
+HeapP * Delete(HeapP * h, HeapP * i);
 
 /*
  * Search for an item with a particular key in a heap.
@@ -207,7 +202,7 @@ _Ptr<HeapP>  Delete(_Ptr<HeapP>  h, _Ptr<HeapP>  i);
  * Return values:
  *   an handle to the item, possibly NULL_HEAP
  */
-_Ptr<HeapP>  Find(_Ptr<HeapP>  h, _Ptr<Item>  item);
+HeapP * Find(HeapP * h, Item * item);
 
 /*
  * Converts a item handle into an item pointer.
@@ -221,8 +216,6 @@ _Ptr<HeapP>  Find(_Ptr<HeapP>  h, _Ptr<Item>  item);
  * Return values:
  *   an pointer to the item
  */
-_Ptr<Item>  ItemOf(_Ptr<HeapP>  h);
-
-#pragma CHECKED_SCOPE OFF
+Item * ItemOf(HeapP * h);
 
 #endif

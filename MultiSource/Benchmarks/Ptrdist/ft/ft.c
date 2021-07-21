@@ -44,8 +44,6 @@
 #include "Fheap.h"
 #include "graph.h"
 
-#pragma CHECKED_SCOPE ON
-
 #define MINUS_INFINITY		INT_MIN
 #define PLUS_INFINITY		INT_MAX
 
@@ -59,8 +57,8 @@
 /*
  * Local functions.
  */
-void      PrintMST(_Ptr<Vertices>  graph);
-_Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
+void      PrintMST(Vertices * graph);
+Vertices * MST(Vertices * graph);
 
 /*
  * Local variables.
@@ -68,11 +66,11 @@ _Ptr<Vertices>  MST(_Ptr<Vertices>  graph);
 int debug = 1;
 
 int
-main(int argc, _Array_ptr<_Nt_array_ptr<const char>> argv : count(argc) )
+main(int argc, char *argv[])
 {
   int            nVertex;
   int            nEdge;
-  _Ptr<Vertices>   graph = 0;
+  Vertices *  graph;
 
   nVertex = DEFAULT_N_VERTEX;
   nEdge = DEFAULT_N_EDGE;
@@ -124,12 +122,12 @@ main(int argc, _Array_ptr<_Nt_array_ptr<const char>> argv : count(argc) )
   return 0;
 }
 
-_Ptr<Vertices> 
-MST(_Ptr<Vertices>  graph)
+Vertices *
+MST(Vertices * graph)
 {
-  _Ptr<HeapP>  heap = 0;
-  _Ptr<Vertices>  vertex = 0;
-  _Ptr<Edges>  edge = 0;
+  HeapP * heap;
+  Vertices * vertex;
+  Edges * edge;
   ;
 
   InitFHeap();
@@ -144,7 +142,7 @@ MST(_Ptr<Vertices>  graph)
   vertex = graph;
   KEY(vertex) = 0;
   heap = MakeHeap();
-  (void)Insert(&heap, vertex);
+  (void)Insert(&heap, (Item *)vertex);
 
   vertex = NEXT_VERTEX(vertex);
   while(vertex != graph)
@@ -177,9 +175,9 @@ MST(_Ptr<Vertices>  graph)
 }
 
 void
-PrintMST(_Ptr<Vertices>  graph)
+PrintMST(Vertices * graph)
 {
-  _Ptr<Vertices>  vertex = 0;
+  Vertices * vertex;
 
   assert(graph != NULL_VERTEX);
 

@@ -14,10 +14,8 @@
 #include "power.h"
 #include <stdio.h>
 
-#pragma CHECKED_SCOPE ON
-
 /* Domain of thetaR->P map is 0.65 to 1.00 [index*0.01+0.65] */
-double map_P _Checked[36] =
+double map_P[36] =
 {8752.218091048, 8446.106670416, 8107.990680283,
  7776.191574285, 7455.920518777, 7146.602181352,
  6847.709026813, 6558.734204024, 6279.213382291,
@@ -36,7 +34,7 @@ double map_P _Checked[36] =
 #define      MAX_THETA_R       0.995
 
 /* Domain of thetaI->Q map is 0.130 to 0.200 [index*0.002+0.130] */
-double map_Q _Checked[36] =
+double map_Q[36] =
 {1768.846590190, 1706.229490046, 1637.253873079,
  1569.637451623, 1504.419525242, 1441.477913810,
  1380.700660446, 1321.980440476, 1265.218982201,
@@ -53,11 +51,10 @@ double map_Q _Checked[36] =
 #define      MIN_THETA_I       0.13
 #define      PER_INDEX_I       0.002
 #define      MAX_THETA_I       0.199
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
-int main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
+int main(int argc,char *argv[])
 {
-  Root r = 0;
+  Root r;
   int i,finished=0;
   double d_theta_R,d_theta_I;
 

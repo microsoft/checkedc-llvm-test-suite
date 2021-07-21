@@ -33,16 +33,12 @@
 
 #include "graph.h"
 
-#pragma CHECKED_SCOPE ON
-
 typedef Vertices Item;
 
 #define NULL_ITEM	NULL_VERTEX
 
-int LessThan(_Ptr<Item> , _Ptr<Item> );
-int Equal(_Ptr<Item> , _Ptr<Item> );
-_Ptr<Item>  Subtract(_Ptr<Item> , int);
-
-#pragma CHECKED_SCOPE OFF
+int LessThan(Item *, Item *);
+int Equal(Item *, Item *);
+Item * Subtract(Item *, int);
 
 #endif

@@ -10,18 +10,15 @@
  * University of California at Berkeley
  */
 
-#include <stdlib.h>
 #include "power.h"
 
-#pragma CHECKED_SCOPE ON
-
-Root build_tree(void)
+Root build_tree() 
 {
   int i;
-  Root t = 0;
-  Lateral l = 0;
+  Root t;
+  Lateral l;
 
-  t = calloc<struct root>(1, sizeof(*t));
+  t = (Root) malloc(sizeof(*t));
 
   for (i=0; i<NUM_FEEDERS; i++) {
     /* Insert future here, split into two loops */
@@ -35,12 +32,12 @@ Root build_tree(void)
 
 Lateral build_lateral(int i, int num)
 {
-  Lateral l = 0;
-  Branch b = 0;
-  Lateral next = 0;
+  Lateral l;
+  Branch b;
+  Lateral next;
  
   if (num == 0) return NULL;
-  l = calloc<struct lateral>(1, sizeof(*l));
+  l = (Lateral) malloc(sizeof(*l));
 
   next = build_lateral(i,num-1);
   b = build_branch(i*BRANCHES_PER_LATERAL,(num-1)*BRANCHES_PER_LATERAL,
@@ -57,12 +54,12 @@ Lateral build_lateral(int i, int num)
 
 Branch build_branch(int i, int j, int num)
 {
-  Leaf l = 0;
-  Branch b = 0;
+  Leaf l;
+  Branch b;
 
   if (num == 0) return NULL;
   /* allocate branch */
-  b = calloc<struct branch>(1, sizeof(*b));
+  b = (Branch) malloc(sizeof(*b));
   
   /* fill in children */
   b->next_branch= build_branch(i,j,num-1);
@@ -80,10 +77,10 @@ Branch build_branch(int i, int j, int num)
   return b;
 }
 
-Leaf build_leaf(void) {
-  Leaf l = 0;
+Leaf build_leaf() {
+  Leaf l;
 
-  l = calloc<struct leaf>(1, sizeof(*l));
+  l = (Leaf) malloc(sizeof(*l));
   l->D.P = 1.0;
   l->D.Q = 1.0;
   return l;

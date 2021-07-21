@@ -1,13 +1,8 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-#include <stdchecked.h>
 #include "perimeter.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#define printf(...) unchecked { printf(__VA_ARGS__); }
-
-#pragma CHECKED_SCOPE ON
 
 static int adj(Direction d, ChildType ct)
 {
@@ -65,8 +60,9 @@ static ChildType reflect(Direction d, ChildType ct)
 
 int CountTree(QuadTree tree) 
 {
-  QuadTree nw = tree->nw, ne = tree->ne, sw = tree->sw, se = tree->se;
+  QuadTree nw,ne,sw,se;
 
+  nw = tree->nw; ne = tree->ne; sw = tree->sw; se = tree->se;
   if (nw==NULL && ne==NULL && sw==NULL && se==NULL)
     return 1;
   else
@@ -97,9 +93,10 @@ static QuadTree child(QuadTree tree, ChildType ct)
 
 static QuadTree gtequal_adj_neighbor(QuadTree tree, Direction d)
 {
-  QuadTree q = NULL, parent = tree->parent;
+  QuadTree q,parent;
   ChildType ct;
   
+  parent=tree->parent;
   ct=tree->childtype;
   if ((parent!=NULL) && adj(d,ct))
     q=gtequal_adj_neighbor(parent,d);
@@ -127,11 +124,11 @@ static int sum_adjacent(QuadTree p, ChildType q1, ChildType q2, int size)
 int perimeter(QuadTree tree, int size)
 {
   int retval = 0;
-  QuadTree neighbor = NULL;
+  QuadTree neighbor;
 
   if (tree->color==grey) 
     {
-      QuadTree child = NULL;
+      QuadTree child;
 #ifdef FUTURES
       future_cell_int fc_sw,fc_se,fc_ne;
 #endif
@@ -186,11 +183,11 @@ int perimeter(QuadTree tree, int size)
   return retval;
 }
 
-extern int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
+extern int dealwithargs(int argc, char * argv[]);
 
-int main(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+int main(int argc, char *argv[])
 {
-  QuadTree tree = NULL;
+  QuadTree tree;
   int count;
   int level;
 

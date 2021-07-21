@@ -15,14 +15,12 @@
 
 #include "KS.h"
 
-#pragma CHECKED_SCOPE ON
-
 /* handle special cases where both nodes are switched */
 float
 CAiBj(ModuleRecPtr mrA, ModuleRecPtr mrB)
 {
-    NetPtr netNode = 0;
-    ModulePtr modNode = 0;
+    NetPtr netNode;
+    ModulePtr modNode;
     float gain = 0.0;
     float netCost;
     unsigned long module = (*mrB).module;
@@ -86,8 +84,8 @@ SwapNode(ModuleRecPtr maxPrev, ModuleRecPtr max,
 void
 UpdateDs(ModuleRecPtr max, Groups group)
 {
-    NetPtr net = 0;
-    ModulePtr mod = 0;
+    NetPtr net;
+    ModulePtr mod;
 
     /* for all nets this is connected to */
     for (net = modules[(*max).module]; net != NULL; net = (*net).next) {
@@ -107,10 +105,10 @@ UpdateDs(ModuleRecPtr max, Groups group)
 
 /* find the best swap available and do it */
 float
-FindMaxGpAndSwap(void)
+FindMaxGpAndSwap()
 {
-    ModuleRecPtr mrA = 0, mrPrevA = 0, mrB = 0, mrPrevB = 0;
-    ModuleRecPtr maxA = 0, maxPrevA = 0, maxB = 0, maxPrevB = 0;
+    ModuleRecPtr mrA, mrPrevA, mrB, mrPrevB;
+    ModuleRecPtr maxA, maxPrevA, maxB, maxPrevB;
     float gp, gpMax;
 
     gpMax = -9999999;
@@ -138,9 +136,9 @@ FindMaxGpAndSwap(void)
 
     /* swap the nodes out, into the swap lists */
     assert(maxA != NULL);
-    _Unchecked { SwapNode(maxPrevA, maxA, &(groupA), &(swapToB)); }
+    SwapNode(maxPrevA, maxA, &(groupA), &(swapToB));
     assert(maxB != NULL);
-    _Unchecked { SwapNode(maxPrevB, maxB, &(groupB), &(swapToA)); }
+    SwapNode(maxPrevB, maxB, &(groupB), &(swapToA));
 
 
     /* update the inverse mapping, these two node are now gone */
@@ -161,7 +159,7 @@ FindMaxGpAndSwap(void)
 
 /* find the best point, during the last numModules/2 swaps */
 float
-FindGMax(_Ptr<unsigned long> iMax)
+FindGMax(unsigned long * iMax)
 {
     int i;
     float gMax;
@@ -182,7 +180,7 @@ void
 SwapSubsetAndReset(unsigned long iMax)
 {
     unsigned long i;
-    ModuleRecPtr mrPrevA = 0, mrA = 0, mrPrevB = 0, mrB = 0;
+    ModuleRecPtr mrPrevA, mrA, mrPrevB, mrB;
 
     /* re-splice the lists @ iMax pointers into the lists */
     for (mrPrevA = NULL, mrA = swapToA.head,
@@ -227,16 +225,16 @@ struct {
     unsigned long total;
     unsigned long edgesCut;
     unsigned long netsCut;
-} netStats _Checked [256];
+} netStats[256];
 long maxStat;
 
 /* print the current groups, and their edge and net cut counts */
 void
 PrintResults(int verbose)
 {
-    ModuleRecPtr mr = 0;
-    NetPtr nn = 0;
-    ModulePtr mn = 0;
+    ModuleRecPtr mr;
+    NetPtr nn;
+    ModulePtr mn;
     unsigned long cuts;
     Groups grp;
     int i, netSz;
@@ -326,11 +324,11 @@ PrintResults(int verbose)
 }
 
 int
-main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
+main(int argc, char **argv)
 {
     unsigned long p, iMax;
     float gMax, lastGMax;
-    ModuleRecPtr mr = 0;
+    ModuleRecPtr mr;
     ;
 
     /* parse argument */
@@ -341,9 +339,9 @@ main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
     }
 
     /* prepare the data structures */
-	ReadNetList(argv[1]);
-      NetsToModules();
-      ComputeNetCosts();
+    ReadNetList(argv[1]);
+    NetsToModules();
+    ComputeNetCosts();
 
     assert((numModules % 2) == 0);
 
@@ -356,8 +354,8 @@ main(int argc, _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
 
 #ifndef KS_MODE
 	/* compute the swap costs */
-	_Unchecked { ComputeDs(&(groupA), GroupA, SwappedToA); }
-	_Unchecked { ComputeDs(&(groupB), GroupB, SwappedToB); }
+	ComputeDs(&(groupA), GroupA, SwappedToA);
+	ComputeDs(&(groupB), GroupB, SwappedToB);
 #endif /* !KS_MODE */
 
 	/* for all pairs of nodes in A,B */

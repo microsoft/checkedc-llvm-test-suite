@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "health.h"
-#pragma CHECKED_SCOPE ON
 
 float my_rand(long long idum)
 {

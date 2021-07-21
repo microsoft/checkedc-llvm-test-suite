@@ -23,8 +23,6 @@
 #include "vcg.h"
 #include "hcg.h"
 
-#pragma CHECKED_SCOPE ON
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -40,22 +38,21 @@ AllocAssign(void)
     /*
      * Allocate cost matrix.
      */
-    costMatrix = malloc<struct costMatrixRow>((channelNets+1) * sizeof(struct costMatrixRow));
+    costMatrix = (long * *)malloc((channelNets+1) * sizeof(long *));
     for (net = 1; net <= channelNets; net++) {
-	costMatrix[net].len = channelTracks + 2,
-	  costMatrix[net].row = malloc<long>((channelTracks+2) * sizeof(long));
+	costMatrix[net] = (long *)malloc((channelTracks+2) * sizeof(long));
     }
 
     /*
      * Allocate structures associated with cost matrix.
      */
-    tracksNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
-    tracksTopNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
-    tracksBotNotPref = malloc<ulong>((channelTracks+2) * sizeof(ulong));
-    tracksNoHCV = malloc<ulong>((channelTracks+2) * sizeof(ulong));
-    tracksAssign = malloc<ulong>((channelTracks+2) * sizeof(ulong));
-    netsAssign = malloc<ulong>((channelNets+1) * sizeof(ulong));
-    netsAssignCopy = malloc<ulong>((channelNets+1) * sizeof(ulong));
+    tracksNotPref = (ulong *)malloc((channelTracks+2) * sizeof(ulong));
+    tracksTopNotPref = (ulong *)malloc((channelTracks+2) * sizeof(ulong));
+    tracksBotNotPref = (ulong *)malloc((channelTracks+2) * sizeof(ulong));
+    tracksNoHCV = (ulong *)malloc((channelTracks+2) * sizeof(ulong));
+    tracksAssign = (ulong *)malloc((channelTracks+2) * sizeof(ulong));
+    netsAssign = (ulong *)malloc((channelNets+1) * sizeof(ulong));
+    netsAssignCopy = (ulong *)malloc((channelNets+1) * sizeof(ulong));
 }
 
 void
@@ -67,20 +64,20 @@ FreeAssign(void)
      * Free cost matrix.
      */
     for (net = 1; net <= channelNets; net++) {
-	_Unchecked { free<long>(costMatrix[net].row); }
+	free(costMatrix[net]);
     }
-    _Unchecked { free<struct costMatrixRow>(costMatrix); }
+    free(costMatrix);
 
     /*
      * Free structures associated with cost matrix.
      */
-    _Unchecked { free<ulong>(tracksNotPref); }
-    _Unchecked { free<ulong>(tracksTopNotPref); }
-    _Unchecked { free<ulong>(tracksBotNotPref); }
-    _Unchecked { free<ulong>(tracksNoHCV); }
-    _Unchecked { free<ulong>(tracksAssign); }
-    _Unchecked { free<ulong>(netsAssign); }
-    _Unchecked { free<ulong>(netsAssignCopy); }
+    free(tracksNotPref);
+    free(tracksTopNotPref);
+    free(tracksBotNotPref);
+    free(tracksNoHCV);
+    free(tracksAssign);
+    free(netsAssign);
+    free(netsAssignCopy);
 }
 
 void
@@ -133,7 +130,7 @@ MaxNetsAssign(void)
 
 #ifdef VERBOSE
     printf("density = %d\n", channelDensity);
-	printf("pivot = %d\n\n", channelDensityColumn);
+    printf("pivot = %d\n\n", channelDensityColumn);
 #endif
 
     /*
@@ -315,8 +312,8 @@ LeftNetsAssign(void)
 }
 
 void
-Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
-       _Array_ptr<ulong> assign : count(channelNets + 1),
+Assign(nodeVCGType * VCG,
+       ulong * assign,
        ulong select)
 {
     long	dist;
@@ -327,7 +324,7 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     ulong	vcv;
     long	vcvDist;
     ulong	vcvAssign;
-    _Array_ptr<long>	costNet : count(channelTracks + 2) = NULL;
+    long *	costNet;
     ;
 
 #ifdef VERBOSE
@@ -351,22 +348,22 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     IdealTrack(channelTracks, cardTopNotPref, cardBotNotPref, &ideal);
 
 #ifdef VERBOSE
-	printf("HCV's:\n");
+    printf("HCV's:\n");
     for (track = 1; track <= channelTracks; track++) {
 	if (tracksNoHCV[track]) {
 	    printf("[%d] no hcv\n", track);
 	}
 	else {
-	   	printf("[%d] hcv\n", track);
+	    printf("[%d] hcv\n", track);
 	}
     }
-	printf("\n");
+    printf("\n");
 #endif
 
     /*
      * What tracks to consider for assign.
      */
-    _Unchecked { costNet = costMatrix[select].row; }
+    costNet = costMatrix[select];
     assert((select >= 1) && (select <= channelNets));
     tracks = 0;
     for (track = 1; track <= channelTracks; track++) {
@@ -510,16 +507,16 @@ Assign(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 }
 
 void
-Select(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
-	_Array_ptr<nodeHCGType> HCG : count(channelNets + 1),
-	_Array_ptr<ulong> netsAssign : count(channelNets + 1),
-	_Ptr<ulong> netSelect,
-	_Array_ptr<ulong> CROSSING : count(channelNets + 1))
+Select(nodeVCGType * VCG,
+       nodeHCGType * HCG,
+       ulong * netsAssign,
+       ulong * netSelect,
+       ulong * CROSSING)
 {
     ulong	net;
     ulong	track;
     ulong	select;
-    _Array_ptr<long>	costNet : count(channelTracks + 2) = NULL;
+    long *	costNet;
     long	cost;
     long	largest;
 
@@ -537,7 +534,7 @@ Select(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
     for (net = 1; net <= channelNets; net++) {
 	if (CROSSING[net]) {
 	    cost = 0;
-	    _Unchecked { costNet = costMatrix[net].row; }
+	    costNet = costMatrix[net];
 	    for (track = 1; track <= channelTracks; track++) {
 		cost += costNet[track];
 	    }
@@ -556,24 +553,24 @@ Select(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 }
 
 void
-BuildCostMatrix(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
-		_Array_ptr<nodeHCGType> HCG : count(channelNets + 1),
-		_Array_ptr<ulong> netsAssign : count(channelNets + 1),
-		_Array_ptr<ulong> CROSSING : count(channelNets + 1))
+BuildCostMatrix(nodeVCGType * VCG,
+		nodeHCGType * HCG,
+		ulong * netsAssign,
+		ulong * CROSSING)
 {
     ulong	net;
     ulong	track;
     ulong	ideal;
     long       	dist;
     long	mult;
-    _Array_ptr<long>	costNet : count(channelTracks + 2) = NULL;
+    long *	costNet;
     ;
 
     /*
      * Initialize cost matrix.
      */
     for (net = 1; net <= channelNets; net++) {
-	_Unchecked { costNet = costMatrix[net].row; }
+	costNet = costMatrix[net];
 	for (track = 1; track <= channelTracks; track++) {
 	    costNet[track] = 0;
 	}
@@ -585,7 +582,7 @@ BuildCostMatrix(_Array_ptr<nodeVCGType> VCG : count(channelNets + 1),
 	     * Compute one column in cost matrix.
 	     * That is, the cost associated with each track for some net.
 	     */
-	    _Unchecked { costNet = costMatrix[net].row; }
+	    costNet = costMatrix[net];
 
 	    /*
 	     * Compute measures related to cost.
@@ -639,7 +636,7 @@ void
 IdealTrack(ulong tracks,
 	   ulong top,
 	   ulong bot,
-	   _Ptr<ulong> ideal)
+	   ulong * ideal)
 {
     ulong	num;
     ulong	den;

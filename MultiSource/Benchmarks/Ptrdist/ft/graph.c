@@ -33,8 +33,6 @@
 #include <stdlib.h>
 #include "graph.h"
 
-#pragma CHECKED_SCOPE ON
-
 #define TRUE 1
 #define FALSE 0
 
@@ -52,14 +50,14 @@ static int generatedEdges;
 /*
  * Local functions.
  */
-_Ptr<Vertices>  GenTree(int vertex);
-_Ptr<Vertices>  AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge);
-_Ptr<Vertices>  PickVertex(_Ptr<Vertices>  graph, int whichVertex);
-void      Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2);
-int       Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2);
-_Ptr<Vertices>  NewVertex(void);
-_Ptr<Edges>  NewEdge(void);
-void      PrintNeighbors(_Ptr<Vertices>  vertex);
+Vertices * GenTree(int vertex);
+Vertices * AddEdges(Vertices * graph, int nVertex, int nEdge);
+Vertices * PickVertex(Vertices * graph, int whichVertex);
+void      Connect(Vertices * vertex1, Vertices * vertex2);
+int       Duplicate(Vertices * vertex1, Vertices * vertex2);
+Vertices * NewVertex();
+Edges * NewEdge();
+void      PrintNeighbors(Vertices * vertex);
 
 /*
  * Local variables.
@@ -73,10 +71,10 @@ static id = 1;
  * Apparently a good reference is Tinhofer G., ,
  * C. Hanser, Verlag, M\"{u}nchen 1980.
  */
-_Ptr<Vertices> 
+Vertices *
 GenGraph(int nVertex, int nEdge)
 {
-  _Ptr<Vertices>  graph = 0;
+  Vertices * graph;
 
   assert(nEdge + 1 >= nVertex);
   assert(nEdge <= nVertex * (nVertex - 1) / 2);
@@ -88,14 +86,14 @@ GenGraph(int nVertex, int nEdge)
   return(graph);
 }
 
-_Ptr<Vertices> 
+Vertices *
 GenTree(int nVertex)
 {
   int       i;
   int       weight;
-  _Ptr<Vertices>  vertex = 0;
-  _Ptr<Vertices>  graph = 0;
-  _Ptr<Edges>  edge = 0;
+  Vertices * vertex;
+  Vertices * graph;
+  Edges * edge;
 
   graph = NewVertex();
   NEXT_VERTEX(graph) = graph;
@@ -139,12 +137,12 @@ GenTree(int nVertex)
   return(graph);
 }
 
-_Ptr<Vertices> 
-AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge)
+Vertices *
+AddEdges(Vertices * graph, int nVertex, int nEdge)
 {
   int       i;
-  _Ptr<Vertices>  vertex1 = 0;
-  _Ptr<Vertices>  vertex2 = 0;
+  Vertices * vertex1;
+  Vertices * vertex2;
 
   assert(graph != NULL_VERTEX);
   assert(nEdge >= 0);
@@ -165,8 +163,8 @@ AddEdges(_Ptr<Vertices>  graph, int nVertex, int nEdge)
   return(graph);
 }
 
-_Ptr<Vertices> 
-PickVertex(_Ptr<Vertices>  graph, int whichVertex)
+Vertices *
+PickVertex(Vertices * graph, int whichVertex)
 {
   int       i;
 
@@ -179,10 +177,10 @@ PickVertex(_Ptr<Vertices>  graph, int whichVertex)
 }
 
 void
-Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
+Connect(Vertices * vertex1, Vertices * vertex2)
 {
   int    weight;
-  _Ptr<Edges>  edge = 0;
+  Edges * edge;
 
   weight = GET_WEIGHT;
 
@@ -202,9 +200,9 @@ Connect(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
 }
 
 int
-Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
+Duplicate(Vertices * vertex1, Vertices * vertex2)
 {
-  _Ptr<Edges>  edge = 0;
+  Edges * edge;
 
   edge = EDGES(vertex1);
 
@@ -221,12 +219,12 @@ Duplicate(_Ptr<Vertices>  vertex1, _Ptr<Vertices>  vertex2)
   return(FALSE);
 }
 
-_Ptr<Vertices> 
-NewVertex(void)
+Vertices *
+NewVertex()
 {
-  _Ptr<Vertices>  vertex = 0;
+  Vertices * vertex;
 
-  vertex = calloc<Vertices>(1, sizeof(Vertices));
+  vertex = (Vertices *)malloc(sizeof(Vertices));
 
   if(vertex == NULL)
   {
@@ -241,12 +239,12 @@ NewVertex(void)
   return(vertex);
 }
 
-_Ptr<Edges> 
-NewEdge(void)
+Edges *
+NewEdge()
 {
-  _Ptr<Edges>  edge = 0;
+  Edges * edge;
 
-  edge = calloc<Edges>(1, sizeof(Edges));
+  edge = (Edges *)malloc(sizeof(Edges));
 
   if(edge == NULL)
   {
@@ -262,9 +260,9 @@ NewEdge(void)
 }
 
 void
-PrintGraph(_Ptr<Vertices>  graph)
+PrintGraph(Vertices * graph)
 {
-  _Ptr<Vertices>  vertex = 0;
+  Vertices * vertex;
 
   assert(graph != NULL);
 
@@ -280,9 +278,9 @@ PrintGraph(_Ptr<Vertices>  graph)
 }
 
 void
-PrintNeighbors(_Ptr<Vertices>  vertex)
+PrintNeighbors(Vertices * vertex)
 {
-  _Ptr<Edges>  edge = 0;
+  Edges * edge;
 
   edge = EDGES(vertex);
   while(edge != NULL)

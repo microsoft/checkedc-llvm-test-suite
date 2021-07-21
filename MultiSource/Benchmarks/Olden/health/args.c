@@ -5,12 +5,11 @@
  *          To be used with health.c.                            *
  *****************************************************************/
 
-#include <stdchecked.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "health.h"
 
-void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc)) {
+void dealwithargs(int argc, char *argv[]) { 
   if (argc < 4) {
     max_level = 3;
     max_time = 15;

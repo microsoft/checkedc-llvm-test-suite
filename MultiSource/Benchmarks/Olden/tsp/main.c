@@ -1,14 +1,13 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
 #include "tsp.h"
-
-#pragma CHECKED_SCOPE ON
+#include <stdio.h>
 #define conquer_thresold 150  /* tsp() will use conquer for problems <= conquer_thresold */
 extern int flag;
 
 void print_tree(Tree t)
 {
-  Tree left = NULL, right = NULL;
+  Tree left,right;
 
   double x,y;
 
@@ -22,7 +21,7 @@ void print_tree(Tree t)
 
 void print_list(Tree t)
 {
-  Tree tmp = NULL;
+  Tree tmp;
   double x,y;
 
   if (!t) return;
@@ -35,9 +34,9 @@ void print_list(Tree t)
     }
 }
 
-int main(int argc,array_ptr<nt_array_ptr<char>> argv : count(argc))
+int main(int argc,char *argv[])
 {
-  Tree t = NULL;
+  Tree t;
   int num;
  
   num=dealwithargs(argc,argv);
@@ -48,7 +47,7 @@ int main(int argc,array_ptr<nt_array_ptr<char>> argv : count(argc))
   if (flag) chatting("newgraph\n");
   if (flag) chatting("newcurve pts\n");
 
-  chatting("Call tsp(t, %d, %d)\n", conquer_thresold, NumNodes); 
+  printf("Call tsp(t, %d, %d)\n", conquer_thresold, NumNodes); 
   tsp(t,conquer_thresold, NumNodes);
 
   if (flag) print_list(t);

@@ -33,13 +33,13 @@ extern double log(double x);
 #define  M_E3     20.08553692318766774179
 #define M_E6 403.42879349273512264299
 #define M_E12 162754.79141900392083592475
+#define NULL 0
 
 #include "tsp.h"
 #ifdef FUTURES
 #include "future-cell.h"
 #endif
 
-#pragma CHECKED_SCOPE ON
 
 static double median(double min,double max,int n);
 static double uniform(double min, double max);
@@ -76,14 +76,14 @@ static double uniform(double min, double max) {
 Tree build_tree(int n,int dir,int lo,int num_proc,double min_x,
                 double max_x,double min_y,double max_y) {
   double med;
-  Tree t = NULL;
+  Tree t;
 #ifdef FUTURES
   future_cell_int fc;
 #endif
 
   if (n==0) return NULL;
 
-  t = (Tree) ALLOC(struct tree, lo, sizeof(*t));
+  t = (Tree) ALLOC(lo,sizeof(*t));
 
   if (dir) {
     dir = !dir;
