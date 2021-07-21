@@ -9,20 +9,19 @@
 #endif
 
 #include "tree.h"
+extern void *malloc(unsigned);
 
-#pragma CHECKED_SCOPE ON
-
-ptr<tree_t> TreeAlloc (int level, int lo, int proc) {
+tree_t *TreeAlloc (int level, int lo, int proc) {
   if (level == 0)
     return NULL;
   else {
-    ptr<tree_t> new = NULL, right = NULL, left = NULL;
-    new = calloc<tree_t>(1, sizeof(tree_t));
+    struct tree *new, *right, *left;
+    new = (struct tree *) malloc(sizeof(tree_t));
     left = TreeAlloc(level -1, lo+proc/2, proc/2);
     right=TreeAlloc(level-1,lo,proc/2);
     new->val = 1;
-    new->left = left;
-    new->right = right;
+    new->left = (struct tree *) left;
+    new->right = (struct tree *) right;
     return new;
   }
 }

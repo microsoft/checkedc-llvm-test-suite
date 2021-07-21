@@ -20,8 +20,6 @@
 #include <stdlib.h>
 #include "channel.h"
 
-#pragma CHECKED_SCOPE ON
-#define printf(...) _Unchecked { printf(__VA_ARGS__); }
 
 /*
  *
@@ -31,7 +29,7 @@
 
 void
 Option(int argc,
-       _Array_ptr<_Nt_array_ptr<char>> argv : count(argc))
+       char *argv[])
 {
     /*
      * Check arguments.
@@ -44,5 +42,5 @@ Option(int argc,
     /*
      * Specified options.
      */
-    _Unchecked { channelFile = argv[1]; }
+    channelFile = argv[1];
 }

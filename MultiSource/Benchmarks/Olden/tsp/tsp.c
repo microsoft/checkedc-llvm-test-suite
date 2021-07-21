@@ -4,8 +4,7 @@
 #ifdef FUTURES
 #include "future-cell.h"
 #endif
-
-#pragma CHECKED_SCOPE ON
+#define NULL 0
 
 static Tree conquer(Tree t);
 static Tree merge(Tree a, Tree b, Tree t, int nproc);
@@ -26,8 +25,8 @@ static double distance(Tree a, Tree b) {
 /* sling tree nodes into a list -- requires root to be tail of list */
 /* only fills in next field, not prev */
 static Tree makelist(Tree t) {
-  Tree left = NULL, right = NULL;
-  Tree tleft = NULL, tright = NULL;
+  Tree left, right;
+  Tree tleft,tright;
   Tree retval = t;
 
   if (!t) return NULL;
@@ -44,7 +43,7 @@ static Tree makelist(Tree t) {
 
 /* reverse orientation of list */
 static void reverse(Tree t) {
-  Tree prev = NULL,back = NULL, next = NULL, tmp = NULL;
+  Tree prev,back,next,tmp;
 
   if (!t) return;
   /*chatting("REVERSE\n");*/
@@ -68,8 +67,7 @@ static void reverse(Tree t) {
 
 /* Use closest-point heuristic from Cormen Leiserson and Rivest */
 static Tree conquer(Tree t) {
-  Tree cycle = NULL, tmp = NULL, min = NULL, prev = NULL, next = NULL,
-       donext = NULL;
+  Tree cycle,tmp,min,prev,next,donext;
   double mindist,test;
   double mintonext, mintoprev, ttonext, ttoprev;
 
@@ -121,9 +119,9 @@ static Tree conquer(Tree t) {
 
 /* Merge two cycles as per Karp */
 static Tree merge(Tree a, Tree b, Tree t, int nproc) {
-  Tree min = NULL, next = NULL, prev = NULL, tmp = NULL;
+  Tree min,next,prev,tmp;
   double mindist,test,mintonext,mintoprev,ttonext,ttoprev;
-  Tree n1 = NULL, p1 = NULL, n2 = NULL, p2 = NULL;
+  Tree n1,p1,n2,p2;
   double tton1,ttop1,tton2,ttop2;
   double n1ton2,n1top2,p1ton2,p1top2;
   int choice;
@@ -266,12 +264,12 @@ static Tree merge(Tree a, Tree b, Tree t, int nproc) {
 
 /* Compute TSP for the tree t -- use conquer for problems <= sz */
 Tree tsp(Tree t,int sz,int nproc) {
-  Tree left = NULL, right = NULL;
-  Tree leftval = NULL;
+  Tree left,right;
+  Tree leftval;
 #ifdef FUTURES
   future_cell_pointer fc;
 #endif
-  Tree rightval = NULL;
+  Tree rightval;
   int nproc_2 = nproc/2;
 
   if (t->sz <= sz) return conquer(t);

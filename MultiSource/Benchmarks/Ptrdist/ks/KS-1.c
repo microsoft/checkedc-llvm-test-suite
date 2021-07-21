@@ -15,41 +15,40 @@
 
 #include "KS.h"
 
-#pragma CHECKED_SCOPE ON
-
-NetPtr modules _Checked [G_SZ];		/* all modules -> nets */
+NetPtr modules[G_SZ];		/* all modules -> nets */
 unsigned long numModules;
 
-ModulePtr nets _Checked [G_SZ];	     	/* all nets -> modules */
+ModulePtr nets[G_SZ];	     	/* all nets -> modules */
 unsigned long numNets;
 
 ModuleList groupA, groupB;			/* current A, B */
 ModuleList swapToA, swapToB;			/* swapped from A,B, ordered */
-float GP _Checked [G_SZ];			/* GPs, ordered */
+float GP[G_SZ];			/* GPs, ordered */
 
-Groups moduleToGroup _Checked [G_SZ];	/* current inverse mapping */
-float D _Checked [G_SZ];			/* module costs */
-float cost _Checked [G_SZ];			/* net costs */
+Groups moduleToGroup[G_SZ];	/* current inverse mapping */
+float D[G_SZ];			/* module costs */
+float cost[G_SZ];			/* net costs */
 
 
 /* read the netlist into the nets[] structure */
 void
-ReadNetList(_Nt_array_ptr<char> fname)
+ReadNetList(char *fname)
 {
-    _Ptr<FILE> inFile = 0;
-    char line _Nt_checked[BUF_LEN + 1] = { 0 };
+    FILE *inFile;
+    char line[BUF_LEN];
+    char *tok;
     unsigned long net, dest;
-    ModulePtr node = 0, prev = 0, head = 0;
+    ModulePtr node, prev, head;
 
     TRY(inFile = fopen(fname, "r"),
 	inFile != NULL, "ReadData",
-	"unable to open input file [%s]", fname, 0, 0,
+	"unable to open input file [%s]", inFile, 0, 0,
 	exit(1));
 
-    _Unchecked { TRY(fgets(line, BUF_LEN, inFile),
-	sscanf((const char*)line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
-	"unable to parse header in file [%s]", fname, 0, 0,
-	exit(1)); }
+    TRY(fgets(line, BUF_LEN, inFile),
+	sscanf(line, "%lu %lu", &numNets, &numModules) == 2, "ReadData",
+	"unable to parse header in file [%s]", inFile, 0, 0,
+	exit(1));
 
     for (net = 0; net < numNets; net++) {
 	fgets(line, BUF_LEN, inFile);
@@ -58,15 +57,14 @@ ReadNetList(_Nt_array_ptr<char> fname)
 	dest = atol(strtok(line, " \t\n"))-1;
 
 	/* parse out all the net module connections */
-	TRY(head = prev = calloc<Module>(1, sizeof(Module)),
+	TRY(head = prev = (Module *)malloc(sizeof(Module)),
 	    prev != NULL, "ReadData",
 	    "unable to allocate a module list node", 0, 0, 0,
 	    exit(1));
 	(*prev).module = atol(strtok(NULL, " \t\n"))-1;
 	(*prev).next = NULL;
-    _Nt_array_ptr<char> tok = NULL;
 	while ((tok = strtok(NULL, " \t\n")) != NULL) {
-	    TRY(node = calloc<Module>(1, sizeof(Module)),
+	    TRY(node = (Module *)malloc(sizeof(Module)),
 		node != NULL, "ReadData",
 		"unable to allocate a module list node", 0, 0, 0,
 		exit(1));
@@ -84,15 +82,15 @@ void
 NetsToModules(void)
 {
     unsigned long net, mod;
-    ModulePtr modNode = 0;
-    NetPtr netNode = 0;
+    ModulePtr modNode;
+    NetPtr netNode;
 
     for (mod = 0; mod<numModules; mod++)
 	modules[mod] = NULL;
 
     for (net=0; net<numNets; net++) {
 	for (modNode = nets[net]; modNode != NULL; modNode = (*modNode).next) {
-	    TRY(netNode = calloc<Net>(1, sizeof(Net)),
+	    TRY(netNode = (Net *)malloc(sizeof(Net)),
 		netNode != NULL, "NetsToModules",
 		"unable to allocate net list node", 0, 0, 0,
 		exit(1));
@@ -132,7 +130,7 @@ void
 InitLists(void)
 {
     unsigned long p;
-    ModuleRecPtr mr = 0;
+    ModuleRecPtr mr;
 
     groupA.head = groupA.tail = NULL;
     groupB.head = groupB.tail = NULL;
@@ -141,7 +139,7 @@ InitLists(void)
     for (p = 0; p<numModules/2; p++) {
 
 	/* build the group A module list */
-	TRY(mr = calloc<ModuleRec>(1, sizeof(ModuleRec)),
+	TRY(mr = (ModuleRec *)malloc(sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -160,7 +158,7 @@ InitLists(void)
 	moduleToGroup[p] = GroupA;
 
 	/* build the group B module list */
-	TRY(mr = calloc<ModuleRec>(1, sizeof(ModuleRec));,
+	TRY(mr = (ModuleRec *)malloc(sizeof(ModuleRec)),
 	    mr != NULL, "main",
 	    "unable to allocate ModuleRec", 0, 0, 0,
 	    exit(1));
@@ -191,11 +189,11 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 {
 #ifdef KS_MODE
 
-    NetPtr netNode = 0;
-    ModulePtr modNode = 0;
-    ModuleRecPtr groupNode = 0;
+    NetPtr netNode;
+    ModulePtr modNode;
+    ModuleRecPtr groupNode;
     unsigned long numInG, numInNet;
-    ModulePtr oneInG = 0;
+    ModulePtr oneInG;
 
     /* for all modules in group */
     for (groupNode = (*group).head;
@@ -236,9 +234,9 @@ ComputeDs(ModuleListPtr group, Groups myGroup, Groups mySwap)
 
     float I, E;
 
-    NetPtr netNode = 0;
-    ModulePtr modNode = 0;
-    ModuleRecPtr groupNode = 0;
+    NetPtr netNode;
+    ModulePtr modNode;
+    ModuleRecPtr groupNode;
 
     /* for all modules in group */
     for (groupNode = (*group).head;

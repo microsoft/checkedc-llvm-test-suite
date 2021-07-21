@@ -2,9 +2,9 @@
 
 #include <stdlib.h>
 #include "em3d.h"
-#pragma CHECKED_SCOPE ON
 
 #ifdef TORONTO
+#define chatting printf
 #endif
 
 #ifdef __MINGW32__
@@ -12,7 +12,7 @@
 #define lrand48() (rand() << 16 | rand())
 #define drand48() (1.0*rand() / RAND_MAX)
 #else
-extern double drand48(void);
+extern double drand48();
 #endif
 
 static int percentcheck=0,numlocal=0;
@@ -41,7 +41,7 @@ int gen_signed_number(int range)
 }
 
 /* Generate a double from 0.0 to 1.0 */
-double gen_uniform_double(void)
+double gen_uniform_double()
 {
   return drand48();
 }

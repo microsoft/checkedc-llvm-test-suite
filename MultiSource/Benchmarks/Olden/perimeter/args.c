@@ -1,15 +1,11 @@
 /* For copyright information, see olden_v1.0/COPYRIGHT */
 
-#include <stdchecked.h>
-
-#pragma CHECKED_SCOPE ON
-
 #ifndef TORONTO
 #include <cm/cmmd.h>
 #include <fcntl.h>
 #endif
 
-extern int atoi(const char * : itype(nt_array_ptr<const char>));
+extern int atoi(const char *);
 
 #ifndef TORONTO
 extern int __NumNodes;
@@ -27,7 +23,7 @@ void filestuff()
 }
 #endif
 
-int dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc))
+int dealwithargs(int argc, char *argv[])
 {
   int level;
 

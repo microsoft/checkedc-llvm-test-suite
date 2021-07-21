@@ -8,12 +8,10 @@
 #ifndef _HEALTH
 #define _HEALTH
 
-#include <stdchecked.h>
-#include <stdio_checked.h>
-#include <stdlib_checked.h>
-#pragma CHECKED_SCOPE ON
+#include <stdio.h>
+#include <stdlib.h>
 
-#define chatting(...) unchecked { printf(__VA_ARGS__); }
+#define chatting printf
 
 #define IA 16807
 #define IM 2147483647
@@ -33,16 +31,16 @@ struct Results {
 };
 
 struct Patient {
-  int                     hosps_visited;
-  int                     time;
-  int                     time_left;
-  ptr<struct Village>     home_village;
+  int                    hosps_visited;
+  int                    time;
+  int                    time_left;
+  struct Village         *home_village;
 };
 
 struct List {
-  ptr<struct List>        forward;
-  ptr<struct Patient>     patient;
-  ptr<struct List>        back;
+  struct List            *forward;
+  struct Patient         *patient;
+  struct List            *back;
 };
 
 struct Hosp {
@@ -67,8 +65,8 @@ struct Hosp {
  
 struct Village {
 #if 1
-  ptr<struct Village>    forward checked[4];
-  ptr<struct Village>    back;
+  struct Village         *forward[4];
+  struct Village         *back;
   struct List            returned;
   struct Hosp            hosp;   
   int                    label;
@@ -76,29 +74,28 @@ struct Village {
 #else
   struct Hosp            hosp;   
   long                   seed;
-  ptr<struct Village>    forward checked[4];
+  struct Village         *forward[4];
   int                    label;
   struct List            returned;
-  ptr<struct Village>    back;
+  struct Village         *back;
 #endif
 };
 
-ptr<struct Village> alloc_tree(int level, int label, ptr<struct Village> back);
-void dealwithargs(int argc, array_ptr<nt_array_ptr<char>> argv : count(argc));
+struct Village *alloc_tree(int level, int label, struct Village *back);
+void dealwithargs(int argc, char *argv[]);
 float my_rand(long long idum);
-ptr<struct Patient> generate_patient(ptr<struct Village> village);
-void put_in_hosp(ptr<struct Hosp> hosp, ptr<struct Patient>patient);
-void addList(ptr<struct List> list, ptr<struct Patient> patient);
-void removeList(ptr<struct List> list, ptr<struct Patient> patient);
-ptr<struct List> sim(ptr<struct Village> village);
-void check_patients_inside(ptr<struct Village> village, ptr<struct List> list);
-ptr<struct List> check_patients_assess(ptr<struct Village> village, ptr<struct List> list);
-void check_patients_waiting(ptr<struct Village> village, ptr<struct List> list);
-float get_num_people(ptr<struct Village> village);
-float get_total_time(ptr<struct Village> village);
-float get_total_hosps(ptr<struct Village> village);
-struct Results get_results(ptr<struct Village> village);
+struct Patient *generate_patient(struct Village *village);
+void put_in_hosp(struct Hosp *hosp, struct Patient *patient);
+void addList(struct List *list, struct Patient *patient);
+void removeList(struct List *list, struct Patient *patient);
+struct List *sim(struct Village *village);
+void check_patients_inside(struct Village *village, struct List *list);
+struct List *check_patients_assess(struct Village *village, struct List *list);
+void check_patients_waiting(struct Village *village, struct List *list);
+float get_num_people(struct Village *village);
+float get_total_time(struct Village *village);
+float get_total_hosps(struct Village *village);
+struct Results get_results(struct Village *village);
 
-#pragma CHECKED_SCOPE OFF
 #endif
 

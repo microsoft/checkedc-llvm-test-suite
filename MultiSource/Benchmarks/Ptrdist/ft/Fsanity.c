@@ -32,12 +32,10 @@
 #include "Fheap.h"
 #include "Fstruct.h"
 
-#pragma CHECKED_SCOPE ON
-
 int
-SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
+SanityCheck1(HeapP * h, Item * i)
 {
-  _Ptr<HeapP>  h1 = 0;
+  HeapP * h1;
 
   if(h == NULL_HEAP)
   {
@@ -64,11 +62,11 @@ SanityCheck1(_Ptr<HeapP>  h, _Ptr<Item>  i)
 }
 
 int
-SanityCheck2(_Ptr<HeapP>  h)
+SanityCheck2(HeapP * h)
 {
   int   sum;
-  _Ptr<HeapP>  h1 = 0;
-  _Ptr<HeapP>  h2 = 0;
+  HeapP * h1;
+  HeapP * h2;
 
   if(h == NULL_HEAP)
   {
@@ -108,11 +106,11 @@ SanityCheck2(_Ptr<HeapP>  h)
 }
 
 int
-SanityCheck3(_Ptr<HeapP>  h, int rank)
+SanityCheck3(HeapP * h, int rank)
 {
   int   sum;
-  _Ptr<HeapP>  h1 = 0;
-  _Ptr<HeapP>  h2 = 0;
+  HeapP * h1;
+  HeapP * h2;
 
   if((h == NULL_HEAP) && (rank == 0))
   {
@@ -145,9 +143,9 @@ SanityCheck3(_Ptr<HeapP>  h, int rank)
 }
 
 void
-PrettyPrint(_Ptr<HeapP>  h)
+PrettyPrint(HeapP * h)
 {
-  _Ptr<HeapP>  h1 = 0;
+  HeapP * h1;
 
   if(h == NULL_HEAP)
   {
@@ -170,4 +168,3 @@ PrettyPrint(_Ptr<HeapP>  h)
   printf(")");
 }
 
-#pragma CHECKED_SCOPE OFF
