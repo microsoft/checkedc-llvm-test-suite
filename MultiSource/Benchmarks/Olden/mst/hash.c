@@ -14,7 +14,7 @@ static array_ptr<char> temp : count(remaining);
 
 static array_ptr<void> localmalloc(int size) : byte_count(size)
 {
-  array_ptr<void> blah;
+  array_ptr<void> blah : byte_count(size) = 0;
   
   if (size>remaining) 
     {
@@ -22,7 +22,7 @@ static array_ptr<void> localmalloc(int size) : byte_count(size)
       temp = calloc<char>(remaining, sizeof(char));
       if (!temp) printf("Error! malloc returns null\n");
     }
-  blah = temp;
+  blah = _Dynamic_bounds_cast<array_ptr<void>>(temp, byte_count(size));
   temp += size;
   remaining -= size;
   return blah;
