@@ -39,7 +39,7 @@ typedef struct node_t {
   array_ptr<ptr<struct node_t>> to_nodes : count(degree); /* array of nodes pointed to */
   array_ptr<ptr<double>> from_values : count(from_count); /* array of ptrs to vals where data comes from */
   array_ptr<double> coeffs : count(from_count); /* array of coeffs on edges */
-  int from_count;
+  unsigned int from_count;
   int from_length;
   int degree;
 } node_t;

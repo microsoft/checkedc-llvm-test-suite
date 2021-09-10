@@ -123,9 +123,7 @@ void make_neighbors(ptr<node_t> nodelist, array_ptr<table_arr_t> table : count(P
       if ((((unsigned long long) other_node) >> 7) < 2048)
         chatting("post other_node = 0x%x\n",other_node);
 #endif
-      other_node->from_values = _Dynamic_bounds_cast<array_ptr<ptr<double>>>(other_node->from_values, count(0)),
-        other_node->coeffs = _Dynamic_bounds_cast<array_ptr<double>>(other_node->coeffs, count(0)),
-        ++other_node->from_count;          /* <----- 12% load miss penalty */
+      ++other_node->from_count;          /* <----- 12% load miss penalty */
     }
   }
 }
